@@ -1,13 +1,9 @@
 package com.github.allisson95.algashop.ordering.domain.entity;
 
 import com.github.allisson95.algashop.ordering.domain.exception.CustomerArchivedException;
-import com.github.allisson95.algashop.ordering.domain.validator.Validators;
-import com.github.allisson95.algashop.ordering.domain.valueobject.CustomerId;
-import com.github.allisson95.algashop.ordering.domain.valueobject.FullName;
-import com.github.allisson95.algashop.ordering.domain.valueobject.LoyaltyPoints;
+import com.github.allisson95.algashop.ordering.domain.valueobject.*;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.Objects;
 
 public class Customer {
@@ -16,13 +12,13 @@ public class Customer {
 
     private FullName fullName;
 
-    private LocalDate birthDate;
+    private BirthDate birthDate;
 
-    private String email;
+    private Email email;
 
-    private String phone;
+    private Phone phone;
 
-    private String document;
+    private Document document;
 
     private Boolean promotionNotificationsAllowed;
 
@@ -34,7 +30,7 @@ public class Customer {
 
     private LoyaltyPoints loyaltyPoints;
 
-    public Customer(final FullName fullName, final LocalDate birthDate, final String email, final String phone, final String document, final Boolean promotionNotificationsAllowed, final Instant registeredAt) {
+    public Customer(final FullName fullName, final BirthDate birthDate, final Email email, final Phone phone, final Document document, final Boolean promotionNotificationsAllowed, final Instant registeredAt) {
         this.setId(new CustomerId());
         this.setFullName(fullName);
         this.setBirthDate(birthDate);
@@ -48,7 +44,7 @@ public class Customer {
         this.setLoyaltyPoints(LoyaltyPoints.ZERO);
     }
 
-    public Customer(final CustomerId id, final FullName fullName, final LocalDate birthDate, final String email, final String phone, final String document, final Boolean promotionNotificationsAllowed, final Boolean archived, final Instant registeredAt, final Instant archivedAt, final LoyaltyPoints loyaltyPoints) {
+    public Customer(final CustomerId id, final FullName fullName, final BirthDate birthDate, final Email email, final Phone phone, final Document document, final Boolean promotionNotificationsAllowed, final Boolean archived, final Instant registeredAt, final Instant archivedAt, final LoyaltyPoints loyaltyPoints) {
         this.id = id;
         this.fullName = fullName;
         this.birthDate = birthDate;
@@ -73,9 +69,9 @@ public class Customer {
         this.setArchivedAt(Instant.now());
         this.setFullName(new FullName("Anonymous", "Anonymous"));
         this.setBirthDate(null);
-        this.setEmail("anonymous@email.com");
-        this.setPhone("000-000-0000");
-        this.setDocument("000-00-0000");
+        this.setEmail(new Email("anonymous@email.com"));
+        this.setPhone(new Phone("000-000-0000"));
+        this.setDocument(new Document("000-00-0000"));
         this.setPromotionNotificationsAllowed(false);
     }
 
@@ -94,12 +90,12 @@ public class Customer {
         this.setFullName(newName);
     }
 
-    public void changeEmail(final String newEmail) {
+    public void changeEmail(final Email newEmail) {
         this.verifyIfChangeable();
         this.setEmail(newEmail);
     }
 
-    public void changePhone(final String newPhone) {
+    public void changePhone(final Phone newPhone) {
         this.verifyIfChangeable();
         this.setPhone(newPhone);
     }
@@ -122,50 +118,41 @@ public class Customer {
         this.fullName = fullName;
     }
 
-    public LocalDate birthDate() {
+    public BirthDate birthDate() {
         return birthDate;
     }
 
-    private void setBirthDate(final LocalDate birthDate) {
+    private void setBirthDate(final BirthDate birthDate) {
         if (birthDate == null) {
             this.birthDate = null;
             return;
         }
-        if (birthDate.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("birthDate cannot be in the future");
-        }
         this.birthDate = birthDate;
     }
 
-    public String email() {
+    public Email email() {
         return email;
     }
 
-    private void setEmail(final String email) {
+    private void setEmail(final Email email) {
         Objects.requireNonNull(email, "email cannot be null");
-        if (email.isBlank()) {
-            throw new IllegalArgumentException("email cannot be blank");
-        }
-        if (!Validators.isValidEmail(email)) {
-            throw new IllegalArgumentException("%s is not a well-formed email address".formatted(email));
-        }
         this.email = email;
     }
 
-    public String phone() {
+    public Phone phone() {
         return phone;
     }
 
-    private void setPhone(final String phone) {
+    private void setPhone(final Phone phone) {
         Objects.requireNonNull(phone, "phone cannot be null");
         this.phone = phone;
     }
 
-    public String document() {
+    public Document document() {
         return document;
     }
 
-    private void setDocument(final String document) {
+    private void setDocument(final Document document) {
         Objects.requireNonNull(document, "document cannot be null");
         this.document = document;
     }
