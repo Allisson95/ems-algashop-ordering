@@ -1,6 +1,8 @@
 package com.github.allisson95.algashop.ordering.domain.valueobject;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -10,8 +12,8 @@ class QuantityTest {
     void shouldCreateQuantity() {
         final Quantity quantity = new Quantity(5);
         assertWith(quantity,
-                q -> assertThat(quantity.value()).isEqualTo(5),
-                q -> assertThat(quantity.toString()).isEqualTo("5"));
+                q -> assertThat(q).isEqualTo(new Quantity(5)),
+                q -> assertThat(q.toString()).isEqualTo("5"));
     }
 
     @Test
@@ -42,6 +44,22 @@ class QuantityTest {
         assertThatExceptionOfType(NullPointerException.class)
                 .isThrownBy(() -> q1.add(null))
                 .withMessage("quantityToAdd cannot be null");
+    }
+
+    @ParameterizedTest
+    @CsvSource(textBlock = """
+            # VALUE,    EQUAL,  GT1,    GT2,    LT1,    LT2
+            5,          5,      4,      1,      6,      10
+            30,         30,     29,     7,      31,     49
+            """)
+    void shouldCompareQuantity(int value, int equal, int gt1, int gt2, int lt1, int lt2) {
+        assertWith(new Quantity(value),
+                q -> assertThatComparable(q).isEqualByComparingTo(new Quantity(equal)),
+                q -> assertThatComparable(q).isGreaterThan(new Quantity(gt1)),
+                q -> assertThatComparable(q).isGreaterThan(new Quantity(gt2)),
+                q -> assertThatComparable(q).isLessThan(new Quantity(lt1)),
+                q -> assertThatComparable(q).isLessThan(new Quantity(lt2))
+        );
     }
 
 }
