@@ -1,5 +1,6 @@
 package com.github.allisson95.algashop.ordering.domain.entity;
 
+import com.github.allisson95.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
 import com.github.allisson95.algashop.ordering.domain.valueobject.Money;
 import com.github.allisson95.algashop.ordering.domain.valueobject.ProductName;
 import com.github.allisson95.algashop.ordering.domain.valueobject.Quantity;
@@ -9,15 +10,31 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertWith;
+import static org.assertj.core.api.Assertions.*;
 
 class OrderTest {
 
     @Test
     void shouldGenerateNewOrder() {
-        final Order draftOrder = Order.draft(new CustomerId());
-        assertThat(draftOrder).isNotNull();
+        final CustomerId customerId = new CustomerId();
+        final Order draftOrder = Order.draft(customerId);
+        assertWith(draftOrder,
+                o -> assertThat(o.id()).isNotNull(),
+                o -> assertThat(o.customerId()).isEqualTo(customerId),
+                o -> assertThat(o.isDraft()).isTrue(),
+                o -> assertThat(o.items()).isEmpty(),
+                o -> assertThat(o.totalAmount()).isEqualTo(new Money(BigDecimal.ZERO)),
+                o -> assertThat(o.totalItems()).isEqualTo(new Quantity(0)),
+                o -> assertThat(o.placedAt()).isNull(),
+                o -> assertThat(o.paidAt()).isNull(),
+                o -> assertThat(o.cancelledAt()).isNull(),
+                o -> assertThat(o.readyAt()).isNull(),
+                o -> assertThat(o.billing()).isNull(),
+                o -> assertThat(o.shipping()).isNull(),
+                o -> assertThat(o.shippingCoast()).isNull(),
+                o -> assertThat(o.expectedDeliveryDate()).isNull(),
+                o -> assertThat(o.paymentMethod()).isNull()
+        );
     }
 
     @Test
@@ -56,6 +73,23 @@ class OrderTest {
 
         assertThat(order.totalAmount()).isEqualTo(new Money(new BigDecimal("339.88")));
         assertThat(order.totalItems()).isEqualTo(new Quantity(3));
+    }
+
+    @Test
+    void givenDraftOrder_whenPlace_thenChangeOrderStatusToPlaced() {
+        final Order draftOrder = Order.draft(new CustomerId());
+        draftOrder.place();
+        assertThat(draftOrder.isPlaced()).isTrue();
+        assertThat(draftOrder.placedAt()).isNotNull();
+    }
+
+    @Test
+    void givenPlacedOrder_whenTryToPlaceAgain_thenThrowException() {
+        final Order placedOrder = Order.draft(new CustomerId());
+        placedOrder.place();
+        assertThatExceptionOfType(OrderStatusCannotBeChangedException.class)
+                .isThrownBy(placedOrder::place)
+                .withMessage("Cannot change order %s status from %s to %s".formatted(placedOrder.id(), placedOrder.status(), OrderStatus.PLACED));
     }
 
 }

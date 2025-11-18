@@ -1,5 +1,6 @@
 package com.github.allisson95.algashop.ordering.domain.entity;
 
+import com.github.allisson95.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
 import com.github.allisson95.algashop.ordering.domain.valueobject.*;
 import com.github.allisson95.algashop.ordering.domain.valueobject.id.CustomerId;
 import com.github.allisson95.algashop.ordering.domain.valueobject.id.OrderId;
@@ -68,6 +69,32 @@ public class Order {
         return new Order(new OrderId(), customerId, Money.ZERO, Quantity.ZERO, null, null, null, null, null, null, null, null, OrderStatus.DRAFT, null, new HashSet<>());
     }
 
+    public void place() {
+        // TODO: Business rules!
+        this.changeStatus(OrderStatus.PLACED);
+        this.setPlacedAt(Instant.now());
+    }
+
+    public boolean isPaid() {
+        return OrderStatus.PAID.equals(this.status());
+    }
+
+    public boolean isCancelled() {
+        return OrderStatus.CANCELED.equals(this.status());
+    }
+
+    public boolean isReady() {
+        return OrderStatus.READY.equals(this.status());
+    }
+
+    public boolean isDraft() {
+        return OrderStatus.DRAFT.equals(this.status());
+    }
+
+    public boolean isPlaced() {
+        return OrderStatus.PLACED.equals(this.status());
+    }
+
     public void addItem(final ProductId productId, final ProductName productName, final Money price, final Quantity quantity) {
         final OrderItem orderItem = OrderItem.newOrderItem()
                 .orderId(this.id())
@@ -83,6 +110,14 @@ public class Order {
 
         this.items.add(orderItem);
         this.recalculateTotals();
+    }
+
+    private void changeStatus(final OrderStatus newStatus) {
+        Objects.requireNonNull(newStatus, "newStatus cannot be null");
+        if (this.status().cantBeUpdatedTo(newStatus)) {
+            throw new OrderStatusCannotBeChangedException(this.id(), this.status(), newStatus);
+        }
+        this.setStatus(newStatus);
     }
 
     private void recalculateTotals() {
