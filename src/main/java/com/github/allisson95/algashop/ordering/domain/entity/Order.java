@@ -11,6 +11,9 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.*;
 
+import static java.util.Objects.isNull;
+import static java.util.Objects.requireNonNull;
+
 public class Order {
 
     private OrderId id;
@@ -102,8 +105,8 @@ public class Order {
     }
 
     public void addItem(final Product product, final Quantity quantity) {
-        Objects.requireNonNull(product, "product cannot be null");
-        Objects.requireNonNull(quantity, "quantity cannot be null");
+        requireNonNull(product, "product cannot be null");
+        requireNonNull(quantity, "quantity cannot be null");
 
         this.verifyIfChangeable();
 
@@ -124,19 +127,19 @@ public class Order {
     }
 
     public void changePaymentMethod(final PaymentMethod newPaymentMethod) {
-        Objects.requireNonNull(newPaymentMethod, "newPaymentMethod cannot be null");
+        requireNonNull(newPaymentMethod, "newPaymentMethod cannot be null");
         this.verifyIfChangeable();
         this.setPaymentMethod(newPaymentMethod);
     }
 
     public void changeBilling(final Billing newBilling) {
-        Objects.requireNonNull(newBilling, "newBilling cannot be null");
+        requireNonNull(newBilling, "newBilling cannot be null");
         this.verifyIfChangeable();
         this.setBilling(newBilling);
     }
 
     public void changeShipping(final Shipping newShipping) {
-        Objects.requireNonNull(newShipping, "newShipping cannot be null");
+        requireNonNull(newShipping, "newShipping cannot be null");
 
         this.verifyIfChangeable();
 
@@ -149,8 +152,8 @@ public class Order {
     }
 
     public void changeItemQuantity(final OrderItemId orderItemId, final Quantity newQuantity) {
-        Objects.requireNonNull(orderItemId, "orderItemId cannot be null");
-        Objects.requireNonNull(newQuantity, "newQuantity cannot be null");
+        requireNonNull(orderItemId, "orderItemId cannot be null");
+        requireNonNull(newQuantity, "newQuantity cannot be null");
 
         this.verifyIfChangeable();
 
@@ -160,8 +163,16 @@ public class Order {
         this.recalculateTotals();
     }
 
+    public void removeItem(final OrderItemId orderItemId) {
+        requireNonNull(orderItemId, "orderItemId cannot be null");
+        this.verifyIfChangeable();
+        final OrderItem orderItem = findOrderItem(orderItemId);
+        this.items.remove(orderItem);
+        this.recalculateTotals();
+    }
+
     private void changeStatus(final OrderStatus newStatus) {
-        Objects.requireNonNull(newStatus, "newStatus cannot be null");
+        requireNonNull(newStatus, "newStatus cannot be null");
         if (this.status().cantBeUpdatedTo(newStatus)) {
             throw new OrderStatusCannotBeChangedException(this.id(), this.status(), newStatus);
         }
@@ -180,13 +191,13 @@ public class Order {
     }
 
     private void verifyIfCanChangeToPlaced() {
-        if (Objects.isNull(this.billing())) {
+        if (isNull(this.billing())) {
             throw OrderCannotBePlacedException.becauseHasNoBillingInfo(this.id());
         }
-        if (Objects.isNull(this.shipping())) {
+        if (isNull(this.shipping())) {
             throw OrderCannotBePlacedException.becauseHasNoShippingInfo(this.id());
         }
-        if (Objects.isNull(this.paymentMethod())) {
+        if (isNull(this.paymentMethod())) {
             throw OrderCannotBePlacedException.becauseHasNoPaymentMethod(this.id());
         }
         if (this.items().isEmpty()) {
@@ -201,7 +212,7 @@ public class Order {
     }
 
     private OrderItem findOrderItem(final OrderItemId orderItemId) {
-        Objects.requireNonNull(orderItemId, "orderItemId cannot be null");
+        requireNonNull(orderItemId, "orderItemId cannot be null");
         return this.items().stream()
                 .filter(item -> item.id().equals(orderItemId))
                 .findFirst()
@@ -213,7 +224,7 @@ public class Order {
     }
 
     private void setId(final OrderId id) {
-        Objects.requireNonNull(id, "id cannot be null");
+        requireNonNull(id, "id cannot be null");
         this.id = id;
     }
 
@@ -222,7 +233,7 @@ public class Order {
     }
 
     private void setCustomerId(final CustomerId customerId) {
-        Objects.requireNonNull(customerId, "customerId cannot be null");
+        requireNonNull(customerId, "customerId cannot be null");
         this.customerId = customerId;
     }
 
@@ -231,7 +242,7 @@ public class Order {
     }
 
     private void setTotalAmount(final Money totalAmount) {
-        Objects.requireNonNull(totalAmount, "totalAmount cannot be null");
+        requireNonNull(totalAmount, "totalAmount cannot be null");
         this.totalAmount = totalAmount;
     }
 
@@ -240,7 +251,7 @@ public class Order {
     }
 
     private void setTotalItems(final Quantity totalItems) {
-        Objects.requireNonNull(totalItems, "totalItems cannot be null");
+        requireNonNull(totalItems, "totalItems cannot be null");
         this.totalItems = totalItems;
     }
 
@@ -297,7 +308,7 @@ public class Order {
     }
 
     private void setStatus(final OrderStatus status) {
-        Objects.requireNonNull(status, "status cannot be null");
+        requireNonNull(status, "status cannot be null");
         this.status = status;
     }
 
@@ -314,7 +325,7 @@ public class Order {
     }
 
     private void setItems(final Set<OrderItem> items) {
-        Objects.requireNonNull(items, "items cannot be null");
+        requireNonNull(items, "items cannot be null");
         this.items = items;
     }
 
