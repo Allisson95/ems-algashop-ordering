@@ -16,18 +16,24 @@ class OrderItemTest {
 
     @Test
     void shouldGenerateOrderItem() {
+        final OrderId orderId = new OrderId();
         final Product product = ProductTestDataBuilder.aProduct().build();
         final Quantity quantity = new Quantity(faker.number().numberBetween(1, 10));
         final Money expectedTotalAmount = product.price().multiply(quantity);
 
         final OrderItem orderItem = OrderItem.newOrderItem()
-                .orderId(new OrderId())
+                .orderId(orderId)
                 .product(product)
                 .quantity(quantity)
                 .build();
 
         assertWith(orderItem,
                 i -> assertThat(i).isNotNull(),
+                i -> assertThat(i.orderId()).isEqualTo(orderId),
+                i -> assertThat(i.productId()).isEqualTo(product.id()),
+                i -> assertThat(i.productName()).isEqualTo(product.name()),
+                i -> assertThat(i.price()).isEqualTo(product.price()),
+                i -> assertThat(i.quantity()).isEqualTo(quantity),
                 i -> assertThat(i.totalAmount()).isEqualTo(expectedTotalAmount)
         );
     }

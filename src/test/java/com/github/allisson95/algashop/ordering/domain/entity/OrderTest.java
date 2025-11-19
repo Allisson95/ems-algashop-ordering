@@ -18,7 +18,7 @@ class OrderTest {
     Faker faker = new Faker();
 
     @Test
-    void shouldGenerateNewOrder() {
+    void shouldGenerateDraftOrder() {
         final CustomerId customerId = new CustomerId();
         final Order draftOrder = Order.draft(customerId);
         assertWith(draftOrder,
