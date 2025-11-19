@@ -14,13 +14,9 @@ public class OrderTestDataBuilder {
 
     private PaymentMethod paymentMethod = PaymentMethod.GATEWAY_BALANCE;
 
-    private Money shippingCost = new Money(faker.commerce().price());
-
-    private LocalDate expectedDeliveryDate = LocalDate.now().plusDays(faker.number().numberBetween(1, 10));
-
     private BillingInfo billing = aBillingInfo();
 
-    private ShippingInfo shipping = aShippingInfo();
+    private Shipping shipping = aShipping();
 
     private boolean withItems = true;
 
@@ -43,22 +39,12 @@ public class OrderTestDataBuilder {
         return this;
     }
 
-    public OrderTestDataBuilder shippingCost(final Money shippingCost) {
-        this.shippingCost = shippingCost;
-        return this;
-    }
-
-    public OrderTestDataBuilder expectedDeliveryDate(final LocalDate expectedDeliveryDate) {
-        this.expectedDeliveryDate = expectedDeliveryDate;
-        return this;
-    }
-
     public OrderTestDataBuilder billing(final BillingInfo billing) {
         this.billing = billing;
         return this;
     }
 
-    public OrderTestDataBuilder shipping(final ShippingInfo shipping) {
+    public OrderTestDataBuilder shipping(final Shipping shipping) {
         this.shipping = shipping;
         return this;
     }
@@ -77,7 +63,7 @@ public class OrderTestDataBuilder {
         final Order order = Order.draft(this.customerId);
         order.changePaymentMethod(this.paymentMethod);
         order.changeBillingInfo(this.billing);
-        order.changeShippingInfo(this.shipping, this.shippingCost, this.expectedDeliveryDate);
+        order.changeShipping(this.shipping);
 
         if (this.withItems) {
             order.addItem(ProductTestDataBuilder.aProduct().build(), new Quantity(faker.number().numberBetween(1, 10)));
@@ -126,10 +112,15 @@ public class OrderTestDataBuilder {
                 .build();
     }
 
-    public static ShippingInfo aShippingInfo() {
+    public static Shipping aShipping() {
         final FullName fullName = new FullName(faker.name().firstName(), faker.name().lastName());
         final Document document = new Document(faker.idNumber().valid());
         final Phone phone = new Phone(faker.phoneNumber().cellPhone());
+        final Recipient recipient = Recipient.builder()
+                .fullName(fullName)
+                .document(document)
+                .phone(phone)
+                .build();
         final Address shippingAddress = Address.builder()
                 .street(faker.address().streetAddress())
                 .number(faker.address().buildingNumber())
@@ -138,12 +129,14 @@ public class OrderTestDataBuilder {
                 .state(faker.address().state())
                 .zipCode(new ZipCode(faker.address().zipCode()))
                 .build();
+        final Money shippingCost = new Money(faker.commerce().price());
+        final LocalDate expectedDeliveryDate = LocalDate.now().plusDays(faker.number().numberBetween(1, 10));
 
-        return ShippingInfo.builder()
-                .fullName(fullName)
-                .document(document)
-                .phone(phone)
+        return Shipping.builder()
+                .recipient(recipient)
                 .address(shippingAddress)
+                .cost(shippingCost)
+                .expectedDeliveryDate(expectedDeliveryDate)
                 .build();
     }
 

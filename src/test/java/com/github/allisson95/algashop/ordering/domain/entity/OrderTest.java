@@ -34,8 +34,6 @@ class OrderTest {
                 o -> assertThat(o.readyAt()).isNull(),
                 o -> assertThat(o.billing()).isNull(),
                 o -> assertThat(o.shipping()).isNull(),
-                o -> assertThat(o.shippingCost()).isNull(),
-                o -> assertThat(o.expectedDeliveryDate()).isNull(),
                 o -> assertThat(o.paymentMethod()).isNull()
         );
     }
@@ -143,65 +141,26 @@ class OrderTest {
     }
 
     @Test
-    void givenDraftOrder_whenChangeShippingInfo_shouldAllowedChange() {
-        final FullName fullName = new FullName(faker.name().firstName(), faker.name().lastName());
-        final Document document = new Document(faker.idNumber().valid());
-        final Phone phone = new Phone(faker.phoneNumber().cellPhone());
-        final Address shippingAddress = Address.builder()
-                .street(faker.address().streetAddress())
-                .number(faker.address().buildingNumber())
-                .neighborhood(faker.address().secondaryAddress())
-                .city(faker.address().city())
-                .state(faker.address().state())
-                .zipCode(new ZipCode(faker.address().zipCode()))
-                .build();
-
-        final ShippingInfo shippingInfo = ShippingInfo.builder()
-                .fullName(fullName)
-                .document(document)
-                .phone(phone)
-                .address(shippingAddress)
-                .build();
-        final Money shippingCost = new Money(faker.commerce().price());
-        final LocalDate expectedDeliveryDate = LocalDate.now().plusDays(faker.number().numberBetween(1, 10));
-
+    void givenDraftOrder_whenChangeShipping_shouldAllowedChange() {
+        final Shipping shipping = OrderTestDataBuilder.aShipping();
         final Order draftOrder = Order.draft(new CustomerId());
-        draftOrder.changeShippingInfo(shippingInfo, shippingCost, expectedDeliveryDate);
+
+        draftOrder.changeShipping(shipping);
 
         assertWith(draftOrder,
-                o -> assertThat(o.shipping()).isEqualTo(shippingInfo),
-                o -> assertThat(o.shippingCost()).isEqualTo(shippingCost),
-                o -> assertThat(o.expectedDeliveryDate()).isEqualTo(expectedDeliveryDate)
+                o -> assertThat(o.shipping()).isEqualTo(shipping)
         );
     }
 
     @Test
     void givenDraftOrderAndExpectedDeliveryDateInThePast_whenChangeShippingInfo_shouldNotAllowedChange() {
-        final FullName fullName = new FullName(faker.name().firstName(), faker.name().lastName());
-        final Document document = new Document(faker.idNumber().valid());
-        final Phone phone = new Phone(faker.phoneNumber().cellPhone());
-        final Address shippingAddress = Address.builder()
-                .street(faker.address().streetAddress())
-                .number(faker.address().buildingNumber())
-                .neighborhood(faker.address().secondaryAddress())
-                .city(faker.address().city())
-                .state(faker.address().state())
-                .zipCode(new ZipCode(faker.address().zipCode()))
+        final Shipping shipping = OrderTestDataBuilder.aShipping().toBuilder()
+                .expectedDeliveryDate(LocalDate.now().minusDays(faker.number().numberBetween(1, 10)))
                 .build();
-
-        final ShippingInfo shippingInfo = ShippingInfo.builder()
-                .fullName(fullName)
-                .document(document)
-                .phone(phone)
-                .address(shippingAddress)
-                .build();
-        final Money shippingCost = new Money(faker.commerce().price());
-        final LocalDate expectedDeliveryDate = LocalDate.now().minusDays(faker.number().numberBetween(1, 10));
-
         final Order draftOrder = Order.draft(new CustomerId());
 
         assertThatExceptionOfType(OrderInvalidShippingDeliveryDateException.class)
-                .isThrownBy(() -> draftOrder.changeShippingInfo(shippingInfo, shippingCost, expectedDeliveryDate))
+                .isThrownBy(() -> draftOrder.changeShipping(shipping))
                 .withMessage("Order %s expected delivery date must be after current date".formatted(draftOrder.id()));
     }
 

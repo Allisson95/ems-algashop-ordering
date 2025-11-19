@@ -16,14 +16,6 @@ public class OrderCannotBePlacedException extends DomainException {
         return new OrderCannotBePlacedException(orderId, "Has no shipping info");
     }
 
-    public static OrderCannotBePlacedException becauseHasNoShippingCost(final OrderId orderId) {
-        return new OrderCannotBePlacedException(orderId, "Has no shipping cost");
-    }
-
-    public static OrderCannotBePlacedException becauseHasNoExpectedDeliveryDate(final OrderId orderId) {
-        return new OrderCannotBePlacedException(orderId, "Has no expected delivery date");
-    }
-
     public static OrderCannotBePlacedException becauseHasNoPaymentMethod(final OrderId orderId) {
         return new OrderCannotBePlacedException(orderId, "Has no payment method");
     }
