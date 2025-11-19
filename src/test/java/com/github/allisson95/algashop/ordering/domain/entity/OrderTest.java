@@ -1,18 +1,21 @@
 package com.github.allisson95.algashop.ordering.domain.entity;
 
+import com.github.allisson95.algashop.ordering.domain.exception.OrderInvalidShippingDeliveryDateException;
 import com.github.allisson95.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
-import com.github.allisson95.algashop.ordering.domain.valueobject.Money;
-import com.github.allisson95.algashop.ordering.domain.valueobject.ProductName;
-import com.github.allisson95.algashop.ordering.domain.valueobject.Quantity;
+import com.github.allisson95.algashop.ordering.domain.valueobject.*;
 import com.github.allisson95.algashop.ordering.domain.valueobject.id.CustomerId;
 import com.github.allisson95.algashop.ordering.domain.valueobject.id.ProductId;
+import net.datafaker.Faker;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.*;
 
 class OrderTest {
+
+    Faker faker = new Faker();
 
     @Test
     void shouldGenerateNewOrder() {
@@ -41,17 +44,19 @@ class OrderTest {
     void shouldAddItem() {
         final Order order = Order.draft(new CustomerId());
         final ProductId productId = new ProductId();
-        order.addItem(productId, new ProductName("Smartphone"), new Money(new BigDecimal("1499.99")), new Quantity(1));
+        final ProductName productName = new ProductName(faker.commerce().productName());
+        final Money price = new Money(faker.commerce().price());
+        order.addItem(productId, productName, price, new Quantity(1));
 
         assertThat(order.items()).hasSize(1);
         assertWith(order.items().iterator().next(),
                 i -> assertThat(i.id()).isNotNull(),
                 i -> assertThat(i.orderId()).isEqualTo(order.id()),
                 i -> assertThat(i.productId()).isEqualTo(productId),
-                i -> assertThat(i.productName()).isEqualTo(new ProductName("Smartphone")),
-                i -> assertThat(i.price()).isEqualTo(new Money(new BigDecimal("1499.99"))),
+                i -> assertThat(i.productName()).isEqualTo(productName),
+                i -> assertThat(i.price()).isEqualTo(price),
                 i -> assertThat(i.quantity()).isEqualTo(new Quantity(1)),
-                i -> assertThat(i.totalAmount()).isEqualTo(new Money(new BigDecimal("1499.99")))
+                i -> assertThat(i.totalAmount()).isEqualTo(price)
         );
     }
 
@@ -59,7 +64,9 @@ class OrderTest {
     void shouldReturnUnmodifiableItemsToPreventDirectChanges() {
         final Order order = Order.draft(new CustomerId());
         final ProductId productId = new ProductId();
-        order.addItem(productId, new ProductName("Smartphone"), new Money(new BigDecimal("1499.99")), new Quantity(1));
+        final ProductName productName = new ProductName(faker.commerce().productName());
+        final Money price = new Money(faker.commerce().price());
+        order.addItem(productId, productName, price, new Quantity(1));
 
         assertThat(order.items()).isUnmodifiable();
     }
@@ -68,10 +75,10 @@ class OrderTest {
     void shouldCalculateTotals() {
         final Order order = Order.draft(new CustomerId());
         final ProductId productId = new ProductId();
-        order.addItem(productId, new ProductName("Mouse Pad"), new Money(new BigDecimal("79.90")), new Quantity(1));
-        order.addItem(productId, new ProductName("Ram Memory 8GB"), new Money(new BigDecimal("129.99")), new Quantity(2));
+        order.addItem(productId, new ProductName(faker.commerce().productName()), new Money("79.90"), new Quantity(1));
+        order.addItem(productId, new ProductName(faker.commerce().productName()), new Money("129.99"), new Quantity(2));
 
-        assertThat(order.totalAmount()).isEqualTo(new Money(new BigDecimal("339.88")));
+        assertThat(order.totalAmount()).isEqualTo(new Money("339.88"));
         assertThat(order.totalItems()).isEqualTo(new Quantity(3));
     }
 
@@ -90,6 +97,111 @@ class OrderTest {
         assertThatExceptionOfType(OrderStatusCannotBeChangedException.class)
                 .isThrownBy(placedOrder::place)
                 .withMessage("Cannot change order %s status from %s to %s".formatted(placedOrder.id(), placedOrder.status(), OrderStatus.PLACED));
+    }
+
+    @Test
+    void givenDraftOrder_whenChangePaymentMethod_shouldAllowChange() {
+        final Order draftOrder = Order.draft(new CustomerId());
+        draftOrder.changePaymentMethod(PaymentMethod.CREDIT_CARD);
+        assertThat(draftOrder.paymentMethod()).isEqualTo(PaymentMethod.CREDIT_CARD);
+    }
+
+    @Test
+    void givenDraftOrder_whenChangePaymentMethodToNull_shouldThrowException() {
+        final Order draftOrder = Order.draft(new CustomerId());
+        assertThatExceptionOfType(NullPointerException.class)
+                .isThrownBy(() -> draftOrder.changePaymentMethod(null))
+                .withMessage("newPaymentMethod cannot be null");
+    }
+
+    @Test
+    void givenDraftOrder_whenChangeBillingInfo_shouldAllowChange() {
+        final FullName fullName = new FullName(faker.name().firstName(), faker.name().lastName());
+        final Document document = new Document(faker.idNumber().valid());
+        final Phone phone = new Phone(faker.phoneNumber().cellPhone());
+        final Address billingAddress = Address.builder()
+                .street(faker.address().streetAddress())
+                .number(faker.address().buildingNumber())
+                .neighborhood(faker.address().secondaryAddress())
+                .city(faker.address().city())
+                .state(faker.address().state())
+                .zipCode(new ZipCode(faker.address().zipCode()))
+                .build();
+
+        final BillingInfo billingInfo = BillingInfo.builder()
+                .fullName(fullName)
+                .document(document)
+                .phone(phone)
+                .address(billingAddress)
+                .build();
+
+        final Order draftOrder = Order.draft(new CustomerId());
+        draftOrder.changeBillingInfo(billingInfo);
+
+        assertThat(draftOrder.billing()).isEqualTo(billingInfo);
+    }
+
+    @Test
+    void givenDraftOrder_whenChangeShippingInfo_shouldAllowedChange() {
+        final FullName fullName = new FullName(faker.name().firstName(), faker.name().lastName());
+        final Document document = new Document(faker.idNumber().valid());
+        final Phone phone = new Phone(faker.phoneNumber().cellPhone());
+        final Address shippingAddress = Address.builder()
+                .street(faker.address().streetAddress())
+                .number(faker.address().buildingNumber())
+                .neighborhood(faker.address().secondaryAddress())
+                .city(faker.address().city())
+                .state(faker.address().state())
+                .zipCode(new ZipCode(faker.address().zipCode()))
+                .build();
+
+        final ShippingInfo shippingInfo = ShippingInfo.builder()
+                .fullName(fullName)
+                .document(document)
+                .phone(phone)
+                .address(shippingAddress)
+                .build();
+        final Money shippingCost = new Money(faker.commerce().price());
+        final LocalDate expectedDeliveryDate = LocalDate.now().plusDays(faker.number().numberBetween(1, 10));
+
+        final Order draftOrder = Order.draft(new CustomerId());
+        draftOrder.changeShippingInfo(shippingInfo, shippingCost, expectedDeliveryDate);
+
+        assertWith(draftOrder,
+                o -> assertThat(o.shipping()).isEqualTo(shippingInfo),
+                o -> assertThat(o.shippingCoast()).isEqualTo(shippingCost),
+                o -> assertThat(o.expectedDeliveryDate()).isEqualTo(expectedDeliveryDate)
+        );
+    }
+
+    @Test
+    void givenDraftOrderAndExpectedDeliveryDateInThePast_whenChangeShippingInfo_shouldNotAllowedChange() {
+        final FullName fullName = new FullName(faker.name().firstName(), faker.name().lastName());
+        final Document document = new Document(faker.idNumber().valid());
+        final Phone phone = new Phone(faker.phoneNumber().cellPhone());
+        final Address shippingAddress = Address.builder()
+                .street(faker.address().streetAddress())
+                .number(faker.address().buildingNumber())
+                .neighborhood(faker.address().secondaryAddress())
+                .city(faker.address().city())
+                .state(faker.address().state())
+                .zipCode(new ZipCode(faker.address().zipCode()))
+                .build();
+
+        final ShippingInfo shippingInfo = ShippingInfo.builder()
+                .fullName(fullName)
+                .document(document)
+                .phone(phone)
+                .address(shippingAddress)
+                .build();
+        final Money shippingCost = new Money(faker.commerce().price());
+        final LocalDate expectedDeliveryDate = LocalDate.now().minusDays(faker.number().numberBetween(1, 10));
+
+        final Order draftOrder = Order.draft(new CustomerId());
+
+        assertThatExceptionOfType(OrderInvalidShippingDeliveryDateException.class)
+                .isThrownBy(() -> draftOrder.changeShippingInfo(shippingInfo, shippingCost, expectedDeliveryDate))
+                .withMessage("Order %s expected delivery date must be after current date".formatted(draftOrder.id()));
     }
 
 }

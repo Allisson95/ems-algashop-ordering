@@ -1,5 +1,6 @@
 package com.github.allisson95.algashop.ordering.domain.entity;
 
+import com.github.allisson95.algashop.ordering.domain.exception.OrderInvalidShippingDeliveryDateException;
 import com.github.allisson95.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
 import com.github.allisson95.algashop.ordering.domain.valueobject.*;
 import com.github.allisson95.algashop.ordering.domain.valueobject.id.CustomerId;
@@ -110,6 +111,30 @@ public class Order {
 
         this.items.add(orderItem);
         this.recalculateTotals();
+    }
+
+    public void changePaymentMethod(final PaymentMethod newPaymentMethod) {
+        Objects.requireNonNull(newPaymentMethod, "newPaymentMethod cannot be null");
+        this.setPaymentMethod(newPaymentMethod);
+    }
+
+    public void changeBillingInfo(final BillingInfo newBilling) {
+        Objects.requireNonNull(newBilling, "newBilling cannot be null");
+        this.setBilling(newBilling);
+    }
+
+    public void changeShippingInfo(final ShippingInfo newShipping, final Money shippingCost, final LocalDate expectedDeliveryDate) {
+        Objects.requireNonNull(newShipping, "newShipping cannot be null");
+        Objects.requireNonNull(shippingCost, "shippingCost cannot be null");
+        Objects.requireNonNull(expectedDeliveryDate, "expectedDeliveryDate cannot be null");
+
+        if (expectedDeliveryDate.isBefore(LocalDate.now())) {
+            throw new OrderInvalidShippingDeliveryDateException(this.id());
+        }
+
+        this.setShipping(newShipping);
+        this.setShippingCoast(shippingCost);
+        this.setExpectedDeliveryDate(expectedDeliveryDate);
     }
 
     private void changeStatus(final OrderStatus newStatus) {
