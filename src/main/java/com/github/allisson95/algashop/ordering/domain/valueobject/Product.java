@@ -1,5 +1,6 @@
 package com.github.allisson95.algashop.ordering.domain.valueobject;
 
+import com.github.allisson95.algashop.ordering.domain.exception.ProductOutOfStockException;
 import com.github.allisson95.algashop.ordering.domain.valueobject.id.ProductId;
 import lombok.Builder;
 
@@ -13,6 +14,13 @@ public record Product(ProductId id, ProductName name, Money price, Boolean inSto
         Objects.requireNonNull(name, "name cannot be null");
         Objects.requireNonNull(price, "price cannot be null");
         Objects.requireNonNull(inStock, "inStock cannot be null");
+    }
+
+    public void checkOutOfStock() {
+        final boolean isOutOfStock = !inStock();
+        if (isOutOfStock) {
+            throw new ProductOutOfStockException(this.id());
+        }
     }
 
 }

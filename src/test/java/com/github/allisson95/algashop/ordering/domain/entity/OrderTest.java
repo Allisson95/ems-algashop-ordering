@@ -2,6 +2,7 @@ package com.github.allisson95.algashop.ordering.domain.entity;
 
 import com.github.allisson95.algashop.ordering.domain.exception.OrderInvalidShippingDeliveryDateException;
 import com.github.allisson95.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
+import com.github.allisson95.algashop.ordering.domain.exception.ProductOutOfStockException;
 import com.github.allisson95.algashop.ordering.domain.valueobject.*;
 import com.github.allisson95.algashop.ordering.domain.valueobject.id.CustomerId;
 import net.datafaker.Faker;
@@ -218,6 +219,16 @@ class OrderTest {
                 o -> assertThat(o.totalAmount()).isEqualTo(expectedPrice),
                 o -> assertThat(o.totalItems()).isEqualTo(new Quantity(10))
         );
+    }
+
+    @Test
+    void givenOutOfStockProduct_whenTryToAddToOrder_shouldThrowException() {
+        final Order order = OrderTestDataBuilder.anOrder().build();
+        final Product outOfStockProduct = ProductTestDataBuilder.anOutOfStockProduct().build();
+
+        assertThatExceptionOfType(ProductOutOfStockException.class)
+                .isThrownBy(() -> order.addItem(outOfStockProduct, new Quantity(1)))
+                .withMessage("Product %s out of stock".formatted(outOfStockProduct.id()));
     }
 
 }

@@ -113,6 +113,8 @@ public class Order {
         Objects.requireNonNull(product, "product cannot be null");
         Objects.requireNonNull(quantity, "quantity cannot be null");
 
+        product.checkOutOfStock();
+
         final OrderItem orderItem = OrderItem.newOrderItem()
                 .orderId(this.id())
                 .product(product)

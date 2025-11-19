@@ -22,4 +22,12 @@ public class ProductTestDataBuilder {
                 .inStock(true);
     }
 
+    public static Product.ProductBuilder anOutOfStockProduct() {
+        return Product.builder()
+                .id(new ProductId())
+                .name(new ProductName(faker.commerce().productName()))
+                .price(new Money(faker.commerce().price()))
+                .inStock(false);
+    }
+
 }
