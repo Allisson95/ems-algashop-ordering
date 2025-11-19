@@ -203,4 +203,18 @@ class OrderTest {
                 .withMessage("Order %s expected delivery date must be after current date".formatted(draftOrder.id()));
     }
 
+    @Test
+    void givenDraftOrder_whenChangeItemQuantity_shouldBeRecalculated() {
+        final Order order = Order.draft(new CustomerId());
+        order.addItem(new ProductId(), new ProductName(faker.commerce().productName()), new Money("79.90"), new Quantity(1));
+
+        final OrderItem orderItem = order.items().iterator().next();
+        order.changeItemQuantity(orderItem.id(), new Quantity(10));
+
+        assertWith(order,
+                o -> assertThat(o.totalAmount()).isEqualTo(new Money("799")),
+                o -> assertThat(o.totalItems()).isEqualTo(new Quantity(10))
+        );
+    }
+
 }

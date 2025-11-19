@@ -1,11 +1,13 @@
 package com.github.allisson95.algashop.ordering.domain.entity;
 
 import com.github.allisson95.algashop.ordering.domain.exception.OrderCannotBePlacedException;
+import com.github.allisson95.algashop.ordering.domain.exception.OrderDoesNotContainOrderItemException;
 import com.github.allisson95.algashop.ordering.domain.exception.OrderInvalidShippingDeliveryDateException;
 import com.github.allisson95.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
 import com.github.allisson95.algashop.ordering.domain.valueobject.*;
 import com.github.allisson95.algashop.ordering.domain.valueobject.id.CustomerId;
 import com.github.allisson95.algashop.ordering.domain.valueobject.id.OrderId;
+import com.github.allisson95.algashop.ordering.domain.valueobject.id.OrderItemId;
 import com.github.allisson95.algashop.ordering.domain.valueobject.id.ProductId;
 import lombok.Builder;
 
@@ -149,6 +151,16 @@ public class Order {
         this.setExpectedDeliveryDate(expectedDeliveryDate);
     }
 
+    public void changeItemQuantity(final OrderItemId orderItemId, final Quantity newQuantity) {
+        Objects.requireNonNull(orderItemId, "orderItemId cannot be null");
+        Objects.requireNonNull(newQuantity, "newQuantity cannot be null");
+
+        final OrderItem orderItem = findOrderItem(orderItemId);
+        orderItem.changeQuantity(newQuantity);
+
+        this.recalculateTotals();
+    }
+
     private void changeStatus(final OrderStatus newStatus) {
         Objects.requireNonNull(newStatus, "newStatus cannot be null");
         if (this.status().cantBeUpdatedTo(newStatus)) {
@@ -187,6 +199,14 @@ public class Order {
         if (this.items().isEmpty()) {
             throw OrderCannotBePlacedException.becauseHasNoOrderItems(this.id());
         }
+    }
+
+    private OrderItem findOrderItem(final OrderItemId orderItemId) {
+        Objects.requireNonNull(orderItemId, "orderItemId cannot be null");
+        return this.items().stream()
+                .filter(item -> item.id().equals(orderItemId))
+                .findFirst()
+                .orElseThrow(() -> new OrderDoesNotContainOrderItemException(this.id(), orderItemId));
     }
 
     public OrderId id() {

@@ -45,6 +45,12 @@ public class OrderItem {
         return orderItem;
     }
 
+    void changeQuantity(final Quantity newQuantity) {
+        Objects.requireNonNull(newQuantity, "newQuantity cannot be null");
+        this.setQuantity(newQuantity);
+        this.recalculateTotalAmount();
+    }
+
     private void recalculateTotalAmount() {
         this.setTotalAmount(this.price().multiply(this.quantity()));
     }
