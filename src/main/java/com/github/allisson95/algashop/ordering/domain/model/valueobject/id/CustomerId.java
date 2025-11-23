@@ -14,7 +14,7 @@ public record CustomerId(UUID value) {
     }
 
     public CustomerId() {
-        this(IdGenerator.generate());
+        this(IdGenerator.generateTimeBasedUUID());
     }
 
     @Override

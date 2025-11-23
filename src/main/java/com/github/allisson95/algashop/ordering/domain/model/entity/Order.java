@@ -14,7 +14,7 @@ import java.util.*;
 import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 
-public class Order {
+public class Order implements AggregateRoot<OrderId> {
 
     private OrderId id;
 

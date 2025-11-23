@@ -10,7 +10,7 @@ import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 
-public class Customer {
+public class Customer implements AggregateRoot<CustomerId> {
 
     private CustomerId id;
 

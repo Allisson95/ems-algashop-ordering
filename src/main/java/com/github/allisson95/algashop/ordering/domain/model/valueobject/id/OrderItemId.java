@@ -3,23 +3,21 @@ package com.github.allisson95.algashop.ordering.domain.model.valueobject.id;
 import com.github.allisson95.algashop.ordering.domain.model.utility.IdGenerator;
 import org.jspecify.annotations.NonNull;
 
-import java.util.UUID;
-
 import static java.util.Objects.requireNonNull;
 
-public record OrderItemId(UUID value) {
+public record OrderItemId(String value) {
 
     public OrderItemId {
         requireNonNull(value, "id cannot be null");
     }
 
     public OrderItemId() {
-        this(IdGenerator.generate());
+        this(IdGenerator.gererateTSID().toString());
     }
 
     @Override
     public @NonNull String toString() {
-        return value.toString();
+        return value;
     }
 
 }

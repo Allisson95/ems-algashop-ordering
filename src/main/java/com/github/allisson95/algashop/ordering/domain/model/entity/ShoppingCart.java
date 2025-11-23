@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class ShoppingCart {
+public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
 
     private ShoppingCartId id;
 

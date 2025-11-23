@@ -14,7 +14,7 @@ public record ShoppingCartId(UUID value) {
     }
 
     public ShoppingCartId() {
-        this(IdGenerator.generate());
+        this(IdGenerator.generateTimeBasedUUID());
     }
 
     @Override
