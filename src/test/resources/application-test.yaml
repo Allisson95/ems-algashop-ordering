@@ -1,3 +1,8 @@
+decorator:
+  datasource:
+    datasource-proxy:
+      count-query: true
+
 logging:
   level:
     net.ttddyy.dsproxy.listener: DEBUG
