@@ -28,7 +28,12 @@ class OrderPersistenceEntityRepositoryIT {
 
         this.orderPersistenceEntityRepository.persist(entity);
 
-        assertThat(this.orderPersistenceEntityRepository.existsById(entity.getId())).isTrue();
+        assertWith(this.orderPersistenceEntityRepository.findById(entity.getId()),
+                o -> assertThat(o).isPresent(),
+                o -> assertThat(o).hasValueSatisfying(
+                        e -> assertThat(e.getItems()).hasSize(2)
+                )
+        );
     }
 
     @Test

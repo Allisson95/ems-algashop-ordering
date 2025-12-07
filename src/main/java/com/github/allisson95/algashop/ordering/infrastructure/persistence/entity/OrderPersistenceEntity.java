@@ -13,23 +13,25 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
-@Builder
-@AllArgsConstructor
+import static java.util.Objects.isNull;
+
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "orders")
+@Table(name = "'order'")
 @EntityListeners(AuditingEntityListener.class)
 public class OrderPersistenceEntity {
 
     @ToString.Include
     @Id
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private Long id;
 
     private UUID customerId;
@@ -56,6 +58,9 @@ public class OrderPersistenceEntity {
 
     private String paymentMethod;
 
+    @OneToMany(mappedBy = OrderItemPersistenceEntity_.ORDER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<OrderItemPersistenceEntity> items = new LinkedHashSet<>();
+
     @CreatedBy
     private UUID createdBy;
 
@@ -70,6 +75,47 @@ public class OrderPersistenceEntity {
 
     @Version
     private Integer version;
+
+    @Builder
+    public OrderPersistenceEntity(final Long id, final UUID customerId, final BigDecimal totalAmount, final Integer totalItems, final Instant placedAt, final Instant paidAt, final Instant cancelledAt, final Instant readyAt, final BillingEmbeddable billing, final ShippingEmbeddable shipping, final String status, final String paymentMethod, final Set<OrderItemPersistenceEntity> items, final UUID createdBy, final Instant createdAt, final UUID lastModifiedBy, final Instant lastModifiedAt, final Integer version) {
+        this.id = id;
+        this.customerId = customerId;
+        this.totalAmount = totalAmount;
+        this.totalItems = totalItems;
+        this.placedAt = placedAt;
+        this.paidAt = paidAt;
+        this.cancelledAt = cancelledAt;
+        this.readyAt = readyAt;
+        this.billing = billing;
+        this.shipping = shipping;
+        this.status = status;
+        this.paymentMethod = paymentMethod;
+        this.replaceItems(items);
+        this.createdBy = createdBy;
+        this.createdAt = createdAt;
+        this.lastModifiedBy = lastModifiedBy;
+        this.lastModifiedAt = lastModifiedAt;
+        this.version = version;
+    }
+
+    public void replaceItems(final Set<OrderItemPersistenceEntity> items) {
+        if (isNull(items) || items.isEmpty()) {
+            this.items = new LinkedHashSet<>();
+            return;
+        }
+
+        this.items = new LinkedHashSet<>();
+        items.forEach(this::addItem);
+    }
+
+    public void addItem(final OrderItemPersistenceEntity item) {
+        if (isNull(item)) {
+            return;
+        }
+
+        item.setOrder(this);
+        this.items.add(item);
+    }
 
     @Override
     public final boolean equals(final Object o) {
