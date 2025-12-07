@@ -1,5 +1,7 @@
 package com.github.allisson95.algashop.ordering.infrastructure.persistence.entity;
 
+import com.github.allisson95.algashop.ordering.infrastructure.persistence.embeddable.BillingEmbeddable;
+import com.github.allisson95.algashop.ordering.infrastructure.persistence.embeddable.ShippingEmbeddable;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
@@ -43,6 +45,12 @@ public class OrderPersistenceEntity {
     private Instant cancelledAt;
 
     private Instant readyAt;
+
+    @Embedded
+    private BillingEmbeddable billing;
+
+    @Embedded
+    private ShippingEmbeddable shipping;
 
     private String status;
 
