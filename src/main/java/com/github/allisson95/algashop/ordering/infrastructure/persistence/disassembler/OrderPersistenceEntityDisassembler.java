@@ -3,14 +3,18 @@ package com.github.allisson95.algashop.ordering.infrastructure.persistence.disas
 import com.github.allisson95.algashop.ordering.domain.model.entity.Order;
 import com.github.allisson95.algashop.ordering.domain.model.entity.OrderStatus;
 import com.github.allisson95.algashop.ordering.domain.model.entity.PaymentMethod;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.Money;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.Quantity;
+import com.github.allisson95.algashop.ordering.domain.model.valueobject.*;
 import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.OrderId;
+import com.github.allisson95.algashop.ordering.infrastructure.persistence.embeddable.AddressEmbeddable;
+import com.github.allisson95.algashop.ordering.infrastructure.persistence.embeddable.BillingEmbeddable;
+import com.github.allisson95.algashop.ordering.infrastructure.persistence.embeddable.ShippingEmbeddable;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
+
+import static java.util.Objects.isNull;
 
 @Component
 public class OrderPersistenceEntityDisassembler {
@@ -25,12 +29,59 @@ public class OrderPersistenceEntityDisassembler {
                 .paidAt(orderPersistenceEntity.getPaidAt())
                 .cancelledAt(orderPersistenceEntity.getCancelledAt())
                 .readyAt(orderPersistenceEntity.getReadyAt())
-//                .billing(null)
-//                .shipping(null)
+                .billing(assembleBilling(orderPersistenceEntity.getBilling()))
+                .shipping(assembleShipping(orderPersistenceEntity.getShipping()))
                 .status(OrderStatus.valueOf(orderPersistenceEntity.getStatus()))
                 .paymentMethod(PaymentMethod.valueOf(orderPersistenceEntity.getPaymentMethod()))
                 .items(new HashSet<>())
                 .version(orderPersistenceEntity.getVersion())
+                .build();
+    }
+
+    private Billing assembleBilling(final BillingEmbeddable billing) {
+        if (isNull(billing)) {
+            return null;
+        }
+
+        return Billing.builder()
+                .fullName(new FullName(billing.getFirstName(), billing.getLastName()))
+                .document(new Document(billing.getDocument()))
+                .phone(new Phone(billing.getPhone()))
+                .email(new Email(billing.getEmail()))
+                .address(assembleAddress(billing.getAddress()))
+                .build();
+    }
+
+    private Shipping assembleShipping(final ShippingEmbeddable shipping) {
+        if (isNull(shipping)) {
+            return null;
+        }
+
+        return Shipping.builder()
+                .recipient(assembleRecipient(shipping))
+                .address(assembleAddress(shipping.getAddress()))
+                .cost(new Money(shipping.getCost()))
+                .expectedDeliveryDate(shipping.getExpectedDeliveryDate())
+                .build();
+    }
+
+    private Recipient assembleRecipient(final ShippingEmbeddable shipping) {
+        return Recipient.builder()
+                .fullName(new FullName(shipping.getRecipient().getFirstName(), shipping.getRecipient().getLastName()))
+                .document(new Document(shipping.getRecipient().getDocument()))
+                .phone(new Phone(shipping.getRecipient().getPhone()))
+                .build();
+    }
+
+    private Address assembleAddress(final AddressEmbeddable address) {
+        return Address.builder()
+                .street(address.getStreet())
+                .number(address.getNumber())
+                .complement(address.getComplement())
+                .neighborhood(address.getNeighborhood())
+                .city(address.getCity())
+                .state(address.getState())
+                .zipCode(new ZipCode(address.getZipCode()))
                 .build();
     }
 

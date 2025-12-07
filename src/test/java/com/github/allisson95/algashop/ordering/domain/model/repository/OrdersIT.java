@@ -45,8 +45,8 @@ class OrdersIT {
                 o -> assertThat(o.paidAt()).isEqualTo(order.paidAt()),
                 o -> assertThat(o.cancelledAt()).isEqualTo(order.cancelledAt()),
                 o -> assertThat(o.readyAt()).isEqualTo(order.readyAt()),
-//                o -> assertThat(o.billing()).isEqualTo(order.billing()),
-//                o -> assertThat(o.shipping()).isEqualTo(order.shipping()),
+                o -> assertThat(o.billing()).isEqualTo(order.billing()),
+                o -> assertThat(o.shipping()).isEqualTo(order.shipping()),
                 o -> assertThat(o.status()).isEqualTo(order.status()),
                 o -> assertThat(o.paymentMethod()).isEqualTo(order.paymentMethod())
         );
