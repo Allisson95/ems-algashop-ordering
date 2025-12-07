@@ -19,6 +19,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.requireNonNullElseGet;
 
 @NoArgsConstructor
 @Getter
@@ -99,22 +100,30 @@ public class OrderPersistenceEntity {
     }
 
     public void replaceItems(final Set<OrderItemPersistenceEntity> items) {
+        if (isNull(this.getItems())) {
+            this.setItems(new LinkedHashSet<>());
+        } else {
+            this.getItems().clear();
+        }
+
         if (isNull(items) || items.isEmpty()) {
-            this.items = new LinkedHashSet<>();
             return;
         }
 
-        this.items = new LinkedHashSet<>();
         items.forEach(this::addItem);
     }
 
-    public void addItem(final OrderItemPersistenceEntity item) {
+    private void addItem(final OrderItemPersistenceEntity item) {
         if (isNull(item)) {
             return;
         }
 
         item.setOrder(this);
         this.items.add(item);
+    }
+
+    private void setItems(final Set<OrderItemPersistenceEntity> items) {
+        this.items = requireNonNullElseGet(items, LinkedHashSet::new);
     }
 
     @Override

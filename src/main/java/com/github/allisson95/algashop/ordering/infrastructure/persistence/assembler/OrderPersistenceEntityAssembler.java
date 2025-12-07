@@ -1,6 +1,7 @@
 package com.github.allisson95.algashop.ordering.infrastructure.persistence.assembler;
 
 import com.github.allisson95.algashop.ordering.domain.model.entity.Order;
+import com.github.allisson95.algashop.ordering.domain.model.entity.OrderItem;
 import com.github.allisson95.algashop.ordering.domain.model.valueobject.Address;
 import com.github.allisson95.algashop.ordering.domain.model.valueobject.Billing;
 import com.github.allisson95.algashop.ordering.domain.model.valueobject.Shipping;
@@ -8,11 +9,20 @@ import com.github.allisson95.algashop.ordering.infrastructure.persistence.embedd
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.embeddable.BillingEmbeddable;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.embeddable.RecipientEmbeddable;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.embeddable.ShippingEmbeddable;
+import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.OrderItemPersistenceEntity;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+
 import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
+import static java.util.Optional.ofNullable;
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
 
 @Component
 public class OrderPersistenceEntityAssembler {
@@ -40,9 +50,28 @@ public class OrderPersistenceEntityAssembler {
         orderPersistenceEntity.setShipping(assembleShipping(order.shipping()));
         orderPersistenceEntity.setStatus(order.status().name());
         orderPersistenceEntity.setPaymentMethod(order.paymentMethod().name());
+        orderPersistenceEntity.replaceItems(mergeItems(order, orderPersistenceEntity));
         orderPersistenceEntity.setVersion(order.version());
 
         return orderPersistenceEntity;
+    }
+
+    public OrderItemPersistenceEntity fromDomain(final OrderItem orderItem) {
+        return merge(new OrderItemPersistenceEntity(), orderItem);
+    }
+
+    public OrderItemPersistenceEntity merge(final OrderItemPersistenceEntity orderItemPersistenceEntity, final OrderItem orderItem) {
+        requireNonNull(orderItemPersistenceEntity, "orderItemPersistenceEntity cannot be null");
+        requireNonNull(orderItem, "orderItem cannot be null");
+
+        orderItemPersistenceEntity.setId(orderItem.id().value().toLong());
+        orderItemPersistenceEntity.setProductId(orderItem.productId().toString());
+        orderItemPersistenceEntity.setProductName(orderItem.productName().value());
+        orderItemPersistenceEntity.setPrice(orderItem.price().value());
+        orderItemPersistenceEntity.setQuantity(orderItem.quantity().value());
+        orderItemPersistenceEntity.setTotalAmount(orderItem.totalAmount().value());
+
+        return orderItemPersistenceEntity;
     }
 
     private BillingEmbeddable assembleBilling(final Billing billing) {
@@ -92,6 +121,29 @@ public class OrderPersistenceEntityAssembler {
                 .state(address.state())
                 .zipCode(address.zipCode().value())
                 .build();
+    }
+
+    private Set<OrderItemPersistenceEntity> mergeItems(final Order order, final OrderPersistenceEntity orderPersistenceEntity) {
+        final Set<OrderItem> orderItems = order.items();
+        if (isNull(orderItems) || orderItems.isEmpty()) {
+            return new LinkedHashSet<>();
+        }
+
+        final Set<OrderItemPersistenceEntity> existingItems = orderPersistenceEntity.getItems();
+        if (isNull(existingItems) || existingItems.isEmpty()) {
+            return orderItems.stream()
+                    .map(this::fromDomain)
+                    .collect(toSet());
+        }
+
+        final Map<Long, OrderItemPersistenceEntity> existingItemMap = existingItems.stream()
+                .collect(toMap(OrderItemPersistenceEntity::getId, identity()));
+
+        return orderItems.stream()
+                .map(orderItem -> ofNullable(existingItemMap.get(orderItem.id().value().toLong()))
+                        .map(existingItem -> merge(existingItem, orderItem))
+                        .orElse(fromDomain(orderItem)))
+                .collect(toSet());
     }
 
 }
