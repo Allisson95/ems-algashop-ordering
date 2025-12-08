@@ -7,18 +7,14 @@ import com.github.allisson95.algashop.ordering.infrastructure.persistence.assemb
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.disassembler.OrderPersistenceEntityDisassembler;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.repository.OrderPersistenceEntityRepository;
+import com.github.allisson95.algashop.ordering.infrastructure.persistence.util.DomainVersionHandler;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Method;
 import java.util.Optional;
-
-import static java.util.Objects.requireNonNull;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -74,37 +70,7 @@ public class OrdersPersistenceProvider implements Orders {
 
     @SneakyThrows
     private void updateVersion(final Order order, final OrderPersistenceEntity orderEntity) {
-        final var domainVersionMethodHandler = DomainVersionMethodHandler.of(order, orderEntity.getVersion());
-        ReflectionUtils.doWithMethods(Order.class, domainVersionMethodHandler, domainVersionMethodHandler);
-    }
-
-    static class DomainVersionMethodHandler implements ReflectionUtils.MethodFilter, ReflectionUtils.MethodCallback {
-
-        private final Object target;
-
-        private final Object version;
-
-        private DomainVersionMethodHandler(final Object target, final Object version) {
-            this.target = requireNonNull(target);
-            this.version = requireNonNull(version);
-        }
-
-        static DomainVersionMethodHandler of(final Object target, final Object version) {
-            return new DomainVersionMethodHandler(target, version);
-        }
-
-        @Override
-        public void doWith(final @NonNull Method method) throws IllegalArgumentException, IllegalAccessException {
-            ReflectionUtils.makeAccessible(method);
-            ReflectionUtils.invokeMethod(method, target, version);
-            method.setAccessible(false);
-        }
-
-        @Override
-        public boolean matches(final Method method) {
-            return method.getName().equals("setVersion") && method.getParameterCount() == 1;
-        }
-
+        DomainVersionHandler.setVersion(order, orderEntity.getVersion());
     }
 
 }

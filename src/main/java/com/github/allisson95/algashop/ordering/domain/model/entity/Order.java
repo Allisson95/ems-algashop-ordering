@@ -42,10 +42,10 @@ public class Order implements AggregateRoot<OrderId> {
 
     private Set<OrderItem> items;
 
-    private Integer version;
+    private Long version;
 
     @Builder(builderClassName = "ExistingOrderBuilder", builderMethodName = "existingOrder")
-    private Order(final OrderId id, final CustomerId customerId, final Money totalAmount, final Quantity totalItems, final Instant placedAt, final Instant paidAt, final Instant cancelledAt, final Instant readyAt, final Billing billing, final Shipping shipping, final OrderStatus status, final PaymentMethod paymentMethod, final Set<OrderItem> items, final Integer version) {
+    private Order(final OrderId id, final CustomerId customerId, final Money totalAmount, final Quantity totalItems, final Instant placedAt, final Instant paidAt, final Instant cancelledAt, final Instant readyAt, final Billing billing, final Shipping shipping, final OrderStatus status, final PaymentMethod paymentMethod, final Set<OrderItem> items) {
         this.setId(id);
         this.setCustomerId(customerId);
         this.setTotalAmount(totalAmount);
@@ -59,11 +59,10 @@ public class Order implements AggregateRoot<OrderId> {
         this.setStatus(status);
         this.setPaymentMethod(paymentMethod);
         this.setItems(items);
-        this.setVersion(version);
     }
 
     public static Order draft(final CustomerId customerId) {
-        return new Order(new OrderId(), customerId, Money.ZERO, Quantity.ZERO, null, null, null, null, null, null, OrderStatus.DRAFT, null, new LinkedHashSet<>(), null);
+        return new Order(new OrderId(), customerId, Money.ZERO, Quantity.ZERO, null, null, null, null, null, null, OrderStatus.DRAFT, null, new LinkedHashSet<>());
     }
 
     public void markAsPaid() {
@@ -332,11 +331,11 @@ public class Order implements AggregateRoot<OrderId> {
         this.items = items;
     }
 
-    public Integer version() {
+    private Long getVersion() {
         return version;
     }
 
-    private void setVersion(final Integer version) {
+    private void setVersion(final Long version) {
         this.version = version;
     }
 

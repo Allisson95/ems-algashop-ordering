@@ -75,10 +75,10 @@ public class OrderPersistenceEntity {
     private Instant lastModifiedAt;
 
     @Version
-    private Integer version;
+    private Long version;
 
     @Builder
-    public OrderPersistenceEntity(final Long id, final UUID customerId, final BigDecimal totalAmount, final Integer totalItems, final Instant placedAt, final Instant paidAt, final Instant cancelledAt, final Instant readyAt, final BillingEmbeddable billing, final ShippingEmbeddable shipping, final String status, final String paymentMethod, final Set<OrderItemPersistenceEntity> items, final UUID createdBy, final Instant createdAt, final UUID lastModifiedBy, final Instant lastModifiedAt, final Integer version) {
+    public OrderPersistenceEntity(final Long id, final UUID customerId, final BigDecimal totalAmount, final Integer totalItems, final Instant placedAt, final Instant paidAt, final Instant cancelledAt, final Instant readyAt, final BillingEmbeddable billing, final ShippingEmbeddable shipping, final String status, final String paymentMethod, final Set<OrderItemPersistenceEntity> items, final UUID createdBy, final Instant createdAt, final UUID lastModifiedBy, final Instant lastModifiedAt, final Long version) {
         this.id = id;
         this.customerId = customerId;
         this.totalAmount = totalAmount;

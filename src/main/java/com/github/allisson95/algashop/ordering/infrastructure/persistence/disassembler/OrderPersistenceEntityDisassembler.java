@@ -14,6 +14,7 @@ import com.github.allisson95.algashop.ordering.infrastructure.persistence.embedd
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.embeddable.ShippingEmbeddable;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.OrderItemPersistenceEntity;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
+import com.github.allisson95.algashop.ordering.infrastructure.persistence.util.DomainVersionHandler;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashSet;
@@ -26,7 +27,7 @@ import static java.util.stream.Collectors.toSet;
 public class OrderPersistenceEntityDisassembler {
 
     public Order toDomainEntity(final OrderPersistenceEntity orderPersistenceEntity) {
-        return Order.existingOrder()
+        final Order order = Order.existingOrder()
                 .id(new OrderId(orderPersistenceEntity.getId()))
                 .customerId(new CustomerId(orderPersistenceEntity.getCustomerId()))
                 .totalAmount(new Money(orderPersistenceEntity.getTotalAmount()))
@@ -40,8 +41,9 @@ public class OrderPersistenceEntityDisassembler {
                 .status(OrderStatus.valueOf(orderPersistenceEntity.getStatus()))
                 .paymentMethod(PaymentMethod.valueOf(orderPersistenceEntity.getPaymentMethod()))
                 .items(assembleOrderItems(orderPersistenceEntity.getItems()))
-                .version(orderPersistenceEntity.getVersion())
                 .build();
+        DomainVersionHandler.setVersion(order, orderPersistenceEntity.getVersion());
+        return order;
     }
 
     private Billing assembleBilling(final BillingEmbeddable billing) {

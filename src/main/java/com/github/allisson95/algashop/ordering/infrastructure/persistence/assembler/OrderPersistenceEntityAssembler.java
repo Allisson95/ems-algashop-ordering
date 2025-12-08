@@ -11,6 +11,7 @@ import com.github.allisson95.algashop.ordering.infrastructure.persistence.embedd
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.embeddable.ShippingEmbeddable;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.OrderItemPersistenceEntity;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
+import com.github.allisson95.algashop.ordering.infrastructure.persistence.util.DomainVersionHandler;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashSet;
@@ -51,7 +52,7 @@ public class OrderPersistenceEntityAssembler {
         orderPersistenceEntity.setStatus(order.status().name());
         orderPersistenceEntity.setPaymentMethod(order.paymentMethod().name());
         orderPersistenceEntity.replaceItems(mergeItems(order, orderPersistenceEntity));
-        orderPersistenceEntity.setVersion(order.version());
+        orderPersistenceEntity.setVersion(DomainVersionHandler.getVersion(order));
 
         return orderPersistenceEntity;
     }
