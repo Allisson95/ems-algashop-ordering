@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
@@ -19,8 +20,9 @@ import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
-@Component
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
+@Component
 public class OrdersPersistenceProvider implements Orders {
 
     private final OrderPersistenceEntityRepository repository;
@@ -33,7 +35,7 @@ public class OrdersPersistenceProvider implements Orders {
 
     @Override
     public Optional<Order> ofId(final OrderId orderId) {
-        return this.repository.findById(orderId.value().toLong())
+        return this.repository.findOrderPersistenceEntityWithItemsById(orderId.value().toLong())
                 .map(this.disassembler::toDomainEntity);
     }
 
@@ -43,8 +45,9 @@ public class OrdersPersistenceProvider implements Orders {
     }
 
     @Override
+    @Transactional
     public void add(final Order order) {
-        this.repository.findById(order.id().value().toLong())
+        this.repository.findOrderPersistenceEntityWithItemsById(order.id().value().toLong())
                 .ifPresentOrElse(
                         orderPersistenceEntity -> this.updateOrder(orderPersistenceEntity, order),
                         () -> this.insertOrder(order)

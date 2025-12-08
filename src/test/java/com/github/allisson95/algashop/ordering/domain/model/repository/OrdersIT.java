@@ -1,11 +1,13 @@
 package com.github.allisson95.algashop.ordering.domain.model.repository;
 
+import com.github.allisson95.algashop.ordering.DataJpaCleanUpExtension;
 import com.github.allisson95.algashop.ordering.domain.model.entity.Order;
 import com.github.allisson95.algashop.ordering.domain.model.entity.OrderStatus;
 import com.github.allisson95.algashop.ordering.domain.model.entity.OrderTestDataBuilder;
 import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.OrderId;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.configuration.SpringDataJpaConfiguration;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
@@ -18,11 +20,14 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.*;
 
 @Import(SpringDataJpaConfiguration.class)
-@DataJpaTest(showSql = false, includeFilters = {
-        @ComponentScan.Filter(type = FilterType.REGEX, pattern = "com.github.allisson95.algashop.ordering.infrastructure.persistence.provider.*PersistenceProvider"),
-        @ComponentScan.Filter(type = FilterType.REGEX, pattern = "com.github.allisson95.algashop.ordering.infrastructure.persistence.assembler.*PersistenceEntityAssembler"),
-        @ComponentScan.Filter(type = FilterType.REGEX, pattern = "com.github.allisson95.algashop.ordering.infrastructure.persistence.disassembler.*PersistenceEntityDisassembler"),
-})
+@DataJpaTest(
+        showSql = false,
+        useDefaultFilters = false,
+        includeFilters = {
+                @ComponentScan.Filter(type = FilterType.REGEX, pattern = ".*Persistence(Provider|EntityAssembler|EntityDisassembler)"),
+        }
+)
+@ExtendWith(DataJpaCleanUpExtension.class)
 class OrdersIT {
 
     @Autowired
