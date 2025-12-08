@@ -1,11 +1,13 @@
 package com.github.allisson95.algashop.ordering.infrastructure.persistence.provider;
 
 import com.github.allisson95.algashop.ordering.DataJpaCleanUpExtension;
+import com.github.allisson95.algashop.ordering.DataSourceProxyQueryCountConfiguration;
 import com.github.allisson95.algashop.ordering.domain.model.entity.Order;
 import com.github.allisson95.algashop.ordering.domain.model.entity.OrderStatus;
 import com.github.allisson95.algashop.ordering.domain.model.entity.OrderTestDataBuilder;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.configuration.SpringDataJpaConfiguration;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.repository.OrderPersistenceEntityRepository;
+import io.hypersistence.utils.jdbc.validator.SQLStatementCountValidator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 
-@Import(SpringDataJpaConfiguration.class)
+@Import({ SpringDataJpaConfiguration.class, DataSourceProxyQueryCountConfiguration.class })
 @DataJpaTest(
         showSql = false,
         useDefaultFilters = false,
@@ -74,9 +76,11 @@ public class OrdersPersistenceProviderIT {
         Order order = OrderTestDataBuilder.anOrder().build();
         persistenceProvider.add(order);
 
+        SQLStatementCountValidator.reset();
         assertThatNoException().isThrownBy(
                 () -> persistenceProvider.ofId(order.id())
         );
+        SQLStatementCountValidator.assertSelectCount(1); // Validate N+1 problem
     }
 
 }
