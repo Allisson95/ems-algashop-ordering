@@ -8,6 +8,8 @@ import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.util.DomainVersionHandler;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class CustomerPersistenceEntityDisassembler {
 
@@ -15,7 +17,7 @@ public class CustomerPersistenceEntityDisassembler {
         final Customer customer = Customer.existingCustomer()
                 .id(new CustomerId(customerPersistenceEntity.getId()))
                 .fullName(new FullName(customerPersistenceEntity.getFirstName(), customerPersistenceEntity.getLastName()))
-                .birthDate(new BirthDate(customerPersistenceEntity.getBirthDate()))
+                .birthDate(Optional.ofNullable(customerPersistenceEntity.getBirthDate()).map(BirthDate::new).orElse(null))
                 .email(new Email(customerPersistenceEntity.getEmail()))
                 .phone(new Phone(customerPersistenceEntity.getPhone()))
                 .document(new Document(customerPersistenceEntity.getDocument()))
