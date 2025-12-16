@@ -32,6 +32,8 @@ public class ShoppingCartItem {
 
     private Boolean available;
 
+    private Long version;
+
     @Builder(builderClassName = "ExistingShoppingCartItemBuilder", builderMethodName = "existingShoppingCartItem")
     private ShoppingCartItem(final ShoppingCartItemId id, final ShoppingCartId shoppingCartId, final ProductId productId, final ProductName productName, final Money price, final Quantity quantity, final Money totalAmount, final Boolean available) {
         this.setId(id);
@@ -153,6 +155,14 @@ public class ShoppingCartItem {
     private void setAvailable(final Boolean available) {
         requireNonNull(available, "available cannot be null");
         this.available = available;
+    }
+
+    private Long getVersion() {
+        return version;
+    }
+
+    private void setVersion(final Long version) {
+        this.version = version;
     }
 
     @Override

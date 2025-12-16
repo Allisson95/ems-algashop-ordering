@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class ShoppingCartTestDataBuilder {
 
-    private CustomerId customerId = new CustomerId();
+    private CustomerId customerId = CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
 
     private boolean withItems = true;
 
