@@ -54,7 +54,7 @@ class ShoppingCartsIT {
         final ShoppingCart actual = possibleShoppingCart.get();
 
         assertWith(actual,
-                sc -> assertThat(sc).usingRecursiveComparison().ignoringFields("items").isEqualTo(shoppingCart),
+                sc -> assertThat(sc).usingRecursiveComparison().ignoringFields("createdAt", "items").isEqualTo(shoppingCart),
                 sc -> assertThatCollection(sc.items()).containsExactlyInAnyOrderElementsOf(shoppingCart.items()),
                 sc -> assertThatCollection(sc.items()).usingRecursiveFieldByFieldElementComparator().containsExactlyInAnyOrderElementsOf(shoppingCart.items())
         );

@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.Persistable;
@@ -42,13 +43,14 @@ public class ShoppingCartPersistenceEntity implements Persistable<UUID> {
 
     private Integer totalItems;
 
-    private Instant createdAt;
-
     @OneToMany(mappedBy = ShoppingCartItemPersistenceEntity_.SHOPPING_CART, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ShoppingCartItemPersistenceEntity> items = new LinkedHashSet<>();
 
     @CreatedBy
     private UUID createdBy;
+
+    @CreatedDate
+    private Instant createdAt;
 
     @LastModifiedBy
     private UUID lastModifiedBy;
