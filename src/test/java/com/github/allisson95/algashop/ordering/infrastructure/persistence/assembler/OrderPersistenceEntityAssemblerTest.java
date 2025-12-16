@@ -93,13 +93,13 @@ class OrderPersistenceEntityAssemblerTest {
         final OrderItem itemToRemove = order.items().iterator().next();
         order.removeItem(itemToRemove.id());
 
-        assertThat(order.items()).hasSize(2);
-        assertThat(existingOrderEntity.getItems()).hasSize(3);
+        assertThat(order.items()).hasSize(1);
+        assertThat(existingOrderEntity.getItems()).hasSize(2);
 
         assembler.merge(existingOrderEntity, order);
 
         assertWith(existingOrderEntity.getItems(),
-                i -> assertThat(i).hasSize(2),
+                i -> assertThat(i).hasSize(1),
                 i -> assertThatCollection(i).doesNotContain(assembler.fromDomain(itemToRemove))
         );
     }

@@ -66,9 +66,8 @@ public class OrderTestDataBuilder {
         order.changeShipping(this.shipping);
 
         if (this.withItems) {
-            order.addItem(ProductTestDataBuilder.aProduct().build(), new Quantity(faker.number().numberBetween(1, 10)));
-            order.addItem(ProductTestDataBuilder.aProduct().build(), new Quantity(faker.number().numberBetween(1, 10)));
-            order.addItem(ProductTestDataBuilder.aProduct().build(), new Quantity(faker.number().numberBetween(1, 10)));
+            order.addItem(ProductTestDataBuilder.aProduct().price(new Money("3000")).build(), new Quantity(2));
+            order.addItem(ProductTestDataBuilder.aProduct().price(new Money("200")).build(), new Quantity(1));
         }
 
         switch (this.status) {
