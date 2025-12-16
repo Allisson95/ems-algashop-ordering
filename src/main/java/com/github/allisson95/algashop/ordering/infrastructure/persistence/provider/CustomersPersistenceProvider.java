@@ -61,6 +61,11 @@ class CustomersPersistenceProvider implements Customers {
                 .map(this.disassembler::toDomainEntity);
     }
 
+    @Override
+    public boolean isEmailUnique(final Email email, final CustomerId exceptedCustomerId) {
+        return !this.repository.existsByEmailAndIdNot(email.value(), exceptedCustomerId.value());
+    }
+
     private void updateCustomer(final CustomerPersistenceEntity customerPersistenceEntity, final Customer customer) {
         this.assembler.merge(customerPersistenceEntity, customer);
         this.entityManager.detach(customerPersistenceEntity);

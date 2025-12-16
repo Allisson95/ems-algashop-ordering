@@ -10,4 +10,6 @@ public interface CustomerPersistenceEntityRepository extends BaseJpaRepository<C
 
     Optional<CustomerPersistenceEntity> findByEmail(String email);
 
+    boolean existsByEmailAndIdNot(String email, UUID id);
+
 }

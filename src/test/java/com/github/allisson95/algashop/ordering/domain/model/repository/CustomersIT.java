@@ -124,4 +124,21 @@ class CustomersIT {
         assertThat(possibleCustomer).isEmpty();
     }
 
+    @Test
+    void shouldReturnTrueIfEmailIsUnique() {
+        final Customer customer = CustomerTestDataBuilder.newCustomer().build();
+        customers.add(customer);
+
+        assertThat(customers.isEmailUnique(customer.email(), customer.id())).isTrue();
+        assertThat(customers.isEmailUnique(new Email(UUID.randomUUID().toString() + "@algashop.com"), new CustomerId())).isTrue();
+    }
+
+    @Test
+    void shouldReturnFalseIfEmailIsNotUnique() {
+        final Customer customer = CustomerTestDataBuilder.newCustomer().build();
+        customers.add(customer);
+
+        assertThat(customers.isEmailUnique(customer.email(), new CustomerId())).isFalse();
+    }
+
 }
