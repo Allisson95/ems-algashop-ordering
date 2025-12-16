@@ -2,6 +2,7 @@ package com.github.allisson95.algashop.ordering.domain.model.repository;
 
 import com.github.allisson95.algashop.ordering.domain.model.entity.Customer;
 import com.github.allisson95.algashop.ordering.domain.model.entity.CustomerTestDataBuilder;
+import com.github.allisson95.algashop.ordering.domain.model.valueobject.Email;
 import com.github.allisson95.algashop.ordering.domain.model.valueobject.FullName;
 import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.configuration.SpringDataJpaConfiguration;
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -100,6 +102,26 @@ class CustomersIT {
 
         assertThat(customers.exists(customer.id())).isTrue();
         assertThat(customers.exists(new CustomerId())).isFalse();
+    }
+
+    @Test
+    void shouldFindByEmail() {
+        final Customer customer = CustomerTestDataBuilder.newCustomer().build();
+        customers.add(customer);
+
+        final Optional<Customer> possibleCustomer = customers.ofEmail(customer.email());
+
+        assertThat(possibleCustomer).isPresent();
+    }
+
+    @Test
+    void shouldFindByEmailReturnsEmptyIfCustomerWithProvidedEmailDoesNotExist() {
+        final Customer customer = CustomerTestDataBuilder.newCustomer().build();
+        customers.add(customer);
+
+        final Optional<Customer> possibleCustomer = customers.ofEmail(new Email(UUID.randomUUID().toString() + "@algashop.com"));
+
+        assertThat(possibleCustomer).isEmpty();
     }
 
 }

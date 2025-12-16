@@ -3,8 +3,11 @@ package com.github.allisson95.algashop.ordering.infrastructure.persistence.repos
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceEntity;
 import io.hypersistence.utils.spring.repository.BaseJpaRepository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public interface CustomerPersistenceEntityRepository extends BaseJpaRepository<CustomerPersistenceEntity, UUID> {
+
+    Optional<CustomerPersistenceEntity> findByEmail(String email);
 
 }
