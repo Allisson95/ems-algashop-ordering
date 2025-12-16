@@ -9,7 +9,6 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
@@ -28,7 +27,7 @@ import static java.util.Objects.requireNonNullElseGet;
 @Entity
 @Table(name = "shopping_cart")
 @EntityListeners(AuditingEntityListener.class)
-public class ShoppingCartPersistenceEntity implements Persistable<UUID> {
+public class ShoppingCartPersistenceEntity extends AbstractEntity<UUID> {
 
     @ToString.Include
     @Id
@@ -60,15 +59,6 @@ public class ShoppingCartPersistenceEntity implements Persistable<UUID> {
 
     @Version
     private Long version;
-
-    @Transient
-    private boolean isNew = true;
-
-    @PostPersist
-    @PostLoad
-    void markNotNew() {
-        this.isNew = false;
-    }
 
     public UUID getCustomerId() {
         return this.customer.getId();

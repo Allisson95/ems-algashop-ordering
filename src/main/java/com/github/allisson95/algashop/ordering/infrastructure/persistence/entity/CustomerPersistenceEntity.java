@@ -7,7 +7,6 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
@@ -23,7 +22,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "customer")
 @EntityListeners(AuditingEntityListener.class)
-public class CustomerPersistenceEntity implements Persistable<UUID> {
+public class CustomerPersistenceEntity extends AbstractEntity<UUID> {
 
     @ToString.Include
     @Id
@@ -69,15 +68,5 @@ public class CustomerPersistenceEntity implements Persistable<UUID> {
 
     @Version
     private Long version;
-
-    @Builder.Default
-    @Transient
-    private boolean isNew = true;
-
-    @PostPersist
-    @PostLoad
-    void markNotNew() {
-        this.isNew = false;
-    }
 
 }
