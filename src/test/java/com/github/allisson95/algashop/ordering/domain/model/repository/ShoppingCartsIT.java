@@ -91,6 +91,18 @@ class ShoppingCartsIT {
     }
 
     @Test
+    void shouldVerifyIfShoppingCartExistsByCustomerId() {
+        final ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().build();
+        shoppingCarts.add(shoppingCart);
+
+        boolean exists = shoppingCarts.existsByCustomer(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID);
+        assertThat(exists).isTrue();
+
+        exists = shoppingCarts.existsByCustomer(new CustomerId());
+        assertThat(exists).isFalse();
+    }
+
+    @Test
     void shouldRemoveShoppingCart() {
         final ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().build();
         shoppingCarts.add(shoppingCart);

@@ -10,4 +10,6 @@ public interface ShoppingCarts extends RemoveCapableRepository<ShoppingCart, Sho
 
     Optional<ShoppingCart> ofCustomer(CustomerId customerId);
 
+    boolean existsByCustomer(CustomerId customerId);
+
 }

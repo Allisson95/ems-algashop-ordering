@@ -20,6 +20,8 @@ public interface ShoppingCartPersistenceEntityRepository extends JpaRepository<S
 
     Optional<ShoppingCartPersistenceEntity> findByCustomer_Id(UUID customerId);
 
+    boolean existsByCustomer_Id(UUID customerId);
+
     @Modifying
     @Transactional
     @Query("""

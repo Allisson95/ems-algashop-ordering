@@ -78,6 +78,11 @@ class ShoppingCartsPersistenceProvider implements ShoppingCarts {
                 .map(this.disassembler::toDomainEntity);
     }
 
+    @Override
+    public boolean existsByCustomer(final CustomerId customerId) {
+        return this.repository.existsByCustomer_Id(customerId.value());
+    }
+
     private void updateShoppingCart(final ShoppingCartPersistenceEntity shoppingCartPersistenceEntity, final ShoppingCart shoppingCart) {
         this.assembler.merge(shoppingCartPersistenceEntity, shoppingCart);
         this.entityManager.detach(shoppingCartPersistenceEntity);
