@@ -1,8 +1,8 @@
 package com.github.allisson95.algashop.ordering.infrastructure.persistence.assembler;
 
-import com.github.allisson95.algashop.ordering.domain.model.entity.Order;
-import com.github.allisson95.algashop.ordering.domain.model.entity.OrderItem;
-import com.github.allisson95.algashop.ordering.domain.model.entity.OrderTestDataBuilder;
+import com.github.allisson95.algashop.ordering.domain.model.order.Order;
+import com.github.allisson95.algashop.ordering.domain.model.order.OrderItem;
+import com.github.allisson95.algashop.ordering.domain.model.order.OrderTestDataBuilder;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceEntityTestDataBuilder;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntityTestDataBuilder;

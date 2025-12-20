@@ -1,14 +1,14 @@
 package com.github.allisson95.algashop.ordering.infrastructure.persistence.disassembler;
 
-import com.github.allisson95.algashop.ordering.domain.model.entity.ShoppingCart;
-import com.github.allisson95.algashop.ordering.domain.model.entity.ShoppingCartItem;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.Money;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.ProductName;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.Quantity;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.CustomerId;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.ProductId;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.ShoppingCartId;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.ShoppingCartItemId;
+import com.github.allisson95.algashop.ordering.domain.model.commons.Money;
+import com.github.allisson95.algashop.ordering.domain.model.commons.Quantity;
+import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerId;
+import com.github.allisson95.algashop.ordering.domain.model.product.ProductId;
+import com.github.allisson95.algashop.ordering.domain.model.product.ProductName;
+import com.github.allisson95.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
+import com.github.allisson95.algashop.ordering.domain.model.shoppingcart.ShoppingCartId;
+import com.github.allisson95.algashop.ordering.domain.model.shoppingcart.ShoppingCartItem;
+import com.github.allisson95.algashop.ordering.domain.model.shoppingcart.ShoppingCartItemId;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.ShoppingCartItemPersistenceEntity;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.ShoppingCartPersistenceEntity;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.util.DomainVersionHandler;

@@ -1,9 +1,9 @@
 package com.github.allisson95.algashop.ordering.infrastructure.persistence.provider;
 
-import com.github.allisson95.algashop.ordering.domain.model.entity.Customer;
-import com.github.allisson95.algashop.ordering.domain.model.repository.Customers;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.Email;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.CustomerId;
+import com.github.allisson95.algashop.ordering.domain.model.commons.Email;
+import com.github.allisson95.algashop.ordering.domain.model.customer.Customer;
+import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerId;
+import com.github.allisson95.algashop.ordering.domain.model.customer.Customers;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.assembler.CustomerPersistenceEntityAssembler;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.disassembler.CustomerPersistenceEntityDisassembler;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceEntity;

@@ -1,8 +1,8 @@
 package com.github.allisson95.algashop.ordering.infrastructure.persistence.assembler;
 
-import com.github.allisson95.algashop.ordering.domain.model.entity.Customer;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.Address;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.BirthDate;
+import com.github.allisson95.algashop.ordering.domain.model.commons.Address;
+import com.github.allisson95.algashop.ordering.domain.model.customer.BirthDate;
+import com.github.allisson95.algashop.ordering.domain.model.customer.Customer;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.embeddable.AddressEmbeddable;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceEntity;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.util.DomainVersionHandler;

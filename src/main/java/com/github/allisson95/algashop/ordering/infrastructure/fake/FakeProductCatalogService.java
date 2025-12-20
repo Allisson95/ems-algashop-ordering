@@ -1,10 +1,10 @@
 package com.github.allisson95.algashop.ordering.infrastructure.fake;
 
-import com.github.allisson95.algashop.ordering.domain.model.service.ProductCatalogService;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.Money;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.Product;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.ProductName;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.ProductId;
+import com.github.allisson95.algashop.ordering.domain.model.commons.Money;
+import com.github.allisson95.algashop.ordering.domain.model.product.Product;
+import com.github.allisson95.algashop.ordering.domain.model.product.ProductCatalogService;
+import com.github.allisson95.algashop.ordering.domain.model.product.ProductId;
+import com.github.allisson95.algashop.ordering.domain.model.product.ProductName;
 
 import java.util.Optional;
 

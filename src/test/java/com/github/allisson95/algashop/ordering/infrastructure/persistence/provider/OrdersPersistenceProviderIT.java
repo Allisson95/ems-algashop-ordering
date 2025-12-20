@@ -2,10 +2,10 @@ package com.github.allisson95.algashop.ordering.infrastructure.persistence.provi
 
 import com.github.allisson95.algashop.ordering.DataJpaCleanUpExtension;
 import com.github.allisson95.algashop.ordering.DataSourceProxyQueryCountConfiguration;
-import com.github.allisson95.algashop.ordering.domain.model.entity.CustomerTestDataBuilder;
-import com.github.allisson95.algashop.ordering.domain.model.entity.Order;
-import com.github.allisson95.algashop.ordering.domain.model.entity.OrderStatus;
-import com.github.allisson95.algashop.ordering.domain.model.entity.OrderTestDataBuilder;
+import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
+import com.github.allisson95.algashop.ordering.domain.model.order.Order;
+import com.github.allisson95.algashop.ordering.domain.model.order.OrderStatus;
+import com.github.allisson95.algashop.ordering.domain.model.order.OrderTestDataBuilder;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.configuration.SpringDataJpaConfiguration;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.repository.OrderPersistenceEntityRepository;
 import io.hypersistence.utils.jdbc.validator.SQLStatementCountValidator;

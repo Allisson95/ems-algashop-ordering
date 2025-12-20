@@ -1,7 +1,7 @@
 package com.github.allisson95.algashop.ordering.infrastructure.persistence.assembler;
 
-import com.github.allisson95.algashop.ordering.domain.model.entity.ShoppingCart;
-import com.github.allisson95.algashop.ordering.domain.model.entity.ShoppingCartItem;
+import com.github.allisson95.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
+import com.github.allisson95.algashop.ordering.domain.model.shoppingcart.ShoppingCartItem;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.ShoppingCartItemPersistenceEntity;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.ShoppingCartPersistenceEntity;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.repository.CustomerPersistenceEntityRepository;

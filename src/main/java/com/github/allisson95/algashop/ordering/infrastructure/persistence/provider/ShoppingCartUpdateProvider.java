@@ -1,8 +1,8 @@
 package com.github.allisson95.algashop.ordering.infrastructure.persistence.provider;
 
-import com.github.allisson95.algashop.ordering.domain.model.service.ShoppingCartProductAdjustmentService;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.Money;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.ProductId;
+import com.github.allisson95.algashop.ordering.domain.model.commons.Money;
+import com.github.allisson95.algashop.ordering.domain.model.product.ProductId;
+import com.github.allisson95.algashop.ordering.domain.model.shoppingcart.ShoppingCartProductAdjustmentService;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.repository.ShoppingCartPersistenceEntityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

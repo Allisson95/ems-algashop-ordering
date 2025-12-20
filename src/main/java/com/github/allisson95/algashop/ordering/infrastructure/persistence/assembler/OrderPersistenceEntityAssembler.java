@@ -1,10 +1,10 @@
 package com.github.allisson95.algashop.ordering.infrastructure.persistence.assembler;
 
-import com.github.allisson95.algashop.ordering.domain.model.entity.Order;
-import com.github.allisson95.algashop.ordering.domain.model.entity.OrderItem;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.Address;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.Billing;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.Shipping;
+import com.github.allisson95.algashop.ordering.domain.model.commons.Address;
+import com.github.allisson95.algashop.ordering.domain.model.order.Billing;
+import com.github.allisson95.algashop.ordering.domain.model.order.Order;
+import com.github.allisson95.algashop.ordering.domain.model.order.OrderItem;
+import com.github.allisson95.algashop.ordering.domain.model.order.Shipping;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.embeddable.AddressEmbeddable;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.embeddable.BillingEmbeddable;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.embeddable.RecipientEmbeddable;

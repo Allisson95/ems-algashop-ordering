@@ -1,8 +1,10 @@
 package com.github.allisson95.algashop.ordering.infrastructure.persistence.disassembler;
 
-import com.github.allisson95.algashop.ordering.domain.model.entity.Customer;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.*;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.CustomerId;
+import com.github.allisson95.algashop.ordering.domain.model.commons.*;
+import com.github.allisson95.algashop.ordering.domain.model.customer.BirthDate;
+import com.github.allisson95.algashop.ordering.domain.model.customer.Customer;
+import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerId;
+import com.github.allisson95.algashop.ordering.domain.model.customer.LoyaltyPoints;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.embeddable.AddressEmbeddable;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceEntity;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.util.DomainVersionHandler;

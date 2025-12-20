@@ -1,8 +1,8 @@
 package com.github.allisson95.algashop.ordering.infrastructure.persistence.repository;
 
 import com.github.allisson95.algashop.ordering.DataJpaCleanUpExtension;
-import com.github.allisson95.algashop.ordering.domain.model.entity.CustomerTestDataBuilder;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.CustomerId;
+import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerId;
+import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.configuration.SpringDataJpaConfiguration;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceEntity;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceEntityTestDataBuilder;

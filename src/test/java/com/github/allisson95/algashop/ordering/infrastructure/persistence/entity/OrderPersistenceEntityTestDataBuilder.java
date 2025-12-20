@@ -1,7 +1,7 @@
 package com.github.allisson95.algashop.ordering.infrastructure.persistence.entity;
 
-import com.github.allisson95.algashop.ordering.domain.model.utility.IdGenerator;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.ProductId;
+import com.github.allisson95.algashop.ordering.domain.model.IdGenerator;
+import com.github.allisson95.algashop.ordering.domain.model.product.ProductId;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity.OrderPersistenceEntityBuilder;
 
 import java.math.BigDecimal;

@@ -2,14 +2,14 @@ package com.github.allisson95.algashop.ordering.infrastructure.persistence.provi
 
 import com.github.allisson95.algashop.ordering.DataJpaCleanUpExtension;
 import com.github.allisson95.algashop.ordering.DataSourceProxyQueryCountConfiguration;
-import com.github.allisson95.algashop.ordering.domain.model.entity.CustomerTestDataBuilder;
-import com.github.allisson95.algashop.ordering.domain.model.entity.ProductTestDataBuilder;
-import com.github.allisson95.algashop.ordering.domain.model.entity.ShoppingCart;
-import com.github.allisson95.algashop.ordering.domain.model.entity.ShoppingCartTestDataBuilder;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.Money;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.Product;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.Quantity;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.ProductId;
+import com.github.allisson95.algashop.ordering.domain.model.commons.Money;
+import com.github.allisson95.algashop.ordering.domain.model.commons.Quantity;
+import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
+import com.github.allisson95.algashop.ordering.domain.model.product.Product;
+import com.github.allisson95.algashop.ordering.domain.model.product.ProductId;
+import com.github.allisson95.algashop.ordering.domain.model.product.ProductTestDataBuilder;
+import com.github.allisson95.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
+import com.github.allisson95.algashop.ordering.domain.model.shoppingcart.ShoppingCartTestDataBuilder;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.configuration.SpringDataJpaConfiguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

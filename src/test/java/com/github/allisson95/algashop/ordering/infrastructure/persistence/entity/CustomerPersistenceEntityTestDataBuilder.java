@@ -5,7 +5,7 @@ import com.github.allisson95.algashop.ordering.infrastructure.persistence.embedd
 import java.time.Instant;
 import java.time.LocalDate;
 
-import static com.github.allisson95.algashop.ordering.domain.model.entity.CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
+import static com.github.allisson95.algashop.ordering.domain.model.customer.CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID;
 
 public class CustomerPersistenceEntityTestDataBuilder {
 

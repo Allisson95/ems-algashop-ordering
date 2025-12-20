@@ -1,14 +1,10 @@
 package com.github.allisson95.algashop.ordering.infrastructure.persistence.disassembler;
 
-import com.github.allisson95.algashop.ordering.domain.model.entity.Order;
-import com.github.allisson95.algashop.ordering.domain.model.entity.OrderItem;
-import com.github.allisson95.algashop.ordering.domain.model.entity.OrderStatus;
-import com.github.allisson95.algashop.ordering.domain.model.entity.PaymentMethod;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.*;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.CustomerId;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.OrderId;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.OrderItemId;
-import com.github.allisson95.algashop.ordering.domain.model.valueobject.id.ProductId;
+import com.github.allisson95.algashop.ordering.domain.model.commons.*;
+import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerId;
+import com.github.allisson95.algashop.ordering.domain.model.order.*;
+import com.github.allisson95.algashop.ordering.domain.model.product.ProductId;
+import com.github.allisson95.algashop.ordering.domain.model.product.ProductName;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.embeddable.AddressEmbeddable;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.embeddable.BillingEmbeddable;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.embeddable.ShippingEmbeddable;
