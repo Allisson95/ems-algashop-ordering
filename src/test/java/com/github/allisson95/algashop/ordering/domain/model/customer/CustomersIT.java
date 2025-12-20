@@ -119,7 +119,7 @@ class CustomersIT {
         final Customer customer = CustomerTestDataBuilder.newCustomer().build();
         customers.add(customer);
 
-        final Optional<Customer> possibleCustomer = customers.ofEmail(new Email(UUID.randomUUID().toString() + "@algashop.com"));
+        final Optional<Customer> possibleCustomer = customers.ofEmail(new Email(UUID.randomUUID() + "@algashop.com"));
 
         assertThat(possibleCustomer).isEmpty();
     }
@@ -130,7 +130,7 @@ class CustomersIT {
         customers.add(customer);
 
         assertThat(customers.isEmailUnique(customer.email(), customer.id())).isTrue();
-        assertThat(customers.isEmailUnique(new Email(UUID.randomUUID().toString() + "@algashop.com"), new CustomerId())).isTrue();
+        assertThat(customers.isEmailUnique(new Email(UUID.randomUUID() + "@algashop.com"), new CustomerId())).isTrue();
     }
 
     @Test

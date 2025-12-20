@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.LinkedHashSet;
@@ -18,6 +17,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class OrderPersistenceEntityAssemblerTest {
@@ -30,7 +30,7 @@ class OrderPersistenceEntityAssemblerTest {
 
     @BeforeEach
     void setUp() {
-        Mockito.when(customerRepository.getReferenceById(any()))
+        when(customerRepository.getReferenceById(any()))
                 .thenAnswer(invocation -> {
                     final UUID customerId = invocation.getArgument(0);
                     return CustomerPersistenceEntityTestDataBuilder.aCustomer().id(customerId).build();
