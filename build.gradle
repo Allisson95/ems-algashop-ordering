@@ -50,6 +50,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
     testImplementation 'com.github.jsqlparser:jsqlparser:5.3'
     testImplementation 'net.datafaker:datafaker:2.5.3'
+    testImplementation 'org.wiremock.integrations:wiremock-spring-boot:4.0.8'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     mockitoAgent("org.mockito:mockito-core") {
         transitive = false
