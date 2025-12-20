@@ -2,6 +2,7 @@ package com.github.allisson95.algashop.ordering.application.service;
 
 import com.github.allisson95.algashop.ordering.application.model.AddressData;
 import com.github.allisson95.algashop.ordering.application.model.CustomerInput;
+import com.github.allisson95.algashop.ordering.application.model.CustomerOutput;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertWith;
 
 @SpringBootTest
 class CustomerManagementApplicationServiceIT {
@@ -43,6 +45,25 @@ class CustomerManagementApplicationServiceIT {
         final UUID uuid = service.create(customerInput);
 
         assertThat(uuid).isNotNull();
+
+        final CustomerOutput customerOutput = service.findById(uuid);
+
+        assertWith(customerOutput,
+                c -> assertThat(c).isNotNull(),
+                c -> assertThat(c.id()).isEqualTo(uuid),
+                c -> assertThat(c.firstName()).isEqualTo(customerInput.firstName()),
+                c -> assertThat(c.lastName()).isEqualTo(customerInput.lastName()),
+                c -> assertThat(c.birthDate()).isEqualTo(customerInput.birthDate()),
+                c -> assertThat(c.email()).isEqualTo(customerInput.email()),
+                c -> assertThat(c.phone()).isEqualTo(customerInput.phone()),
+                c -> assertThat(c.document()).isEqualTo(customerInput.document()),
+                c -> assertThat(c.promotionNotificationsAllowed()).isEqualTo(customerInput.promotionNotificationsAllowed()),
+                c -> assertThat(c.loyaltyPoints()).isEqualTo(0),
+                c -> assertThat(c.archived()).isFalse(),
+                c -> assertThat(c.archivedAt()).isNull(),
+                c -> assertThat(c.registeredAt()).isNotNull(),
+                c -> assertThat(c.address()).isEqualTo(customerInput.address())
+        );
     }
 
 }
