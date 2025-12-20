@@ -1,4 +1,4 @@
-package com.github.allisson95.algashop.ordering.application.model;
+package com.github.allisson95.algashop.ordering.application.commons;
 
 import lombok.Builder;
 

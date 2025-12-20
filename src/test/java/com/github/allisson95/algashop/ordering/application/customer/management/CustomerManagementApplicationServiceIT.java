@@ -1,8 +1,6 @@
-package com.github.allisson95.algashop.ordering.application.service;
+package com.github.allisson95.algashop.ordering.application.customer.management;
 
-import com.github.allisson95.algashop.ordering.application.model.AddressData;
-import com.github.allisson95.algashop.ordering.application.model.CustomerInput;
-import com.github.allisson95.algashop.ordering.application.model.CustomerOutput;
+import com.github.allisson95.algashop.ordering.application.commons.AddressData;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
