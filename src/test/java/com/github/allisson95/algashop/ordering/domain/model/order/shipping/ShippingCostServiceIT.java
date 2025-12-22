@@ -6,7 +6,6 @@ import com.github.allisson95.algashop.ordering.domain.model.order.shipping.Shipp
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.wiremock.spring.ConfigureWireMock;
 import org.wiremock.spring.EnableWireMock;
 
 import java.time.LocalDate;
@@ -14,12 +13,7 @@ import java.time.LocalDate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@EnableWireMock(
-        @ConfigureWireMock(
-                filesUnderClasspath = "wiremock",
-                baseUrlProperties = "spring.http.serviceclient.rapidex.base-url"
-        )
-)
+@EnableWireMock
 class ShippingCostServiceIT {
 
     @Autowired

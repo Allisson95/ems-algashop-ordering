@@ -16,7 +16,7 @@ spring:
         factory: http_components
     serviceclient:
       rapidex:
-        base-url: http://localhost:8081
+        base-url: ${wiremock.server.baseUrl}
   jpa:
     hibernate:
       ddl-auto: update
