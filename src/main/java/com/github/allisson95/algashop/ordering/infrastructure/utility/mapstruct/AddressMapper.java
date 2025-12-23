@@ -1,0 +1,16 @@
+package com.github.allisson95.algashop.ordering.infrastructure.utility.mapstruct;
+
+import com.github.allisson95.algashop.ordering.application.commons.AddressData;
+import com.github.allisson95.algashop.ordering.domain.model.commons.Address;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.springframework.core.convert.converter.Converter;
+
+@Mapper
+public interface AddressMapper extends Converter<Address, AddressData> {
+
+    @Mapping(target = "zipCode", source = "zipCode.value")
+    @Override
+    AddressData convert(Address source);
+
+}

@@ -22,6 +22,12 @@ configurations {
     mockitoAgent
 }
 
+ext {
+    set('mapstructVersion', "1.6.3")
+    set('mapstructSpringExtensionsVersion', "2.0.0")
+    set('lombokMapstructBindingVersion', "0.2.0")
+}
+
 repositories {
     mavenCentral()
 }
@@ -37,10 +43,15 @@ dependencies {
     implementation 'com.github.gavlyukovskiy:datasource-proxy-spring-boot-starter:2.0.0'
     implementation 'io.hypersistence:hypersistence-utils-hibernate-71:3.14.1'
     implementation 'org.apache.httpcomponents.client5:httpclient5'
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    implementation "org.mapstruct.extensions.spring:mapstruct-spring-annotations:${mapstructSpringExtensionsVersion}"
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.h2database:h2'
     annotationProcessor "org.hibernate.orm:hibernate-processor"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+    annotationProcessor "org.mapstruct.extensions.spring:mapstruct-spring-extensions:${mapstructSpringExtensionsVersion}"
+    annotationProcessor "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     testImplementation 'org.springframework.boot:spring-boot-starter-actuator-test'
@@ -50,11 +61,21 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
     testImplementation 'com.github.jsqlparser:jsqlparser:5.3'
     testImplementation 'net.datafaker:datafaker:2.5.3'
+    testImplementation "org.mapstruct.extensions.spring:mapstruct-spring-test-extensions:${mapstructSpringExtensionsVersion}"
     testImplementation 'org.wiremock.integrations:wiremock-spring-boot:4.0.8'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+    testAnnotationProcessor "org.mapstruct.extensions.spring:mapstruct-spring-extensions:${mapstructSpringExtensionsVersion}"
     mockitoAgent("org.mockito:mockito-core") {
         transitive = false
     }
+}
+
+compileJava {
+    options.compilerArgs += [
+            '-Amapstruct.defaultComponentModel=spring',
+            '-Amapstruct.verbose=true'
+    ]
 }
 
 tasks.named('test') {
