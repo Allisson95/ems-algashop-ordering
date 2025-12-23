@@ -1,5 +1,7 @@
 package com.github.allisson95.algashop.ordering.application.checkout;
 
+import com.github.allisson95.algashop.ordering.application.utility.Mapper;
+import com.github.allisson95.algashop.ordering.domain.model.commons.Address;
 import com.github.allisson95.algashop.ordering.domain.model.commons.Quantity;
 import com.github.allisson95.algashop.ordering.domain.model.commons.ZipCode;
 import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerId;
@@ -31,9 +33,7 @@ public class BuyNowApplicationService {
 
     private final Orders orders;
 
-    private final ShippingInputDisassembler shippingInputDisassembler;
-
-    private final BillingInputDisassembler billingInputDisassembler;
+    private final Mapper mapper;
 
     @Transactional
     public String buyNow(final BuyNowInput input) {
@@ -47,9 +47,9 @@ public class BuyNowApplicationService {
 
         CalculationResponse shippingCostDetails = calculateShippingCost(input.shipping());
 
-        final Shipping shipping = shippingInputDisassembler.toDomainModel(input.shipping(), shippingCostDetails);
+        final Shipping shipping = createShipping(input.shipping(), shippingCostDetails);
 
-        final Billing billing = billingInputDisassembler.toDomainModel(input.billing());
+        final Billing billing = mapper.convert(input.billing(), Billing.class);
 
         Order order = buyNowService.buyNow(
                 product, customerId, billing, shipping, quantity, paymentMethod
@@ -60,15 +60,24 @@ public class BuyNowApplicationService {
         return order.getId().toString();
     }
 
+    private Product findProduct(final ProductId productId) {
+        return productCatalogService.ofId(productId)
+                .orElseThrow(() -> new ProductNotFoundException(productId));
+    }
+
     private CalculationResponse calculateShippingCost(final ShippingInput shipping) {
         final ZipCode origin = originAddressService.originAddress().zipCode();
         final ZipCode destination = new ZipCode(shipping.address().zipCode());
         return shippingCostService.calculate(new ShippingCostService.CalculationRequest(origin, destination));
     }
 
-    private Product findProduct(final ProductId productId) {
-        return productCatalogService.ofId(productId)
-                .orElseThrow(() -> new ProductNotFoundException(productId));
+    public Shipping createShipping(final ShippingInput shipping, final CalculationResponse shippingCostDetails) {
+        return Shipping.builder()
+                .cost(shippingCostDetails.cost())
+                .expectedDeliveryDate(shippingCostDetails.estimatedDeliveryDate())
+                .recipient(mapper.convert(shipping.recipient(), Recipient.class))
+                .address(mapper.convert(shipping.address(), Address.class))
+                .build();
     }
 
 }

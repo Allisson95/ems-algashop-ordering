@@ -8,8 +8,8 @@ public record BillingData(
         String firstName,
         String lastName,
         String document,
-        String email,
         String phone,
+        String email,
         AddressData address
 ) {
 
