@@ -34,7 +34,7 @@ public class ShoppingCartPersistenceEntityAssembler {
         requireNonNull(shoppingCart, "shoppingCart cannot be null");
 
         if (isNull(shoppingCartPersistenceEntity.getId())) {
-            shoppingCartPersistenceEntity.setId(shoppingCart.id().value());
+            shoppingCartPersistenceEntity.setId(shoppingCart.getId().value());
         }
         shoppingCartPersistenceEntity.setCustomer(this.customerRepository.getReferenceById(shoppingCart.getCustomerId().value()));
         shoppingCartPersistenceEntity.setTotalAmount(shoppingCart.getTotalAmount().value());
@@ -56,7 +56,7 @@ public class ShoppingCartPersistenceEntityAssembler {
         requireNonNull(shoppingCartItem, "shoppingCart cannot be null");
 
         if (isNull(shoppingCartItemPersistenceEntity.getId())) {
-            shoppingCartItemPersistenceEntity.setId(shoppingCartItem.id().value());
+            shoppingCartItemPersistenceEntity.setId(shoppingCartItem.getId().value());
         }
         shoppingCartItemPersistenceEntity.setProductId(shoppingCartItem.getProductId().value());
         shoppingCartItemPersistenceEntity.setProductName(shoppingCartItem.getProductName().value());
@@ -87,7 +87,7 @@ public class ShoppingCartPersistenceEntityAssembler {
                 .collect(toMap(ShoppingCartItemPersistenceEntity::getId, identity()));
 
         return shoppingCartItems.stream()
-                .map(shoppingCartItem -> ofNullable(existingItemMap.get(shoppingCartItem.id().value()))
+                .map(shoppingCartItem -> ofNullable(existingItemMap.get(shoppingCartItem.getId().value()))
                         .map(existingItem -> merge(existingItem, shoppingCartItem))
                         .orElse(fromDomain(shoppingCartItem)))
                 .collect(toSet());

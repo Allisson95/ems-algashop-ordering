@@ -21,7 +21,7 @@ class ShoppingCartTest {
         final ShoppingCart shoppingCart = ShoppingCart.startShopping(customerId);
 
         assertWith(shoppingCart,
-                c -> assertThat(c.id()).isNotNull(),
+                c -> assertThat(c.getId()).isNotNull(),
                 c -> assertThat(c.getCustomerId()).isEqualTo(customerId),
                 c -> assertThat(c.getTotalAmount()).isEqualTo(Money.ZERO),
                 c -> assertThat(c.getTotalItems()).isEqualTo(Quantity.ZERO),
@@ -118,7 +118,7 @@ class ShoppingCartTest {
         final Quantity expectedTotalItems = new Quantity(actualTotalItems.value() - itemToRemove.getQuantity().value());
         final Money expectedTotalAmount = new Money(actualTotalAmount.value().subtract(itemToRemove.getTotalAmount().value()));
 
-        shoppingCart.removeItem(itemToRemove.id());
+        shoppingCart.removeItem(itemToRemove.getId());
 
         assertWith(shoppingCart,
                 c -> assertThat(c.getItems()).hasSize(2),

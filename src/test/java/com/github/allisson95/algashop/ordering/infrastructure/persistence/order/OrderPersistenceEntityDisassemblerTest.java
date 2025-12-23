@@ -23,7 +23,7 @@ class OrderPersistenceEntityDisassemblerTest {
         final Order domainEntity = this.disassembler.toDomainEntity(entity);
 
         assertWith(domainEntity,
-                e -> assertThat(e.id()).isEqualTo(new OrderId(entity.getId())),
+                e -> assertThat(e.getId()).isEqualTo(new OrderId(entity.getId())),
                 e -> assertThat(e.getCustomerId()).isEqualTo(new CustomerId(entity.getCustomerId())),
                 e -> assertThat(e.getTotalAmount()).isEqualTo(new Money(entity.getTotalAmount())),
                 e -> assertThat(e.getTotalItems()).isEqualTo(new Quantity(entity.getTotalItems())),

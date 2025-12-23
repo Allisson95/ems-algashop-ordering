@@ -69,7 +69,7 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
             shoppingCartItem.refresh(product);
             shoppingCartItem.changeQuantity(shoppingCartItem.getQuantity().add(quantity));
         } catch (final ShoppingCartDoesNotContainItemException e) {
-            shoppingCartItem = ShoppingCartItem.brandNew(this.id(), product, quantity);
+            shoppingCartItem = ShoppingCartItem.brandNew(this.getId(), product, quantity);
             this.items.add(shoppingCartItem);
         }
 
@@ -91,7 +91,7 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
 
     public ShoppingCartItem findItem(final ShoppingCartItemId shoppingCartItemId) {
         requireNonNull(shoppingCartItemId, "shoppingCartItemId cannot be null");
-        return this.findShoppingCartItem(item -> item.id().equals(shoppingCartItemId), () -> new ShoppingCartDoesNotContainItemException(shoppingCartItemId));
+        return this.findShoppingCartItem(item -> item.getId().equals(shoppingCartItemId), () -> new ShoppingCartDoesNotContainItemException(shoppingCartItemId));
     }
 
     public ShoppingCartItem findItem(final ProductId productId) {
@@ -124,10 +124,6 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
     private ShoppingCartItem findShoppingCartItem(final Predicate<ShoppingCartItem> predicate, final Supplier<DomainException> exceptionSupplier) {
         requireNonNull(predicate, "predicate cannot be null");
         return this.getItems().stream().filter(predicate).findFirst().orElseThrow(exceptionSupplier);
-    }
-
-    public ShoppingCartId id() {
-        return id;
     }
 
     private void setId(final ShoppingCartId id) {
@@ -176,12 +172,12 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
     public boolean equals(final Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         final ShoppingCart that = (ShoppingCart) o;
-        return Objects.equals(id(), that.id());
+        return Objects.equals(this.getId(), that.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id());
+        return Objects.hashCode(this.getId());
     }
 
 }

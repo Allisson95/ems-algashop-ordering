@@ -24,7 +24,7 @@ class OrderChangingTest {
         final Product product = ProductTestDataBuilder.aProduct().build();
         final Quantity quantity = new Quantity(1);
         final OrderItem orderItem = order.getItems().iterator().next();
-        final OrderItemId orderItemId = orderItem.id();
+        final OrderItemId orderItemId = orderItem.getId();
         final Quantity newQuantity = new Quantity(2);
 
         final List<ThrowableAssert.ThrowingCallable> tasks = List.of(

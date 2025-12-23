@@ -31,7 +31,7 @@ class OrderMarkAsReadyTest {
 
         assertThatExceptionOfType(OrderStatusCannotBeChangedException.class)
                 .isThrownBy(nonPaidOrder::markAsReady)
-                .withMessage("Cannot change order %s status from %s to %s".formatted(nonPaidOrder.id(), nonPaidOrder.getStatus(), OrderStatus.READY));
+                .withMessage("Cannot change order %s status from %s to %s".formatted(nonPaidOrder.getId(), nonPaidOrder.getStatus(), OrderStatus.READY));
     }
 
 }

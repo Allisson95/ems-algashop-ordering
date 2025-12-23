@@ -28,7 +28,7 @@ class OrderCancelTest {
         final Order canceledOrder = OrderTestDataBuilder.anOrder().status(OrderStatus.CANCELED).build();
         assertThatExceptionOfType(OrderStatusCannotBeChangedException.class)
                 .isThrownBy(canceledOrder::cancel)
-                .withMessage("Cannot change order %s status from %s to %s".formatted(canceledOrder.id(), canceledOrder.getStatus(), OrderStatus.CANCELED));
+                .withMessage("Cannot change order %s status from %s to %s".formatted(canceledOrder.getId(), canceledOrder.getStatus(), OrderStatus.CANCELED));
     }
 
 }

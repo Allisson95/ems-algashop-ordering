@@ -38,7 +38,7 @@ public class OrderPersistenceEntityAssembler {
         requireNonNull(order, "order cannot be null");
 
         if (isNull(orderPersistenceEntity.getId())) {
-            orderPersistenceEntity.setId(order.id().value().toLong());
+            orderPersistenceEntity.setId(order.getId().value().toLong());
         }
 
         final CustomerPersistenceEntity customerPersistenceEntity = this.customerRepository.getReferenceById(order.getCustomerId().value());
@@ -68,7 +68,7 @@ public class OrderPersistenceEntityAssembler {
         requireNonNull(orderItemPersistenceEntity, "orderItemPersistenceEntity cannot be null");
         requireNonNull(orderItem, "orderItem cannot be null");
 
-        orderItemPersistenceEntity.setId(orderItem.id().value().toLong());
+        orderItemPersistenceEntity.setId(orderItem.getId().value().toLong());
         orderItemPersistenceEntity.setProductId(orderItem.getProductId().toString());
         orderItemPersistenceEntity.setProductName(orderItem.getProductName().value());
         orderItemPersistenceEntity.setPrice(orderItem.getPrice().value());
@@ -144,7 +144,7 @@ public class OrderPersistenceEntityAssembler {
                 .collect(toMap(OrderItemPersistenceEntity::getId, identity()));
 
         return orderItems.stream()
-                .map(orderItem -> ofNullable(existingItemMap.get(orderItem.id().value().toLong()))
+                .map(orderItem -> ofNullable(existingItemMap.get(orderItem.getId().value().toLong()))
                         .map(existingItem -> merge(existingItem, orderItem))
                         .orElse(fromDomain(orderItem)))
                 .collect(toSet());

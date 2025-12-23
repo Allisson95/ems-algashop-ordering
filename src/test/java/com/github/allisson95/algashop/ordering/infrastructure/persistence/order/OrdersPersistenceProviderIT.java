@@ -55,7 +55,7 @@ public class OrdersPersistenceProviderIT {
     @Test
     public void shouldUpdateAndKeepPersistenceEntityState() {
         Order order = OrderTestDataBuilder.anOrder().status(OrderStatus.PLACED).build();
-        long orderId = order.id().value().toLong();
+        long orderId = order.getId().value().toLong();
         persistenceProvider.add(order);
 
         var persistenceEntity = entityRepository.findById(orderId).orElseThrow();
@@ -66,7 +66,7 @@ public class OrdersPersistenceProviderIT {
         assertThat(persistenceEntity.getLastModifiedAt()).isNotNull();
         assertThat(persistenceEntity.getLastModifiedBy()).isNotNull();
 
-        order = persistenceProvider.ofId(order.id()).orElseThrow();
+        order = persistenceProvider.ofId(order.getId()).orElseThrow();
         order.markAsPaid();
         persistenceProvider.add(order);
 
@@ -88,7 +88,7 @@ public class OrdersPersistenceProviderIT {
 
         SQLStatementCountValidator.reset();
         assertThatNoException().isThrownBy(
-                () -> persistenceProvider.ofId(order.id())
+                () -> persistenceProvider.ofId(order.getId())
         );
         SQLStatementCountValidator.assertSelectCount(1); // Validate N+1 problem
     }

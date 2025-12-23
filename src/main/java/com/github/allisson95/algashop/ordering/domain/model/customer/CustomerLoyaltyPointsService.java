@@ -20,7 +20,7 @@ public class CustomerLoyaltyPointsService {
         requireNonNull(customer, "customer cannot be null");
         requireNonNull(order, "order cannot be null");
 
-        if (!customer.id().equals(order.getCustomerId())) {
+        if (!customer.getId().equals(order.getCustomerId())) {
             throw new OrderNotBelongsToCustomerException();
         }
 

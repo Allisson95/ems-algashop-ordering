@@ -29,13 +29,13 @@ public class CustomerRegistrationService {
                 .address(address)
                 .build();
 
-        verifyEmailUniqueness(newCustomer.getEmail(), newCustomer.id());
+        verifyEmailUniqueness(newCustomer.getEmail(), newCustomer.getId());
 
         return newCustomer;
     }
 
     public void changeEmail(final Customer customer, final Email newEmail) {
-        verifyEmailUniqueness(newEmail, customer.id());
+        verifyEmailUniqueness(newEmail, customer.getId());
         customer.changeEmail(newEmail);
     }
 

@@ -38,7 +38,7 @@ class ShoppingCartsPersistenceProvider implements ShoppingCarts {
     @Transactional
     @Override
     public void remove(final ShoppingCart shoppingCart) {
-        this.remove(shoppingCart.id());
+        this.remove(shoppingCart.getId());
     }
 
     @Override
@@ -55,7 +55,7 @@ class ShoppingCartsPersistenceProvider implements ShoppingCarts {
     @Transactional
     @Override
     public void add(final ShoppingCart shoppingCart) {
-        this.repository.findShoppingCartPersistenceEntityWithItemsById(shoppingCart.id().value())
+        this.repository.findShoppingCartPersistenceEntityWithItemsById(shoppingCart.getId().value())
                 .ifPresentOrElse(
                         shoppingCartPersistenceEntity -> this.updateShoppingCart(shoppingCartPersistenceEntity, shoppingCart),
                         () -> this.insertShoppingCart(shoppingCart)
@@ -96,7 +96,7 @@ class ShoppingCartsPersistenceProvider implements ShoppingCarts {
         DomainVersionHandler.setVersion(shoppingCart, shoppingCartPersistenceEntity.getVersion());
         final Map<UUID, Long> shoppingCartItemVersions = shoppingCartPersistenceEntity.getItems().stream()
                 .collect(Collectors.toMap(ShoppingCartItemPersistenceEntity::getId, ShoppingCartItemPersistenceEntity::getVersion));
-        shoppingCart.getItems().forEach(item -> DomainVersionHandler.setVersion(item, shoppingCartItemVersions.get(item.id().value())));
+        shoppingCart.getItems().forEach(item -> DomainVersionHandler.setVersion(item, shoppingCartItemVersions.get(item.getId().value())));
     }
 
 }

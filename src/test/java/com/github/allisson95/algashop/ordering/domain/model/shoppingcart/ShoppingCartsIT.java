@@ -46,7 +46,7 @@ class ShoppingCartsIT {
 
         shoppingCarts.add(shoppingCart);
 
-        final Optional<ShoppingCart> possibleShoppingCart = shoppingCarts.ofId(shoppingCart.id());
+        final Optional<ShoppingCart> possibleShoppingCart = shoppingCarts.ofId(shoppingCart.getId());
 
         assertThat(possibleShoppingCart).isPresent();
         final ShoppingCart actual = possibleShoppingCart.get();
@@ -104,11 +104,11 @@ class ShoppingCartsIT {
     void shouldRemoveShoppingCart() {
         final ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().build();
         shoppingCarts.add(shoppingCart);
-        assertThat(shoppingCarts.ofId(shoppingCart.id())).isPresent();
+        assertThat(shoppingCarts.ofId(shoppingCart.getId())).isPresent();
 
-        shoppingCarts.remove(shoppingCart.id());
+        shoppingCarts.remove(shoppingCart.getId());
 
-        assertThat(shoppingCarts.ofId(shoppingCart.id())).isEmpty();
+        assertThat(shoppingCarts.ofId(shoppingCart.getId())).isEmpty();
     }
 
     @Test
@@ -116,7 +116,7 @@ class ShoppingCartsIT {
         ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().build();
         shoppingCarts.add(shoppingCart);
 
-        shoppingCart = shoppingCarts.ofId(shoppingCart.id()).orElseThrow();
+        shoppingCart = shoppingCarts.ofId(shoppingCart.getId()).orElseThrow();
         assertWith(shoppingCart,
                 sc -> assertThatCollection(sc.getItems()).isNotEmpty()
         );
@@ -125,7 +125,7 @@ class ShoppingCartsIT {
 
         shoppingCarts.add(shoppingCart);
 
-        assertWith(shoppingCarts.ofId(shoppingCart.id()).orElseThrow(),
+        assertWith(shoppingCarts.ofId(shoppingCart.getId()).orElseThrow(),
                 sc -> assertThatCollection(sc.getItems()).isEmpty()
         );
     }

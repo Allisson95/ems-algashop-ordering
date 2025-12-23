@@ -39,7 +39,7 @@ class CustomersPersistenceProvider implements Customers {
 
     @Override
     public void add(final Customer customer) {
-        this.repository.findById(customer.id().value())
+        this.repository.findById(customer.getId().value())
                 .ifPresentOrElse(
                         customerPersistenceEntity -> this.updateCustomer(customerPersistenceEntity, customer),
                         () -> this.insertCustomer(customer)

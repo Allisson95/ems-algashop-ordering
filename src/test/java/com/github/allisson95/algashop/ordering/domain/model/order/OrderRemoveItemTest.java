@@ -20,7 +20,7 @@ class OrderRemoveItemTest {
         final Money expectedTotalAmount = new Money(order.getTotalAmount().value().subtract(orderItem.getTotalAmount().value(), MathContext.DECIMAL32));
 
         assertWith(order,
-                o -> assertThatCode(() -> o.removeItem(orderItem.id())).doesNotThrowAnyException(),
+                o -> assertThatCode(() -> o.removeItem(orderItem.getId())).doesNotThrowAnyException(),
                 o -> assertThat(o.getItems()).doesNotContain(orderItem),
                 o -> assertThat(o.getTotalItems()).isEqualTo(expectedTotalItems),
                 o -> assertThat(o.getTotalAmount()).isEqualTo(expectedTotalAmount)
@@ -34,18 +34,18 @@ class OrderRemoveItemTest {
 
         assertThatExceptionOfType(OrderDoesNotContainOrderItemException.class)
                 .isThrownBy(() -> order.removeItem(orderItemId))
-                .withMessage("Order %s does not contain order item %s".formatted(order.id(), orderItemId));
+                .withMessage("Order %s does not contain order item %s".formatted(order.getId(), orderItemId));
     }
 
     @ParameterizedTest
     @EnumSource(names = { "DRAFT" }, mode = EnumSource.Mode.EXCLUDE)
     void givenANonDraftOrder_whenTryToRemoveItem_shouldThrowException(final OrderStatus nonDraftStatus) {
         final Order order = OrderTestDataBuilder.anOrder().status(nonDraftStatus).build();
-        final OrderItemId orderItemId = order.getItems().iterator().next().id();
+        final OrderItemId orderItemId = order.getItems().iterator().next().getId();
 
         assertThatExceptionOfType(OrderCannotBeEditedException.class)
                 .isThrownBy(() -> order.removeItem(orderItemId))
-                .withMessage("Order %s with status %s cannot be edited".formatted(order.id(), order.getStatus()));
+                .withMessage("Order %s with status %s cannot be edited".formatted(order.getId(), order.getStatus()));
     }
 
 }

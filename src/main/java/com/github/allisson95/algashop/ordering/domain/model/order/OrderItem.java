@@ -64,10 +64,6 @@ public class OrderItem {
         this.setTotalAmount(this.getPrice().multiply(this.getQuantity()));
     }
 
-    public OrderItemId id() {
-        return id;
-    }
-
     private void setId(final OrderItemId id) {
         requireNonNull(id, "id cannot be null");
         this.id = id;
@@ -107,12 +103,12 @@ public class OrderItem {
     public boolean equals(final Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         final OrderItem orderItem = (OrderItem) o;
-        return Objects.equals(id(), orderItem.id());
+        return Objects.equals(getId(), orderItem.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id());
+        return Objects.hashCode(getId());
     }
 
 }

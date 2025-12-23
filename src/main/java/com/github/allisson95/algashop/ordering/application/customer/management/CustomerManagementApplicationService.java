@@ -45,7 +45,7 @@ class CustomerManagementApplicationService {
 
         customers.add(registeredCustomer);
 
-        return registeredCustomer.id().value();
+        return registeredCustomer.getId().value();
     }
 
     @Transactional(readOnly = true)

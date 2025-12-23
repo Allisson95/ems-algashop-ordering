@@ -112,10 +112,6 @@ public class Customer implements AggregateRoot<CustomerId> {
         this.setAddress(newAddress);
     }
 
-    public CustomerId id() {
-        return id;
-    }
-
     private void setId(final CustomerId id) {
         requireNonNull(id, "id cannot be null");
         this.id = id;
@@ -196,12 +192,12 @@ public class Customer implements AggregateRoot<CustomerId> {
     public boolean equals(final Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         final Customer customer = (Customer) o;
-        return Objects.equals(id(), customer.id());
+        return Objects.equals(this.getId(), customer.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id());
+        return Objects.hashCode(this.getId());
     }
 
 }

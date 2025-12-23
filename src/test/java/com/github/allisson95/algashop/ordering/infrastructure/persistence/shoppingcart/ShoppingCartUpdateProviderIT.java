@@ -70,7 +70,7 @@ class ShoppingCartUpdateProviderIT {
 
         shoppingCartUpdateProvider.adjustPrice(productIdToUpdate, newProduct1Price);
 
-        final ShoppingCart updatedShoppingCart = shoppingCartsPersistenceProvider.ofId(shoppingCart.id()).orElseThrow();
+        final ShoppingCart updatedShoppingCart = shoppingCartsPersistenceProvider.ofId(shoppingCart.getId()).orElseThrow();
         assertWith(updatedShoppingCart,
                 sc -> assertThat(sc.getTotalAmount()).isEqualTo(expectedCartTotalAmount),
                 sc -> assertThat(sc.getTotalItems()).isEqualTo(new Quantity(3))
@@ -99,7 +99,7 @@ class ShoppingCartUpdateProviderIT {
 
         shoppingCartUpdateProvider.changeAvailability(productIdToUpdate, false);
 
-        final ShoppingCart updatedShoppingCart = shoppingCartsPersistenceProvider.ofId(shoppingCart.id()).orElseThrow();
+        final ShoppingCart updatedShoppingCart = shoppingCartsPersistenceProvider.ofId(shoppingCart.getId()).orElseThrow();
         assertWith(updatedShoppingCart.findItem(productIdToUpdate),
                 i -> assertThat(i.getAvailable()).isFalse()
         );

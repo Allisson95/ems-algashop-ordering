@@ -84,10 +84,6 @@ public class ShoppingCartItem {
         this.setTotalAmount(this.getPrice().multiply(this.getQuantity()));
     }
 
-    public ShoppingCartItemId id() {
-        return id;
-    }
-
     private void setId(final ShoppingCartItemId id) {
         requireNonNull(id, "id cannot be null");
         this.id = id;
@@ -140,12 +136,12 @@ public class ShoppingCartItem {
     public boolean equals(final Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         final ShoppingCartItem that = (ShoppingCartItem) o;
-        return Objects.equals(id(), that.id());
+        return Objects.equals(getId(), that.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id());
+        return Objects.hashCode(getId());
     }
 
 }

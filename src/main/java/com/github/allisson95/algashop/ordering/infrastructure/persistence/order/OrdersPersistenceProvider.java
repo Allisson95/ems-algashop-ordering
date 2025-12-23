@@ -43,7 +43,7 @@ public class OrdersPersistenceProvider implements Orders {
     @Override
     @Transactional
     public void add(final Order order) {
-        this.repository.findOrderPersistenceEntityWithItemsById(order.id().value().toLong())
+        this.repository.findOrderPersistenceEntityWithItemsById(order.getId().value().toLong())
                 .ifPresentOrElse(
                         orderPersistenceEntity -> this.updateOrder(orderPersistenceEntity, order),
                         () -> this.insertOrder(order)

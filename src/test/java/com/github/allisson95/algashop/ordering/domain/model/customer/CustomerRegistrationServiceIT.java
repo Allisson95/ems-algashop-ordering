@@ -48,7 +48,7 @@ class CustomerRegistrationServiceIT {
         );
 
         assertWith(registeredCustomer,
-                c -> assertThat(c.id()).isNotNull(),
+                c -> assertThat(c.getId()).isNotNull(),
                 c -> assertThat(c.getFullName()).isEqualTo(expectedName),
                 c -> assertThat(c.getBirthDate()).isEqualTo(expectedBirthDate),
                 c -> assertThat(c.getEmail()).isEqualTo(expectedEmail),

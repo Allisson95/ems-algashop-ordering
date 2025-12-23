@@ -50,11 +50,11 @@ class OrdersIT {
 
         orders.add(order);
 
-        final Optional<Order> possibleOrder = orders.ofId(order.id());
+        final Optional<Order> possibleOrder = orders.ofId(order.getId());
         assertThat(possibleOrder).isPresent();
 
         assertWith(possibleOrder.get(),
-                o -> assertThat(o.id()).isEqualTo(order.id()),
+                o -> assertThat(o.getId()).isEqualTo(order.getId()),
                 o -> assertThat(o.getCustomerId()).isEqualTo(order.getCustomerId()),
                 o -> assertThat(o.getTotalAmount()).isEqualTo(order.getTotalAmount()),
                 o -> assertThat(o.getTotalItems()).isEqualTo(order.getTotalItems()),
@@ -74,12 +74,12 @@ class OrdersIT {
         Order order = OrderTestDataBuilder.anOrder().status(OrderStatus.PLACED).build();
         orders.add(order);
 
-        order = orders.ofId(order.id()).orElseThrow();
+        order = orders.ofId(order.getId()).orElseThrow();
         order.markAsPaid();
 
         orders.add(order);
 
-        order = orders.ofId(order.id()).orElseThrow();
+        order = orders.ofId(order.getId()).orElseThrow();
 
         assertThat(order.isPaid()).isTrue();
     }
@@ -89,8 +89,8 @@ class OrdersIT {
         Order order = OrderTestDataBuilder.anOrder().status(OrderStatus.PLACED).build();
         orders.add(order);
 
-        Order orderT1 = orders.ofId(order.id()).orElseThrow();
-        Order orderT2 = orders.ofId(order.id()).orElseThrow();
+        Order orderT1 = orders.ofId(order.getId()).orElseThrow();
+        Order orderT2 = orders.ofId(order.getId()).orElseThrow();
 
         orderT1.markAsPaid();
         orders.add(orderT1);
@@ -100,7 +100,7 @@ class OrdersIT {
         assertThatExceptionOfType(ObjectOptimisticLockingFailureException.class)
                 .isThrownBy(() -> orders.add(orderT2));
 
-        Order savedOrder = orders.ofId(order.id()).orElseThrow();
+        Order savedOrder = orders.ofId(order.getId()).orElseThrow();
 
         assertThat(savedOrder.getCancelledAt()).isNull();
         assertThat(savedOrder.getPaidAt()).isNotNull();
@@ -121,7 +121,7 @@ class OrdersIT {
         final Order order = OrderTestDataBuilder.anOrder().build();
         orders.add(order);
 
-        assertThat(orders.exists(order.id())).isTrue();
+        assertThat(orders.exists(order.getId())).isTrue();
         assertThat(orders.exists(new OrderId())).isFalse();
     }
 

@@ -23,7 +23,7 @@ class OrderTest {
         final CustomerId customerId = new CustomerId();
         final Order draftOrder = Order.draft(customerId);
         assertWith(draftOrder,
-                o -> assertThat(o.id()).isNotNull(),
+                o -> assertThat(o.getId()).isNotNull(),
                 o -> assertThat(o.getCustomerId()).isEqualTo(customerId),
                 o -> assertThat(o.isDraft()).isTrue(),
                 o -> assertThat(o.getItems()).isEmpty(),
@@ -50,8 +50,8 @@ class OrderTest {
                 o -> assertThat(o.getTotalItems()).isEqualTo(new Quantity(1)),
                 o -> assertThat(o.getTotalAmount()).isEqualTo(product.price()),
                 o -> assertWith(o.getItems().iterator().next(),
-                        i -> assertThat(i.id()).isNotNull(),
-                        i -> assertThat(i.getOrderId()).isEqualTo(order.id()),
+                        i -> assertThat(i.getId()).isNotNull(),
+                        i -> assertThat(i.getOrderId()).isEqualTo(order.getId()),
                         i -> assertThat(i.getProductId()).isEqualTo(product.id()),
                         i -> assertThat(i.getProductName()).isEqualTo(product.name()),
                         i -> assertThat(i.getPrice()).isEqualTo(product.price()),
@@ -96,7 +96,7 @@ class OrderTest {
         final Order placedOrder = OrderTestDataBuilder.anOrder().status(OrderStatus.PLACED).build();
         assertThatExceptionOfType(OrderStatusCannotBeChangedException.class)
                 .isThrownBy(placedOrder::place)
-                .withMessage("Cannot change order %s status from %s to %s".formatted(placedOrder.id(), placedOrder.getStatus(), OrderStatus.PLACED));
+                .withMessage("Cannot change order %s status from %s to %s".formatted(placedOrder.getId(), placedOrder.getStatus(), OrderStatus.PLACED));
     }
 
     @Test
@@ -145,7 +145,7 @@ class OrderTest {
 
         assertThatExceptionOfType(OrderInvalidShippingDeliveryDateException.class)
                 .isThrownBy(() -> draftOrder.changeShipping(shipping))
-                .withMessage("Order %s expected delivery date must be after current date".formatted(draftOrder.id()));
+                .withMessage("Order %s expected delivery date must be after current date".formatted(draftOrder.getId()));
     }
 
     @Test
@@ -156,7 +156,7 @@ class OrderTest {
         final Money expectedPrice = product.price().multiply(new Quantity(10));
 
         final OrderItem orderItem = order.getItems().iterator().next();
-        order.changeItemQuantity(orderItem.id(), new Quantity(10));
+        order.changeItemQuantity(orderItem.getId(), new Quantity(10));
 
         assertWith(order,
                 o -> assertThat(o.getTotalAmount()).isEqualTo(expectedPrice),

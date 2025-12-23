@@ -44,7 +44,7 @@ class OrderPersistenceEntityAssemblerTest {
         final OrderPersistenceEntity entity = assembler.fromDomain(order);
 
         assertWith(entity,
-                e -> assertThat(e.getId()).isEqualTo(order.id().value().toLong()),
+                e -> assertThat(e.getId()).isEqualTo(order.getId().value().toLong()),
                 e -> assertThat(e.getCustomerId()).isEqualTo(order.getCustomerId().value()),
                 e -> assertThat(e.getTotalAmount()).isEqualTo(order.getTotalAmount().value()),
                 e -> assertThat(e.getTotalItems()).isEqualTo(order.getTotalItems().value()),
@@ -89,7 +89,7 @@ class OrderPersistenceEntityAssemblerTest {
         final Order order = OrderTestDataBuilder.anOrder().withItems(true).build();
         final OrderPersistenceEntity existingOrderEntity = assembler.fromDomain(order);
         final OrderItem itemToRemove = order.getItems().iterator().next();
-        order.removeItem(itemToRemove.id());
+        order.removeItem(itemToRemove.getId());
 
         assertThat(order.getItems()).hasSize(1);
         assertThat(existingOrderEntity.getItems()).hasSize(2);

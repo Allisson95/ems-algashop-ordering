@@ -22,7 +22,7 @@ class ShoppingCartItemTest {
         final ShoppingCartItem shoppingCartItem = ShoppingCartItem.brandNew(shoppingCartId, product, quantity);
 
         assertWith(shoppingCartItem,
-                i -> assertThat(i.id()).isNotNull(),
+                i -> assertThat(i.getId()).isNotNull(),
                 i -> assertThat(i.getShoppingCartId()).isEqualTo(shoppingCartId),
                 i -> assertThat(i.getProductId()).isEqualTo(product.id()),
                 i -> assertThat(i.getProductName()).isEqualTo(product.name()),

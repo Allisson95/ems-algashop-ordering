@@ -117,7 +117,7 @@ public class Order implements AggregateRoot<OrderId> {
         product.checkOutOfStock();
 
         final OrderItem orderItem = OrderItem.newOrderItem()
-                .orderId(this.id())
+                .orderId(this.getId())
                 .product(product)
                 .quantity(quantity)
                 .build();
@@ -148,7 +148,7 @@ public class Order implements AggregateRoot<OrderId> {
         this.verifyIfChangeable();
 
         if (newShipping.expectedDeliveryDate().isBefore(LocalDate.now())) {
-            throw new OrderInvalidShippingDeliveryDateException(this.id());
+            throw new OrderInvalidShippingDeliveryDateException(this.getId());
         }
 
         this.setShipping(newShipping);
@@ -178,7 +178,7 @@ public class Order implements AggregateRoot<OrderId> {
     private void changeStatus(final OrderStatus newStatus) {
         requireNonNull(newStatus, "newStatus cannot be null");
         if (this.getStatus().cantBeUpdatedTo(newStatus)) {
-            throw new OrderStatusCannotBeChangedException(this.id(), this.getStatus(), newStatus);
+            throw new OrderStatusCannotBeChangedException(this.getId(), this.getStatus(), newStatus);
         }
         this.setStatus(newStatus);
     }
@@ -196,35 +196,31 @@ public class Order implements AggregateRoot<OrderId> {
 
     private void verifyIfCanChangeToPlaced() {
         if (isNull(this.getBilling())) {
-            throw OrderCannotBePlacedException.becauseHasNoBillingInfo(this.id());
+            throw OrderCannotBePlacedException.becauseHasNoBillingInfo(this.getId());
         }
         if (isNull(this.getShipping())) {
-            throw OrderCannotBePlacedException.becauseHasNoShippingInfo(this.id());
+            throw OrderCannotBePlacedException.becauseHasNoShippingInfo(this.getId());
         }
         if (isNull(this.getPaymentMethod())) {
-            throw OrderCannotBePlacedException.becauseHasNoPaymentMethod(this.id());
+            throw OrderCannotBePlacedException.becauseHasNoPaymentMethod(this.getId());
         }
         if (this.getItems().isEmpty()) {
-            throw OrderCannotBePlacedException.becauseHasNoOrderItems(this.id());
+            throw OrderCannotBePlacedException.becauseHasNoOrderItems(this.getId());
         }
     }
 
     private void verifyIfChangeable() {
         if (!this.isDraft()) {
-            throw new OrderCannotBeEditedException(this.id(), this.getStatus());
+            throw new OrderCannotBeEditedException(this.getId(), this.getStatus());
         }
     }
 
     private OrderItem findOrderItem(final OrderItemId orderItemId) {
         requireNonNull(orderItemId, "orderItemId cannot be null");
         return this.getItems().stream()
-                .filter(item -> item.id().equals(orderItemId))
+                .filter(item -> item.getId().equals(orderItemId))
                 .findFirst()
-                .orElseThrow(() -> new OrderDoesNotContainOrderItemException(this.id(), orderItemId));
-    }
-
-    public OrderId id() {
-        return id;
+                .orElseThrow(() -> new OrderDoesNotContainOrderItemException(this.getId(), orderItemId));
     }
 
     private void setId(final OrderId id) {
@@ -301,12 +297,12 @@ public class Order implements AggregateRoot<OrderId> {
     public boolean equals(final Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         final Order order = (Order) o;
-        return Objects.equals(id(), order.id());
+        return Objects.equals(this.getId(), order.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id());
+        return Objects.hashCode(this.getId());
     }
 
 }

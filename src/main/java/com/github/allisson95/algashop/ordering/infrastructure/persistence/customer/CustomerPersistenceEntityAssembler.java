@@ -24,7 +24,7 @@ public class CustomerPersistenceEntityAssembler {
         requireNonNull(customer, "customer cannot be null");
 
         if (isNull(customerPersistenceEntity.getId())) {
-            customerPersistenceEntity.setId(customer.id().value());
+            customerPersistenceEntity.setId(customer.getId().value());
         }
 
         customerPersistenceEntity.setFirstName(customer.getFullName().firstName());

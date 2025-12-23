@@ -37,11 +37,11 @@ class CustomersIT {
         final Customer newCustomer = CustomerTestDataBuilder.newCustomer().build();
         customers.add(newCustomer);
 
-        final Optional<Customer> possibleCustomer = customers.ofId(newCustomer.id());
+        final Optional<Customer> possibleCustomer = customers.ofId(newCustomer.getId());
 
         assertThat(possibleCustomer).isPresent();
         assertWith(possibleCustomer.get(),
-                c -> assertThat(c.id()).isEqualTo(newCustomer.id()));
+                c -> assertThat(c.getId()).isEqualTo(newCustomer.getId()));
     }
 
     @Test
@@ -49,7 +49,7 @@ class CustomersIT {
         Customer customer = CustomerTestDataBuilder.newCustomer().build();
         customers.add(customer);
 
-        customer = customers.ofId(customer.id()).orElseThrow();
+        customer = customers.ofId(customer.getId()).orElseThrow();
         assertThat(customer.getArchived()).isFalse();
         assertThat(customer.getArchivedAt()).isNull();
 
@@ -57,7 +57,7 @@ class CustomersIT {
 
         customers.add(customer);
 
-        customer = customers.ofId(customer.id()).orElseThrow();
+        customer = customers.ofId(customer.getId()).orElseThrow();
         assertThat(customer.getArchived()).isTrue();
         assertThat(customer.getArchivedAt()).isNotNull();
     }
@@ -67,8 +67,8 @@ class CustomersIT {
         Customer customer = CustomerTestDataBuilder.newCustomer().build();
         customers.add(customer);
 
-        Customer customer1 = customers.ofId(customer.id()).orElseThrow();
-        Customer customer2 = customers.ofId(customer.id()).orElseThrow();
+        Customer customer1 = customers.ofId(customer.getId()).orElseThrow();
+        Customer customer2 = customers.ofId(customer.getId()).orElseThrow();
 
         customer1.archive();
         customers.add(customer1);
@@ -78,7 +78,7 @@ class CustomersIT {
         assertThatExceptionOfType(ObjectOptimisticLockingFailureException.class)
                 .isThrownBy(() -> customers.add(customer2));
 
-        Customer savedCustomer = customers.ofId(customer.id()).orElseThrow();
+        Customer savedCustomer = customers.ofId(customer.getId()).orElseThrow();
 
         assertThat(savedCustomer.getArchived()).isTrue();
         assertThat(savedCustomer.getArchivedAt()).isNotNull();
@@ -100,7 +100,7 @@ class CustomersIT {
         final Customer customer = CustomerTestDataBuilder.newCustomer().build();
         customers.add(customer);
 
-        assertThat(customers.exists(customer.id())).isTrue();
+        assertThat(customers.exists(customer.getId())).isTrue();
         assertThat(customers.exists(new CustomerId())).isFalse();
     }
 
@@ -129,7 +129,7 @@ class CustomersIT {
         final Customer customer = CustomerTestDataBuilder.newCustomer().build();
         customers.add(customer);
 
-        assertThat(customers.isEmailUnique(customer.getEmail(), customer.id())).isTrue();
+        assertThat(customers.isEmailUnique(customer.getEmail(), customer.getId())).isTrue();
         assertThat(customers.isEmailUnique(new Email(UUID.randomUUID() + "@algashop.com"), new CustomerId())).isTrue();
     }
 
