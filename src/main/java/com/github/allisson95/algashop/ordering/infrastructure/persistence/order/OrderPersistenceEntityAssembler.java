@@ -69,11 +69,11 @@ public class OrderPersistenceEntityAssembler {
         requireNonNull(orderItem, "orderItem cannot be null");
 
         orderItemPersistenceEntity.setId(orderItem.id().value().toLong());
-        orderItemPersistenceEntity.setProductId(orderItem.productId().toString());
-        orderItemPersistenceEntity.setProductName(orderItem.productName().value());
-        orderItemPersistenceEntity.setPrice(orderItem.price().value());
-        orderItemPersistenceEntity.setQuantity(orderItem.quantity().value());
-        orderItemPersistenceEntity.setTotalAmount(orderItem.totalAmount().value());
+        orderItemPersistenceEntity.setProductId(orderItem.getProductId().toString());
+        orderItemPersistenceEntity.setProductName(orderItem.getProductName().value());
+        orderItemPersistenceEntity.setPrice(orderItem.getPrice().value());
+        orderItemPersistenceEntity.setQuantity(orderItem.getQuantity().value());
+        orderItemPersistenceEntity.setTotalAmount(orderItem.getTotalAmount().value());
 
         return orderItemPersistenceEntity;
     }

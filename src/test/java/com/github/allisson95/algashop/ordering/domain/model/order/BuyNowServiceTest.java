@@ -44,8 +44,8 @@ class BuyNowServiceTest {
                 o -> assertThat(o.getTotalAmount()).isEqualTo(expectedTotalCost)
         );
         assertWith(order.getItems().iterator().next(),
-                i -> assertThat(i.productId()).isEqualTo(expectedProduct.id()),
-                i -> assertThat(i.quantity()).isEqualTo(expectedQuantity)
+                i -> assertThat(i.getProductId()).isEqualTo(expectedProduct.id()),
+                i -> assertThat(i.getQuantity()).isEqualTo(expectedQuantity)
         );
     }
 

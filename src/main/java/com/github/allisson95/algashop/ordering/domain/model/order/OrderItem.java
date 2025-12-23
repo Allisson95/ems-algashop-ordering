@@ -7,11 +7,13 @@ import com.github.allisson95.algashop.ordering.domain.model.product.ProductId;
 import com.github.allisson95.algashop.ordering.domain.model.product.ProductName;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 
+@Getter
 public class OrderItem {
 
     private OrderItemId id;
@@ -59,7 +61,7 @@ public class OrderItem {
     }
 
     private void recalculateTotalAmount() {
-        this.setTotalAmount(this.price().multiply(this.quantity()));
+        this.setTotalAmount(this.getPrice().multiply(this.getQuantity()));
     }
 
     public OrderItemId id() {
@@ -71,17 +73,9 @@ public class OrderItem {
         this.id = id;
     }
 
-    public OrderId orderId() {
-        return orderId;
-    }
-
     private void setOrderId(final OrderId orderId) {
         requireNonNull(orderId, "orderId cannot be null");
         this.orderId = orderId;
-    }
-
-    public ProductId productId() {
-        return productId;
     }
 
     private void setProductId(final ProductId productId) {
@@ -89,17 +83,9 @@ public class OrderItem {
         this.productId = productId;
     }
 
-    public ProductName productName() {
-        return productName;
-    }
-
     private void setProductName(final ProductName productName) {
         requireNonNull(productName, "productName cannot be null");
         this.productName = productName;
-    }
-
-    public Money price() {
-        return price;
     }
 
     private void setPrice(final Money price) {
@@ -107,17 +93,9 @@ public class OrderItem {
         this.price = price;
     }
 
-    public Quantity quantity() {
-        return quantity;
-    }
-
     private void setQuantity(final Quantity quantity) {
         requireNonNull(quantity, "quantity cannot be null");
         this.quantity = quantity;
-    }
-
-    public Money totalAmount() {
-        return totalAmount;
     }
 
     private void setTotalAmount(final Money totalAmount) {

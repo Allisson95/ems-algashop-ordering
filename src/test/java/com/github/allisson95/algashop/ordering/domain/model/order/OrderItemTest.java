@@ -29,12 +29,12 @@ class OrderItemTest {
 
         assertWith(orderItem,
                 i -> assertThat(i).isNotNull(),
-                i -> assertThat(i.orderId()).isEqualTo(orderId),
-                i -> assertThat(i.productId()).isEqualTo(product.id()),
-                i -> assertThat(i.productName()).isEqualTo(product.name()),
-                i -> assertThat(i.price()).isEqualTo(product.price()),
-                i -> assertThat(i.quantity()).isEqualTo(quantity),
-                i -> assertThat(i.totalAmount()).isEqualTo(expectedTotalAmount)
+                i -> assertThat(i.getOrderId()).isEqualTo(orderId),
+                i -> assertThat(i.getProductId()).isEqualTo(product.id()),
+                i -> assertThat(i.getProductName()).isEqualTo(product.name()),
+                i -> assertThat(i.getPrice()).isEqualTo(product.price()),
+                i -> assertThat(i.getQuantity()).isEqualTo(quantity),
+                i -> assertThat(i.getTotalAmount()).isEqualTo(expectedTotalAmount)
         );
     }
 

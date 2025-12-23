@@ -185,8 +185,8 @@ public class Order implements AggregateRoot<OrderId> {
 
     private void recalculateTotals() {
         final Money shippingCost = Optional.ofNullable(this.getShipping()).map(Shipping::cost).orElse(Money.ZERO);
-        final Money totalItemsAmount = this.getItems().stream().map(OrderItem::totalAmount).reduce(Money.ZERO, Money::add);
-        final Quantity totalItemsCount = this.getItems().stream().map(OrderItem::quantity).reduce(Quantity.ZERO, Quantity::add);
+        final Money totalItemsAmount = this.getItems().stream().map(OrderItem::getTotalAmount).reduce(Money.ZERO, Money::add);
+        final Quantity totalItemsCount = this.getItems().stream().map(OrderItem::getQuantity).reduce(Quantity.ZERO, Quantity::add);
 
         final Money totalOrderAmount = totalItemsAmount.add(shippingCost);
 

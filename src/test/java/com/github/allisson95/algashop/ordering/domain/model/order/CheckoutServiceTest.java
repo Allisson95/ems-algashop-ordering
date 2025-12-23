@@ -39,7 +39,7 @@ class CheckoutServiceTest {
                 o -> assertThat(o.getStatus()).isEqualTo(OrderStatus.PLACED)
         );
         assertThatCollection(order.getItems())
-                .extracting(OrderItem::productId, OrderItem::productName, OrderItem::price, OrderItem::quantity, OrderItem::totalAmount)
+                .extracting(OrderItem::getProductId, OrderItem::getProductName, OrderItem::getPrice, OrderItem::getQuantity, OrderItem::getTotalAmount)
                 .contains(shoppingCartItems.stream()
                         .map(item -> tuple(item.productId(), item.productName(), item.price(), item.quantity(), item.totalAmount()))
                         .toArray(Tuple[]::new));

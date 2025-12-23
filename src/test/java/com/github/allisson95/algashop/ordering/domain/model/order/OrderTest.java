@@ -51,12 +51,12 @@ class OrderTest {
                 o -> assertThat(o.getTotalAmount()).isEqualTo(product.price()),
                 o -> assertWith(o.getItems().iterator().next(),
                         i -> assertThat(i.id()).isNotNull(),
-                        i -> assertThat(i.orderId()).isEqualTo(order.id()),
-                        i -> assertThat(i.productId()).isEqualTo(product.id()),
-                        i -> assertThat(i.productName()).isEqualTo(product.name()),
-                        i -> assertThat(i.price()).isEqualTo(product.price()),
-                        i -> assertThat(i.quantity()).isEqualTo(new Quantity(1)),
-                        i -> assertThat(i.totalAmount()).isEqualTo(product.price()))
+                        i -> assertThat(i.getOrderId()).isEqualTo(order.id()),
+                        i -> assertThat(i.getProductId()).isEqualTo(product.id()),
+                        i -> assertThat(i.getProductName()).isEqualTo(product.name()),
+                        i -> assertThat(i.getPrice()).isEqualTo(product.price()),
+                        i -> assertThat(i.getQuantity()).isEqualTo(new Quantity(1)),
+                        i -> assertThat(i.getTotalAmount()).isEqualTo(product.price()))
         );
     }
 

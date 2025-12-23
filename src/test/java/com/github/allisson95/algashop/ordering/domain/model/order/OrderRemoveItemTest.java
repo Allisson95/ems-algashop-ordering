@@ -16,8 +16,8 @@ class OrderRemoveItemTest {
     void givenADraftOrderWithItems_whenRemoveItem_shouldBeOk() {
         final Order order = OrderTestDataBuilder.anOrder().build();
         final OrderItem orderItem = order.getItems().iterator().next();
-        final Quantity expectedTotalItems = new Quantity(order.getTotalItems().value() - orderItem.quantity().value());
-        final Money expectedTotalAmount = new Money(order.getTotalAmount().value().subtract(orderItem.totalAmount().value(), MathContext.DECIMAL32));
+        final Quantity expectedTotalItems = new Quantity(order.getTotalItems().value() - orderItem.getQuantity().value());
+        final Money expectedTotalAmount = new Money(order.getTotalAmount().value().subtract(orderItem.getTotalAmount().value(), MathContext.DECIMAL32));
 
         assertWith(order,
                 o -> assertThatCode(() -> o.removeItem(orderItem.id())).doesNotThrowAnyException(),
