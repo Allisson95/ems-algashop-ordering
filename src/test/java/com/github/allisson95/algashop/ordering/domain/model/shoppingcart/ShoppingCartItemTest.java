@@ -23,13 +23,13 @@ class ShoppingCartItemTest {
 
         assertWith(shoppingCartItem,
                 i -> assertThat(i.id()).isNotNull(),
-                i -> assertThat(i.shoppingCartId()).isEqualTo(shoppingCartId),
-                i -> assertThat(i.productId()).isEqualTo(product.id()),
-                i -> assertThat(i.productName()).isEqualTo(product.name()),
-                i -> assertThat(i.price()).isEqualTo(product.price()),
-                i -> assertThat(i.quantity()).isEqualTo(quantity),
-                i -> assertThat(i.totalAmount()).isEqualTo(expectedTotalAmount),
-                i -> assertThat(i.isAvailable()).isEqualTo(product.inStock())
+                i -> assertThat(i.getShoppingCartId()).isEqualTo(shoppingCartId),
+                i -> assertThat(i.getProductId()).isEqualTo(product.id()),
+                i -> assertThat(i.getProductName()).isEqualTo(product.name()),
+                i -> assertThat(i.getPrice()).isEqualTo(product.price()),
+                i -> assertThat(i.getQuantity()).isEqualTo(quantity),
+                i -> assertThat(i.getTotalAmount()).isEqualTo(expectedTotalAmount),
+                i -> assertThat(i.getAvailable()).isEqualTo(product.inStock())
         );
     }
 

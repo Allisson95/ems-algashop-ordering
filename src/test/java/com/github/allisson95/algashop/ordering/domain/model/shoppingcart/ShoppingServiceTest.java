@@ -38,10 +38,10 @@ class ShoppingServiceTest {
         final ShoppingCart shoppingCart = service.startShopping(customerId);
 
         assertThat(shoppingCart).isNotNull();
-        assertThat(shoppingCart.customerId()).isEqualTo(customerId);
+        assertThat(shoppingCart.getCustomerId()).isEqualTo(customerId);
         assertThat(shoppingCart.isEmpty()).isTrue();
-        assertThat(shoppingCart.totalAmount()).isEqualTo(Money.ZERO);
-        assertThat(shoppingCart.totalItems()).isEqualTo(Quantity.ZERO);
+        assertThat(shoppingCart.getTotalAmount()).isEqualTo(Money.ZERO);
+        assertThat(shoppingCart.getTotalItems()).isEqualTo(Quantity.ZERO);
 
         verify(customers).exists(customerId);
         verify(shoppingCarts).existsByCustomer(customerId);

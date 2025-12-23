@@ -36,10 +36,10 @@ public class ShoppingCartPersistenceEntityAssembler {
         if (isNull(shoppingCartPersistenceEntity.getId())) {
             shoppingCartPersistenceEntity.setId(shoppingCart.id().value());
         }
-        shoppingCartPersistenceEntity.setCustomer(this.customerRepository.getReferenceById(shoppingCart.customerId().value()));
-        shoppingCartPersistenceEntity.setTotalAmount(shoppingCart.totalAmount().value());
-        shoppingCartPersistenceEntity.setTotalItems(shoppingCart.totalItems().value());
-        shoppingCartPersistenceEntity.setCreatedAt(shoppingCart.createdAt());
+        shoppingCartPersistenceEntity.setCustomer(this.customerRepository.getReferenceById(shoppingCart.getCustomerId().value()));
+        shoppingCartPersistenceEntity.setTotalAmount(shoppingCart.getTotalAmount().value());
+        shoppingCartPersistenceEntity.setTotalItems(shoppingCart.getTotalItems().value());
+        shoppingCartPersistenceEntity.setCreatedAt(shoppingCart.getCreatedAt());
         shoppingCartPersistenceEntity.replaceItems(mergeItems(shoppingCart, shoppingCartPersistenceEntity));
 
         shoppingCartPersistenceEntity.setVersion(DomainVersionHandler.getVersion(shoppingCart));
@@ -58,12 +58,12 @@ public class ShoppingCartPersistenceEntityAssembler {
         if (isNull(shoppingCartItemPersistenceEntity.getId())) {
             shoppingCartItemPersistenceEntity.setId(shoppingCartItem.id().value());
         }
-        shoppingCartItemPersistenceEntity.setProductId(shoppingCartItem.productId().value());
-        shoppingCartItemPersistenceEntity.setProductName(shoppingCartItem.productName().value());
-        shoppingCartItemPersistenceEntity.setPrice(shoppingCartItem.price().value());
-        shoppingCartItemPersistenceEntity.setQuantity(shoppingCartItem.quantity().value());
-        shoppingCartItemPersistenceEntity.setTotalAmount(shoppingCartItem.totalAmount().value());
-        shoppingCartItemPersistenceEntity.setAvailable(shoppingCartItem.isAvailable());
+        shoppingCartItemPersistenceEntity.setProductId(shoppingCartItem.getProductId().value());
+        shoppingCartItemPersistenceEntity.setProductName(shoppingCartItem.getProductName().value());
+        shoppingCartItemPersistenceEntity.setPrice(shoppingCartItem.getPrice().value());
+        shoppingCartItemPersistenceEntity.setQuantity(shoppingCartItem.getQuantity().value());
+        shoppingCartItemPersistenceEntity.setTotalAmount(shoppingCartItem.getTotalAmount().value());
+        shoppingCartItemPersistenceEntity.setAvailable(shoppingCartItem.getAvailable());
 
         shoppingCartItemPersistenceEntity.setVersion(DomainVersionHandler.getVersion(shoppingCartItem));
 
@@ -71,7 +71,7 @@ public class ShoppingCartPersistenceEntityAssembler {
     }
 
     private Set<ShoppingCartItemPersistenceEntity> mergeItems(final ShoppingCart shoppingCart, final ShoppingCartPersistenceEntity shoppingCartPersistenceEntity) {
-        final Set<ShoppingCartItem> shoppingCartItems = shoppingCart.items();
+        final Set<ShoppingCartItem> shoppingCartItems = shoppingCart.getItems();
         if (isNull(shoppingCartItems) || shoppingCartItems.isEmpty()) {
             return new LinkedHashSet<>();
         }

@@ -6,11 +6,13 @@ import com.github.allisson95.algashop.ordering.domain.model.product.Product;
 import com.github.allisson95.algashop.ordering.domain.model.product.ProductId;
 import com.github.allisson95.algashop.ordering.domain.model.product.ProductName;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 
+@Getter
 public class ShoppingCartItem {
 
     private ShoppingCartItemId id;
@@ -73,13 +75,13 @@ public class ShoppingCartItem {
     }
 
     private void verifyIfProductIsCompatible(final Product product) {
-        if (!product.id().equals(this.productId())) {
-            throw new ShoppingCartItemIncompatibleProductException(this.productId(), product.id());
+        if (!product.id().equals(this.getProductId())) {
+            throw new ShoppingCartItemIncompatibleProductException(this.getProductId(), product.id());
         }
     }
 
     private void recalculateTotals() {
-        this.setTotalAmount(this.price().multiply(this.quantity()));
+        this.setTotalAmount(this.getPrice().multiply(this.getQuantity()));
     }
 
     public ShoppingCartItemId id() {
@@ -91,17 +93,9 @@ public class ShoppingCartItem {
         this.id = id;
     }
 
-    public ShoppingCartId shoppingCartId() {
-        return shoppingCartId;
-    }
-
     private void setShoppingCartId(final ShoppingCartId shoppingCartId) {
         requireNonNull(shoppingCartId, "shoppingCartId cannot be null");
         this.shoppingCartId = shoppingCartId;
-    }
-
-    public ProductId productId() {
-        return productId;
     }
 
     private void setProductId(final ProductId productId) {
@@ -109,17 +103,9 @@ public class ShoppingCartItem {
         this.productId = productId;
     }
 
-    public ProductName productName() {
-        return productName;
-    }
-
     private void setProductName(final ProductName productName) {
         requireNonNull(productName, "productName cannot be null");
         this.productName = productName;
-    }
-
-    public Money price() {
-        return price;
     }
 
     private void setPrice(final Money price) {
@@ -127,26 +113,14 @@ public class ShoppingCartItem {
         this.price = price;
     }
 
-    public Quantity quantity() {
-        return quantity;
-    }
-
     private void setQuantity(final Quantity quantity) {
         requireNonNull(quantity, "quantity cannot be null");
         this.quantity = quantity;
     }
 
-    public Money totalAmount() {
-        return totalAmount;
-    }
-
     private void setTotalAmount(final Money totalAmount) {
         requireNonNull(totalAmount, "totalAmount cannot be null");
         this.totalAmount = totalAmount;
-    }
-
-    public Boolean isAvailable() {
-        return available;
     }
 
     private void setAvailable(final Boolean available) {

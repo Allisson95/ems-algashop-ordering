@@ -21,14 +21,14 @@ public class CheckoutService {
             throw new ShoppingCartCantProceedToCheckoutException();
         }
 
-        final Order newOrder = Order.draft(shoppingCart.customerId());
+        final Order newOrder = Order.draft(shoppingCart.getCustomerId());
         newOrder.changeBilling(billing);
         newOrder.changeShipping(shipping);
         newOrder.changePaymentMethod(paymentMethod);
 
-        for (final ShoppingCartItem sci : shoppingCart.items()) {
+        for (final ShoppingCartItem sci : shoppingCart.getItems()) {
             final Product product = getProduct(sci);
-            newOrder.addItem(product, sci.quantity());
+            newOrder.addItem(product, sci.getQuantity());
         }
 
         newOrder.place();
@@ -40,10 +40,10 @@ public class CheckoutService {
 
     private Product getProduct(final ShoppingCartItem sci) {
         return Product.builder()
-                .id(sci.productId())
-                .name(sci.productName())
-                .price(sci.price())
-                .inStock(sci.isAvailable())
+                .id(sci.getProductId())
+                .name(sci.getProductName())
+                .price(sci.getPrice())
+                .inStock(sci.getAvailable())
                 .build();
     }
 

@@ -96,7 +96,7 @@ class ShoppingCartsPersistenceProvider implements ShoppingCarts {
         DomainVersionHandler.setVersion(shoppingCart, shoppingCartPersistenceEntity.getVersion());
         final Map<UUID, Long> shoppingCartItemVersions = shoppingCartPersistenceEntity.getItems().stream()
                 .collect(Collectors.toMap(ShoppingCartItemPersistenceEntity::getId, ShoppingCartItemPersistenceEntity::getVersion));
-        shoppingCart.items().forEach(item -> DomainVersionHandler.setVersion(item, shoppingCartItemVersions.get(item.id().value())));
+        shoppingCart.getItems().forEach(item -> DomainVersionHandler.setVersion(item, shoppingCartItemVersions.get(item.id().value())));
     }
 
 }

@@ -8,6 +8,7 @@ import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerId;
 import com.github.allisson95.algashop.ordering.domain.model.product.Product;
 import com.github.allisson95.algashop.ordering.domain.model.product.ProductId;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.time.Instant;
 import java.util.Collections;
@@ -20,6 +21,7 @@ import java.util.function.Supplier;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
+@Getter
 public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
 
     private ShoppingCartId id;
@@ -65,7 +67,7 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
         try {
             shoppingCartItem = findItem(product.id());
             shoppingCartItem.refresh(product);
-            shoppingCartItem.changeQuantity(shoppingCartItem.quantity().add(quantity));
+            shoppingCartItem.changeQuantity(shoppingCartItem.getQuantity().add(quantity));
         } catch (final ShoppingCartDoesNotContainItemException e) {
             shoppingCartItem = ShoppingCartItem.brandNew(this.id(), product, quantity);
             this.items.add(shoppingCartItem);
@@ -94,7 +96,7 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
 
     public ShoppingCartItem findItem(final ProductId productId) {
         requireNonNull(productId, "productId cannot be null");
-        return this.findShoppingCartItem(item -> item.productId().equals(productId), () -> new ShoppingCartDoesNotContainItemException(productId));
+        return this.findShoppingCartItem(item -> item.getProductId().equals(productId), () -> new ShoppingCartDoesNotContainItemException(productId));
     }
 
     public void changeItemQuantity(final ShoppingCartItemId shoppingCartItemId, final Quantity quantity) {
@@ -105,23 +107,23 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
     }
 
     public boolean containsUnavailableItems() {
-        return this.items().stream().anyMatch(not(ShoppingCartItem::isAvailable));
+        return this.getItems().stream().anyMatch(not(ShoppingCartItem::getAvailable));
     }
 
     public boolean isEmpty() {
-        return this.items().isEmpty();
+        return this.getItems().isEmpty();
     }
 
     private void recalculateTotals() {
-        final Money totalAmount = this.items().stream().map(ShoppingCartItem::totalAmount).reduce(Money.ZERO, Money::add);
-        final Quantity totalItemsCount = this.items().stream().map(ShoppingCartItem::quantity).reduce(Quantity.ZERO, Quantity::add);
+        final Money totalAmount = this.getItems().stream().map(ShoppingCartItem::getTotalAmount).reduce(Money.ZERO, Money::add);
+        final Quantity totalItemsCount = this.getItems().stream().map(ShoppingCartItem::getQuantity).reduce(Quantity.ZERO, Quantity::add);
         this.setTotalAmount(totalAmount);
         this.setTotalItems(totalItemsCount);
     }
 
     private ShoppingCartItem findShoppingCartItem(final Predicate<ShoppingCartItem> predicate, final Supplier<DomainException> exceptionSupplier) {
         requireNonNull(predicate, "predicate cannot be null");
-        return this.items().stream().filter(predicate).findFirst().orElseThrow(exceptionSupplier);
+        return this.getItems().stream().filter(predicate).findFirst().orElseThrow(exceptionSupplier);
     }
 
     public ShoppingCartId id() {
@@ -133,17 +135,9 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
         this.id = id;
     }
 
-    public CustomerId customerId() {
-        return customerId;
-    }
-
     private void setCustomerId(final CustomerId customerId) {
         requireNonNull(customerId, "customerId cannot be null");
         this.customerId = customerId;
-    }
-
-    public Money totalAmount() {
-        return totalAmount;
     }
 
     private void setTotalAmount(final Money totalAmount) {
@@ -151,17 +145,9 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
         this.totalAmount = totalAmount;
     }
 
-    public Quantity totalItems() {
-        return totalItems;
-    }
-
     private void setTotalItems(final Quantity totalItems) {
         requireNonNull(totalItems, "totalItems cannot be null");
         this.totalItems = totalItems;
-    }
-
-    public Instant createdAt() {
-        return createdAt;
     }
 
     private void setCreatedAt(final Instant createdAt) {
@@ -169,7 +155,7 @@ public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
         this.createdAt = createdAt;
     }
 
-    public Set<ShoppingCartItem> items() {
+    public Set<ShoppingCartItem> getItems() {
         return Collections.unmodifiableSet(items);
     }
 

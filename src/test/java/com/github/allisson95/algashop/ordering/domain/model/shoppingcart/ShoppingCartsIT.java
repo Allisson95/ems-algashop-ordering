@@ -53,8 +53,8 @@ class ShoppingCartsIT {
 
         assertWith(actual,
                 sc -> assertThat(sc).usingRecursiveComparison().ignoringFields("createdAt", "items").isEqualTo(shoppingCart),
-                sc -> assertThatCollection(sc.items()).containsExactlyInAnyOrderElementsOf(shoppingCart.items()),
-                sc -> assertThatCollection(sc.items()).usingRecursiveFieldByFieldElementComparator().containsExactlyInAnyOrderElementsOf(shoppingCart.items())
+                sc -> assertThatCollection(sc.getItems()).containsExactlyInAnyOrderElementsOf(shoppingCart.getItems()),
+                sc -> assertThatCollection(sc.getItems()).usingRecursiveFieldByFieldElementComparator().containsExactlyInAnyOrderElementsOf(shoppingCart.getItems())
         );
 //        var actualById = actual.items().stream().collect(toMap(ShoppingCartItem::id, identity()));
 //        var expectedById = shoppingCart.items().stream().collect(toMap(ShoppingCartItem::id, identity()));
@@ -81,8 +81,8 @@ class ShoppingCartsIT {
         assertThat(possibleShoppingCart).isPresent();
         assertWith(possibleShoppingCart.get(),
                 sc -> assertThat(sc).isEqualTo(shoppingCart),
-                sc -> assertThatCollection(sc.items()).isNotEmpty(),
-                sc -> assertThatCollection(sc.items()).isEqualTo(shoppingCart.items())
+                sc -> assertThatCollection(sc.getItems()).isNotEmpty(),
+                sc -> assertThatCollection(sc.getItems()).isEqualTo(shoppingCart.getItems())
         );
 
         assertThat(shoppingCarts.ofCustomer(new CustomerId())).isEmpty();
@@ -118,7 +118,7 @@ class ShoppingCartsIT {
 
         shoppingCart = shoppingCarts.ofId(shoppingCart.id()).orElseThrow();
         assertWith(shoppingCart,
-                sc -> assertThatCollection(sc.items()).isNotEmpty()
+                sc -> assertThatCollection(sc.getItems()).isNotEmpty()
         );
 
         shoppingCart.empty();
@@ -126,7 +126,7 @@ class ShoppingCartsIT {
         shoppingCarts.add(shoppingCart);
 
         assertWith(shoppingCarts.ofId(shoppingCart.id()).orElseThrow(),
-                sc -> assertThatCollection(sc.items()).isEmpty()
+                sc -> assertThatCollection(sc.getItems()).isEmpty()
         );
     }
 

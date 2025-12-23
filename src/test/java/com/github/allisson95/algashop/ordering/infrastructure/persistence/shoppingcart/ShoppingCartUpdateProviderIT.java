@@ -72,16 +72,16 @@ class ShoppingCartUpdateProviderIT {
 
         final ShoppingCart updatedShoppingCart = shoppingCartsPersistenceProvider.ofId(shoppingCart.id()).orElseThrow();
         assertWith(updatedShoppingCart,
-                sc -> assertThat(sc.totalAmount()).isEqualTo(expectedCartTotalAmount),
-                sc -> assertThat(sc.totalItems()).isEqualTo(new Quantity(3))
+                sc -> assertThat(sc.getTotalAmount()).isEqualTo(expectedCartTotalAmount),
+                sc -> assertThat(sc.getTotalItems()).isEqualTo(new Quantity(3))
         );
         assertWith(updatedShoppingCart.findItem(productIdToUpdate),
-                i -> assertThat(i.price()).isEqualTo(newProduct1Price),
-                i -> assertThat(i.totalAmount()).isEqualTo(expectedItemTotalPrice)
+                i -> assertThat(i.getPrice()).isEqualTo(newProduct1Price),
+                i -> assertThat(i.getTotalAmount()).isEqualTo(expectedItemTotalPrice)
         );
         assertWith(updatedShoppingCart.findItem(productIdToNotUpdate),
-                i -> assertThat(i.price()).isEqualTo(product2.price()),
-                i -> assertThat(i.totalAmount()).isEqualTo(shoppingCart.findItem(productIdToNotUpdate).totalAmount())
+                i -> assertThat(i.getPrice()).isEqualTo(product2.price()),
+                i -> assertThat(i.getTotalAmount()).isEqualTo(shoppingCart.findItem(productIdToNotUpdate).getTotalAmount())
         );
     }
 
@@ -101,10 +101,10 @@ class ShoppingCartUpdateProviderIT {
 
         final ShoppingCart updatedShoppingCart = shoppingCartsPersistenceProvider.ofId(shoppingCart.id()).orElseThrow();
         assertWith(updatedShoppingCart.findItem(productIdToUpdate),
-                i -> assertThat(i.isAvailable()).isFalse()
+                i -> assertThat(i.getAvailable()).isFalse()
         );
         assertWith(updatedShoppingCart.findItem(productIdToNotUpdate),
-                i -> assertThat(i.isAvailable()).isTrue()
+                i -> assertThat(i.getAvailable()).isTrue()
         );
     }
 

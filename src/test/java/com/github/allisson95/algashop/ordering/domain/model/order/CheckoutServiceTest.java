@@ -26,8 +26,8 @@ class CheckoutServiceTest {
         final PaymentMethod paymentMethod = PaymentMethod.CREDIT_CARD;
 
         final ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().build();
-        final CustomerId customerId = shoppingCart.customerId();
-        final Set<ShoppingCartItem> shoppingCartItems = new LinkedHashSet<>(shoppingCart.items());
+        final CustomerId customerId = shoppingCart.getCustomerId();
+        final Set<ShoppingCartItem> shoppingCartItems = new LinkedHashSet<>(shoppingCart.getItems());
 
         final Order order = checkoutService.checkout(shoppingCart, billing, shipping, paymentMethod);
 
@@ -41,7 +41,7 @@ class CheckoutServiceTest {
         assertThatCollection(order.getItems())
                 .extracting(OrderItem::getProductId, OrderItem::getProductName, OrderItem::getPrice, OrderItem::getQuantity, OrderItem::getTotalAmount)
                 .contains(shoppingCartItems.stream()
-                        .map(item -> tuple(item.productId(), item.productName(), item.price(), item.quantity(), item.totalAmount()))
+                        .map(item -> tuple(item.getProductId(), item.getProductName(), item.getPrice(), item.getQuantity(), item.getTotalAmount()))
                         .toArray(Tuple[]::new));
         assertThat(shoppingCart.isEmpty()).isTrue();
     }
@@ -53,11 +53,11 @@ class CheckoutServiceTest {
         final PaymentMethod paymentMethod = PaymentMethod.CREDIT_CARD;
 
         final ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().build();
-        final ShoppingCartItem shoppingCartItem = shoppingCart.items().iterator().next();
+        final ShoppingCartItem shoppingCartItem = shoppingCart.getItems().iterator().next();
         final Product unavailableProduct = ProductTestDataBuilder.anOutOfStockProduct()
-                .id(shoppingCartItem.productId())
-                .name(shoppingCartItem.productName())
-                .price(shoppingCartItem.price())
+                .id(shoppingCartItem.getProductId())
+                .name(shoppingCartItem.getProductName())
+                .price(shoppingCartItem.getPrice())
                 .build();
         shoppingCart.refreshItem(unavailableProduct);
 

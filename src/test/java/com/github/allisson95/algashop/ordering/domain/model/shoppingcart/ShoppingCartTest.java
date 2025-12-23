@@ -22,10 +22,10 @@ class ShoppingCartTest {
 
         assertWith(shoppingCart,
                 c -> assertThat(c.id()).isNotNull(),
-                c -> assertThat(c.customerId()).isEqualTo(customerId),
-                c -> assertThat(c.totalAmount()).isEqualTo(Money.ZERO),
-                c -> assertThat(c.totalItems()).isEqualTo(Quantity.ZERO),
-                c -> assertThatTemporal(c.createdAt()).isCloseTo(Instant.now(), within(1, ChronoUnit.SECONDS)),
+                c -> assertThat(c.getCustomerId()).isEqualTo(customerId),
+                c -> assertThat(c.getTotalAmount()).isEqualTo(Money.ZERO),
+                c -> assertThat(c.getTotalItems()).isEqualTo(Quantity.ZERO),
+                c -> assertThatTemporal(c.getCreatedAt()).isCloseTo(Instant.now(), within(1, ChronoUnit.SECONDS)),
                 c -> assertThat(c.isEmpty()).isTrue()
         );
     }
@@ -51,11 +51,11 @@ class ShoppingCartTest {
         final Quantity quantity = new Quantity(1);
         shoppingCart.addItem(product, quantity);
 
-        assertWith(shoppingCart.items().iterator().next(),
-                i -> assertThat(i.productId()).isEqualTo(product.id()),
-                i -> assertThat(i.productName()).isEqualTo(product.name()),
-                i -> assertThat(i.price()).isEqualTo(product.price()),
-                i -> assertThat(i.isAvailable()).isEqualTo(product.inStock())
+        assertWith(shoppingCart.getItems().iterator().next(),
+                i -> assertThat(i.getProductId()).isEqualTo(product.id()),
+                i -> assertThat(i.getProductName()).isEqualTo(product.name()),
+                i -> assertThat(i.getPrice()).isEqualTo(product.price()),
+                i -> assertThat(i.getAvailable()).isEqualTo(product.inStock())
         );
 
         final Product updatedProduct = ProductTestDataBuilder.aProduct().id(product.id()).build();
@@ -64,14 +64,14 @@ class ShoppingCartTest {
         shoppingCart.addItem(updatedProduct, quantity2);
 
         assertWith(shoppingCart,
-                c -> assertThat(c.items()).hasSize(1),
-                c -> assertThat(c.totalItems()).isEqualTo(new Quantity(4)),
-                c -> assertThat(c.totalAmount()).isEqualTo(updatedProduct.price().multiply(new Quantity(4))),
-                c -> assertThatCollection(c.items()).first().satisfies(i -> {
-                    assertThat(i.productId()).isEqualTo(updatedProduct.id());
-                    assertThat(i.productName()).isEqualTo(updatedProduct.name());
-                    assertThat(i.price()).isEqualTo(updatedProduct.price());
-                    assertThat(i.isAvailable()).isEqualTo(updatedProduct.inStock());
+                c -> assertThat(c.getItems()).hasSize(1),
+                c -> assertThat(c.getTotalItems()).isEqualTo(new Quantity(4)),
+                c -> assertThat(c.getTotalAmount()).isEqualTo(updatedProduct.price().multiply(new Quantity(4))),
+                c -> assertThatCollection(c.getItems()).first().satisfies(i -> {
+                    assertThat(i.getProductId()).isEqualTo(updatedProduct.id());
+                    assertThat(i.getProductName()).isEqualTo(updatedProduct.name());
+                    assertThat(i.getPrice()).isEqualTo(updatedProduct.price());
+                    assertThat(i.getAvailable()).isEqualTo(updatedProduct.inStock());
                 })
         );
     }
@@ -91,9 +91,9 @@ class ShoppingCartTest {
         shoppingCart.addItem(product2, quantity2);
 
         assertWith(shoppingCart,
-                c -> assertThat(c.items()).hasSize(2),
-                c -> assertThat(c.totalItems()).isEqualTo(expectedTotalItems),
-                c -> assertThat(c.totalAmount()).isEqualTo(expectedTotalAmount),
+                c -> assertThat(c.getItems()).hasSize(2),
+                c -> assertThat(c.getTotalItems()).isEqualTo(expectedTotalItems),
+                c -> assertThat(c.getTotalAmount()).isEqualTo(expectedTotalAmount),
                 c -> assertThat(c.isEmpty()).isFalse()
         );
     }
@@ -111,19 +111,19 @@ class ShoppingCartTest {
     @Test
     void shouldRemoveItem() {
         final ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().build();
-        final ShoppingCartItem itemToRemove = shoppingCart.items().iterator().next();
-        final Quantity actualTotalItems = shoppingCart.totalItems();
-        final Money actualTotalAmount = shoppingCart.totalAmount();
+        final ShoppingCartItem itemToRemove = shoppingCart.getItems().iterator().next();
+        final Quantity actualTotalItems = shoppingCart.getTotalItems();
+        final Money actualTotalAmount = shoppingCart.getTotalAmount();
 
-        final Quantity expectedTotalItems = new Quantity(actualTotalItems.value() - itemToRemove.quantity().value());
-        final Money expectedTotalAmount = new Money(actualTotalAmount.value().subtract(itemToRemove.totalAmount().value()));
+        final Quantity expectedTotalItems = new Quantity(actualTotalItems.value() - itemToRemove.getQuantity().value());
+        final Money expectedTotalAmount = new Money(actualTotalAmount.value().subtract(itemToRemove.getTotalAmount().value()));
 
         shoppingCart.removeItem(itemToRemove.id());
 
         assertWith(shoppingCart,
-                c -> assertThat(c.items()).hasSize(2),
-                c -> assertThat(c.totalItems()).isEqualTo(expectedTotalItems),
-                c -> assertThat(c.totalAmount()).isEqualTo(expectedTotalAmount)
+                c -> assertThat(c.getItems()).hasSize(2),
+                c -> assertThat(c.getTotalItems()).isEqualTo(expectedTotalItems),
+                c -> assertThat(c.getTotalAmount()).isEqualTo(expectedTotalAmount)
         );
     }
 
@@ -136,9 +136,9 @@ class ShoppingCartTest {
         shoppingCart.empty();
 
         assertWith(shoppingCart,
-                c -> assertThat(c.items()).isEmpty(),
-                c -> assertThat(c.totalItems()).isEqualTo(expectedTotalItems),
-                c -> assertThat(c.totalAmount()).isEqualTo(expectedTotalAmount),
+                c -> assertThat(c.getItems()).isEmpty(),
+                c -> assertThat(c.getTotalItems()).isEqualTo(expectedTotalItems),
+                c -> assertThat(c.getTotalAmount()).isEqualTo(expectedTotalAmount),
                 c -> assertThat(c.isEmpty()).isTrue()
         );
     }
@@ -146,7 +146,7 @@ class ShoppingCartTest {
     @Test
     void shouldReturnUnmodifiableItemsToPreventDirectChanges() {
         final ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().build();
-        assertThatCollection(shoppingCart.items()).isUnmodifiable();
+        assertThatCollection(shoppingCart.getItems()).isUnmodifiable();
     }
 
     @Test
