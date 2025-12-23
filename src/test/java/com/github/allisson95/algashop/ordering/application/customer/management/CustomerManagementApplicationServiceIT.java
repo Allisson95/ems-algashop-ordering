@@ -1,11 +1,10 @@
 package com.github.allisson95.algashop.ordering.application.customer.management;
 
 import com.github.allisson95.algashop.ordering.DataJpaCleanUpExtension;
-import com.github.allisson95.algashop.ordering.application.commons.AddressData;
 import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerArchivedException;
+import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerEmailIsInUseException;
 import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerId;
 import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerNotFoundException;
-import net.datafaker.Faker;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,38 +20,18 @@ import static org.assertj.core.api.Assertions.*;
 @ExtendWith(DataJpaCleanUpExtension.class)
 class CustomerManagementApplicationServiceIT {
 
-    private static final Faker faker = new Faker();
-
     @Autowired
     private CustomerManagementApplicationService service;
 
     @Test
     void shouldCreate() {
-        final CustomerInput customerInput = CustomerInput.builder()
-                .firstName(faker.name().firstName())
-                .lastName(faker.name().lastName())
-                .birthDate(faker.timeAndDate().birthday())
-                .email(faker.internet().emailAddress())
-                .phone(faker.phoneNumber().cellPhone())
-                .document(faker.passport().valid())
-                .promotionNotificationsAllowed(faker.bool().bool())
-                .address(AddressData.builder()
-                        .street(faker.address().streetAddress())
-                        .number(faker.address().buildingNumber())
-                        .complement(faker.address().secondaryAddress())
-                        .neighborhood(faker.address().secondaryAddress())
-                        .city(faker.address().city())
-                        .state(faker.address().state())
-                        .zipCode(faker.address().zipCode())
-                        .build())
-                .build();
+        final CustomerInput customerInput = CustomerInputTestDataBuilder.aCustomer().build();
 
         final UUID customerId = service.create(customerInput);
 
         assertThat(customerId).isNotNull();
 
         final CustomerOutput customerOutput = service.findById(customerId);
-
         assertWith(customerOutput,
                 c -> assertThat(c).isNotNull(),
                 c -> assertThat(c.id()).isEqualTo(customerId),
@@ -75,14 +54,11 @@ class CustomerManagementApplicationServiceIT {
     void shouldUpdate() {
         final CustomerInput customerInput = CustomerInputTestDataBuilder.aCustomer().build();
         final CustomerUpdateInput updateInput = CustomerUpdateInputTestDataBuilder.aCustomerUpdate().build();
-
         final UUID customerId = service.create(customerInput);
-        assertThat(customerId).isNotNull();
 
         service.update(customerId, updateInput);
 
         final CustomerOutput customerOutput = service.findById(customerId);
-
         assertWith(customerOutput,
                 c -> assertThat(c).isNotNull(),
                 c -> assertThat(c.id()).isEqualTo(customerId),
@@ -103,33 +79,12 @@ class CustomerManagementApplicationServiceIT {
 
     @Test
     void shouldArchive() {
-        final CustomerInput customerInput = CustomerInput.builder()
-                .firstName(faker.name().firstName())
-                .lastName(faker.name().lastName())
-                .birthDate(faker.timeAndDate().birthday())
-                .email(faker.internet().emailAddress())
-                .phone(faker.phoneNumber().cellPhone())
-                .document(faker.passport().valid())
-                .promotionNotificationsAllowed(faker.bool().bool())
-                .address(AddressData.builder()
-                        .street(faker.address().streetAddress())
-                        .number(faker.address().buildingNumber())
-                        .complement(faker.address().secondaryAddress())
-                        .neighborhood(faker.address().secondaryAddress())
-                        .city(faker.address().city())
-                        .state(faker.address().state())
-                        .zipCode(faker.address().zipCode())
-                        .build())
-                .build();
-
+        final CustomerInput customerInput = CustomerInputTestDataBuilder.aCustomer().build();
         final UUID customerId = service.create(customerInput);
-
-        assertThat(customerId).isNotNull();
 
         service.archive(customerId);
 
         final CustomerOutput customerOutput = service.findById(customerId);
-
         assertWith(customerOutput,
                 c -> assertThat(c).isNotNull(),
                 c -> assertThat(c.id()).isEqualTo(customerId),
@@ -147,33 +102,63 @@ class CustomerManagementApplicationServiceIT {
 
     @Test
     void shouldThrowExceptionIfArchiveCustomerThatIsAlreadyArchived() {
-        final CustomerInput customerInput = CustomerInput.builder()
-                .firstName(faker.name().firstName())
-                .lastName(faker.name().lastName())
-                .birthDate(faker.timeAndDate().birthday())
-                .email(faker.internet().emailAddress())
-                .phone(faker.phoneNumber().cellPhone())
-                .document(faker.passport().valid())
-                .promotionNotificationsAllowed(faker.bool().bool())
-                .address(AddressData.builder()
-                        .street(faker.address().streetAddress())
-                        .number(faker.address().buildingNumber())
-                        .complement(faker.address().secondaryAddress())
-                        .neighborhood(faker.address().secondaryAddress())
-                        .city(faker.address().city())
-                        .state(faker.address().state())
-                        .zipCode(faker.address().zipCode())
-                        .build())
-                .build();
-
+        final CustomerInput customerInput = CustomerInputTestDataBuilder.aCustomer().build();
         final UUID customerId = service.create(customerInput);
-
-        assertThat(customerId).isNotNull();
-
         service.archive(customerId);
 
         assertThatExceptionOfType(CustomerArchivedException.class)
                 .isThrownBy(() -> service.archive(customerId));
+    }
+
+    @Test
+    void shouldChangeEmail() {
+        final CustomerInput customerInput = CustomerInputTestDataBuilder.aCustomer().build();
+        final UUID customerId = service.create(customerInput);
+
+        service.changeEmail(customerId, "emailchanged@email.com");
+
+        final CustomerOutput customerOutput = service.findById(customerId);
+        assertWith(customerOutput,
+                c -> assertThat(c).isNotNull(),
+                c -> assertThat(c.id()).isEqualTo(customerId),
+                c -> assertThat(c.email()).isEqualTo("emailchanged@email.com")
+        );
+    }
+
+    @Test
+    void shouldThrowExceptionIfChangeEmailOfNonexistentCustomer() {
+        assertThatExceptionOfType(CustomerNotFoundException.class)
+                .isThrownBy(() -> service.changeEmail(new CustomerId().value(), "emailchanged@email.com"));
+    }
+
+    @Test
+    void shouldThrowExceptionIfChangeEmailOfArchivedCustomer() {
+        final CustomerInput customerInput = CustomerInputTestDataBuilder.aCustomer().build();
+        final UUID customerId = service.create(customerInput);
+        service.archive(customerId);
+
+        assertThatExceptionOfType(CustomerArchivedException.class)
+                .isThrownBy(() -> service.changeEmail(customerId, "emailchanged@email.com"));
+    }
+
+    @Test
+    void shouldThrowExceptionIfChangeEmailWithInvalidEmail() {
+        final CustomerInput customerInput = CustomerInputTestDataBuilder.aCustomer().build();
+        final UUID customerId = service.create(customerInput);
+
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> service.changeEmail(customerId, "invalid-email"));
+    }
+
+    @Test
+    void shouldThrowExceptionIfChangeEmailWithEmailThatAlreadyExistsWithAnotherCustomer() {
+        final CustomerInput customerInput1 = CustomerInputTestDataBuilder.aCustomer().email("email1@email.com").build();
+        final CustomerInput customerInput2 = CustomerInputTestDataBuilder.aCustomer().email("email2@email.com").build();
+        service.create(customerInput1);
+        final UUID customerId2 = service.create(customerInput2);
+
+        assertThatExceptionOfType(CustomerEmailIsInUseException.class)
+                .isThrownBy(() -> service.changeEmail(customerId2, "email1@email.com"));
     }
 
 }

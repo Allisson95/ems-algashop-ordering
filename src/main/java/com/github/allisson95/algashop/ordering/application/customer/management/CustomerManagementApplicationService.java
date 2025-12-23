@@ -15,7 +15,7 @@ import static java.util.Objects.requireNonNull;
 @RequiredArgsConstructor
 class CustomerManagementApplicationService {
 
-    private final CustomerRegistrationService registrationService;
+    private final CustomerRegistrationService service;
 
     private final Customers customers;
 
@@ -25,7 +25,7 @@ class CustomerManagementApplicationService {
     public UUID create(final CustomerInput input) {
         requireNonNull(input, "input cannot be null");
 
-        final Customer registeredCustomer = registrationService.register(
+        final Customer registeredCustomer = service.register(
                 new FullName(input.firstName(), input.lastName()),
                 new BirthDate(input.birthDate()),
                 new Email(input.email()),
@@ -76,11 +76,26 @@ class CustomerManagementApplicationService {
     @Transactional
     public void archive(final UUID rawCustomerId) {
         requireNonNull(rawCustomerId, "rawCustomerId cannot be null");
+
         final CustomerId customerId = new CustomerId(rawCustomerId);
         final Customer customer = customers.ofId(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException(customerId));
 
         customer.archive();
+
+        customers.add(customer);
+    }
+
+    @Transactional
+    public void changeEmail(final UUID rawCustomerId, final String newEmail) {
+        requireNonNull(rawCustomerId, "rawCustomerId cannot be null");
+        requireNonNull(newEmail, "newEmail cannot be null");
+
+        final CustomerId customerId = new CustomerId(rawCustomerId);
+        final Customer customer = customers.ofId(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException(customerId));
+
+        service.changeEmail(customer, new Email(newEmail));
 
         customers.add(customer);
     }
