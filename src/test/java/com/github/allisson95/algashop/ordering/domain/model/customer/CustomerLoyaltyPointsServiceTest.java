@@ -26,7 +26,7 @@ class CustomerLoyaltyPointsServiceTest {
 
         service.addPoints(customer, order);
 
-        assertThat(customer.loyaltyPoints()).isEqualTo(new LoyaltyPoints(30));
+        assertThat(customer.getLoyaltyPoints()).isEqualTo(new LoyaltyPoints(30));
     }
 
     @Test
@@ -60,7 +60,7 @@ class CustomerLoyaltyPointsServiceTest {
 
         service.addPoints(customer, order);
 
-        assertThat(customer.loyaltyPoints()).isEqualTo(LoyaltyPoints.ZERO);
+        assertThat(customer.getLoyaltyPoints()).isEqualTo(LoyaltyPoints.ZERO);
     }
 
 }

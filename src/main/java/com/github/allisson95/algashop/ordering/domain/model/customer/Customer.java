@@ -3,12 +3,14 @@ package com.github.allisson95.algashop.ordering.domain.model.customer;
 import com.github.allisson95.algashop.ordering.domain.model.AggregateRoot;
 import com.github.allisson95.algashop.ordering.domain.model.commons.*;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.time.Instant;
 import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 
+@Getter
 public class Customer implements AggregateRoot<CustomerId> {
 
     private CustomerId id;
@@ -61,7 +63,7 @@ public class Customer implements AggregateRoot<CustomerId> {
 
     public void addLoyaltyPoints(final LoyaltyPoints loyaltyPointsToAdd) {
         this.verifyIfChangeable();
-        this.setLoyaltyPoints(this.loyaltyPoints().add(loyaltyPointsToAdd));
+        this.setLoyaltyPoints(this.getLoyaltyPoints().add(loyaltyPointsToAdd));
     }
 
     public void archive() {
@@ -74,7 +76,7 @@ public class Customer implements AggregateRoot<CustomerId> {
         this.setPhone(new Phone("000-000-0000"));
         this.setDocument(new Document("000-00-0000"));
         this.setPromotionNotificationsAllowed(false);
-        this.setAddress(this.address().toBuilder()
+        this.setAddress(this.getAddress().toBuilder()
                 .number("Anonymized")
                 .complement(null)
                 .build());
@@ -119,17 +121,9 @@ public class Customer implements AggregateRoot<CustomerId> {
         this.id = id;
     }
 
-    public FullName fullName() {
-        return fullName;
-    }
-
     private void setFullName(final FullName fullName) {
         requireNonNull(fullName, "fullName cannot be null");
         this.fullName = fullName;
-    }
-
-    public BirthDate birthDate() {
-        return birthDate;
     }
 
     private void setBirthDate(final BirthDate birthDate) {
@@ -140,17 +134,9 @@ public class Customer implements AggregateRoot<CustomerId> {
         this.birthDate = birthDate;
     }
 
-    public Email email() {
-        return email;
-    }
-
     private void setEmail(final Email email) {
         requireNonNull(email, "email cannot be null");
         this.email = email;
-    }
-
-    public Phone phone() {
-        return phone;
     }
 
     private void setPhone(final Phone phone) {
@@ -158,17 +144,9 @@ public class Customer implements AggregateRoot<CustomerId> {
         this.phone = phone;
     }
 
-    public Document document() {
-        return document;
-    }
-
     private void setDocument(final Document document) {
         requireNonNull(document, "document cannot be null");
         this.document = document;
-    }
-
-    public Boolean isPromotionNotificationsAllowed() {
-        return promotionNotificationsAllowed;
     }
 
     private void setPromotionNotificationsAllowed(final Boolean promotionNotificationsAllowed) {
@@ -176,17 +154,9 @@ public class Customer implements AggregateRoot<CustomerId> {
         this.promotionNotificationsAllowed = promotionNotificationsAllowed;
     }
 
-    public Boolean isArchived() {
-        return archived;
-    }
-
     private void setArchived(final Boolean archived) {
         requireNonNull(archived, "archived cannot be null");
         this.archived = archived;
-    }
-
-    public Instant registeredAt() {
-        return registeredAt;
     }
 
     private void setRegisteredAt(final Instant registeredAt) {
@@ -194,25 +164,13 @@ public class Customer implements AggregateRoot<CustomerId> {
         this.registeredAt = registeredAt;
     }
 
-    public Instant archivedAt() {
-        return archivedAt;
-    }
-
     private void setArchivedAt(final Instant archivedAt) {
         this.archivedAt = archivedAt;
-    }
-
-    public LoyaltyPoints loyaltyPoints() {
-        return loyaltyPoints;
     }
 
     private void setLoyaltyPoints(final LoyaltyPoints loyaltyPoints) {
         requireNonNull(loyaltyPoints, "loyaltyPoints cannot be null");
         this.loyaltyPoints = loyaltyPoints;
-    }
-
-    public Address address() {
-        return address;
     }
 
     private void setAddress(final Address address) {
@@ -221,7 +179,7 @@ public class Customer implements AggregateRoot<CustomerId> {
     }
 
     private void verifyIfChangeable() {
-        if (this.isArchived()) {
+        if (this.getArchived()) {
             throw new CustomerArchivedException();
         }
     }

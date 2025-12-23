@@ -56,13 +56,13 @@ class CustomerRegistrationServiceTest {
 
         assertWith(registeredCustomer,
                 c -> assertThat(c.id()).isNotNull(),
-                c -> assertThat(c.fullName()).isEqualTo(expectedName),
-                c -> assertThat(c.birthDate()).isEqualTo(expectedBirthDate),
-                c -> assertThat(c.email()).isEqualTo(expectedEmail),
-                c -> assertThat(c.phone()).isEqualTo(expectedPhone),
-                c -> assertThat(c.document()).isEqualTo(expectedDocument),
-                c -> assertThat(c.isPromotionNotificationsAllowed()).isEqualTo(expectedPromotionNotificationsAllowed),
-                c -> assertThat(c.address()).isEqualTo(expectedAddress)
+                c -> assertThat(c.getFullName()).isEqualTo(expectedName),
+                c -> assertThat(c.getBirthDate()).isEqualTo(expectedBirthDate),
+                c -> assertThat(c.getEmail()).isEqualTo(expectedEmail),
+                c -> assertThat(c.getPhone()).isEqualTo(expectedPhone),
+                c -> assertThat(c.getDocument()).isEqualTo(expectedDocument),
+                c -> assertThat(c.getPromotionNotificationsAllowed()).isEqualTo(expectedPromotionNotificationsAllowed),
+                c -> assertThat(c.getAddress()).isEqualTo(expectedAddress)
         );
     }
 

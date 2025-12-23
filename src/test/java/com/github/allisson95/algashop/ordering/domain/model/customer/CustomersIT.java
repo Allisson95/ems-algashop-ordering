@@ -50,16 +50,16 @@ class CustomersIT {
         customers.add(customer);
 
         customer = customers.ofId(customer.id()).orElseThrow();
-        assertThat(customer.isArchived()).isFalse();
-        assertThat(customer.archivedAt()).isNull();
+        assertThat(customer.getArchived()).isFalse();
+        assertThat(customer.getArchivedAt()).isNull();
 
         customer.archive();
 
         customers.add(customer);
 
         customer = customers.ofId(customer.id()).orElseThrow();
-        assertThat(customer.isArchived()).isTrue();
-        assertThat(customer.archivedAt()).isNotNull();
+        assertThat(customer.getArchived()).isTrue();
+        assertThat(customer.getArchivedAt()).isNotNull();
     }
 
     @Test
@@ -80,9 +80,9 @@ class CustomersIT {
 
         Customer savedCustomer = customers.ofId(customer.id()).orElseThrow();
 
-        assertThat(savedCustomer.isArchived()).isTrue();
-        assertThat(savedCustomer.archivedAt()).isNotNull();
-        assertThat(savedCustomer.fullName()).isNotEqualTo(new FullName("John", "Doe"));
+        assertThat(savedCustomer.getArchived()).isTrue();
+        assertThat(savedCustomer.getArchivedAt()).isNotNull();
+        assertThat(savedCustomer.getFullName()).isNotEqualTo(new FullName("John", "Doe"));
     }
 
     @Test
@@ -109,7 +109,7 @@ class CustomersIT {
         final Customer customer = CustomerTestDataBuilder.newCustomer().build();
         customers.add(customer);
 
-        final Optional<Customer> possibleCustomer = customers.ofEmail(customer.email());
+        final Optional<Customer> possibleCustomer = customers.ofEmail(customer.getEmail());
 
         assertThat(possibleCustomer).isPresent();
     }
@@ -129,7 +129,7 @@ class CustomersIT {
         final Customer customer = CustomerTestDataBuilder.newCustomer().build();
         customers.add(customer);
 
-        assertThat(customers.isEmailUnique(customer.email(), customer.id())).isTrue();
+        assertThat(customers.isEmailUnique(customer.getEmail(), customer.id())).isTrue();
         assertThat(customers.isEmailUnique(new Email(UUID.randomUUID() + "@algashop.com"), new CustomerId())).isTrue();
     }
 
@@ -138,7 +138,7 @@ class CustomersIT {
         final Customer customer = CustomerTestDataBuilder.newCustomer().build();
         customers.add(customer);
 
-        assertThat(customers.isEmailUnique(customer.email(), new CustomerId())).isFalse();
+        assertThat(customers.isEmailUnique(customer.getEmail(), new CustomerId())).isFalse();
     }
 
 }

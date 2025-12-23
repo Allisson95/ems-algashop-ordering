@@ -29,7 +29,7 @@ public class CustomerRegistrationService {
                 .address(address)
                 .build();
 
-        verifyEmailUniqueness(newCustomer.email(), newCustomer.id());
+        verifyEmailUniqueness(newCustomer.getEmail(), newCustomer.id());
 
         return newCustomer;
     }

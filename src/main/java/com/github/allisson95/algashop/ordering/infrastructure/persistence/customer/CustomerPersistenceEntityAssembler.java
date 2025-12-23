@@ -27,18 +27,18 @@ public class CustomerPersistenceEntityAssembler {
             customerPersistenceEntity.setId(customer.id().value());
         }
 
-        customerPersistenceEntity.setFirstName(customer.fullName().firstName());
-        customerPersistenceEntity.setLastName(customer.fullName().lastName());
-        customerPersistenceEntity.setBirthDate(Optional.ofNullable(customer.birthDate()).map(BirthDate::value).orElse(null));
-        customerPersistenceEntity.setEmail(customer.email().value());
-        customerPersistenceEntity.setPhone(customer.phone().value());
-        customerPersistenceEntity.setDocument(customer.document().value());
-        customerPersistenceEntity.setPromotionNotificationsAllowed(customer.isPromotionNotificationsAllowed());
-        customerPersistenceEntity.setArchived(customer.isArchived());
-        customerPersistenceEntity.setRegisteredAt(customer.registeredAt());
-        customerPersistenceEntity.setArchivedAt(customer.archivedAt());
-        customerPersistenceEntity.setLoyaltyPoints(customer.loyaltyPoints().value());
-        customerPersistenceEntity.setAddress(assembleAddress(customer.address()));
+        customerPersistenceEntity.setFirstName(customer.getFullName().firstName());
+        customerPersistenceEntity.setLastName(customer.getFullName().lastName());
+        customerPersistenceEntity.setBirthDate(Optional.ofNullable(customer.getBirthDate()).map(BirthDate::value).orElse(null));
+        customerPersistenceEntity.setEmail(customer.getEmail().value());
+        customerPersistenceEntity.setPhone(customer.getPhone().value());
+        customerPersistenceEntity.setDocument(customer.getDocument().value());
+        customerPersistenceEntity.setPromotionNotificationsAllowed(customer.getPromotionNotificationsAllowed());
+        customerPersistenceEntity.setArchived(customer.getArchived());
+        customerPersistenceEntity.setRegisteredAt(customer.getRegisteredAt());
+        customerPersistenceEntity.setArchivedAt(customer.getArchivedAt());
+        customerPersistenceEntity.setLoyaltyPoints(customer.getLoyaltyPoints().value());
+        customerPersistenceEntity.setAddress(assembleAddress(customer.getAddress()));
         customerPersistenceEntity.setVersion(DomainVersionHandler.getVersion(customer));
 
         return customerPersistenceEntity;

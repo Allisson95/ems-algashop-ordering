@@ -14,15 +14,15 @@ class CustomerTest {
         customer.archive();
 
         assertWith(customer,
-                c -> assertThat(c.isArchived()).isTrue(),
-                c -> assertThat(c.archivedAt()).isNotNull(),
-                c -> assertThat(c.fullName()).isEqualTo(new FullName("Anonymous", "Anonymous")),
-                c -> assertThat(c.birthDate()).isNull(),
-                c -> assertThat(c.email()).isNotEqualTo(new Email("johndoe@email.com")),
-                c -> assertThat(c.phone()).isEqualTo(new Phone("000-000-0000")),
-                c -> assertThat(c.document()).isEqualTo(new Document("000-00-0000")),
-                c -> assertThat(c.isPromotionNotificationsAllowed()).isFalse(),
-                c -> assertThat(c.address()).isEqualTo(Address.builder()
+                c -> assertThat(c.getArchived()).isTrue(),
+                c -> assertThat(c.getArchivedAt()).isNotNull(),
+                c -> assertThat(c.getFullName()).isEqualTo(new FullName("Anonymous", "Anonymous")),
+                c -> assertThat(c.getBirthDate()).isNull(),
+                c -> assertThat(c.getEmail()).isNotEqualTo(new Email("johndoe@email.com")),
+                c -> assertThat(c.getPhone()).isEqualTo(new Phone("000-000-0000")),
+                c -> assertThat(c.getDocument()).isEqualTo(new Document("000-00-0000")),
+                c -> assertThat(c.getPromotionNotificationsAllowed()).isFalse(),
+                c -> assertThat(c.getAddress()).isEqualTo(Address.builder()
                         .street("Bourbon Street")
                         .number("Anonymized")
                         .neighborhood("North Ville")
@@ -67,7 +67,7 @@ class CustomerTest {
                 .withMessage("Customer is archived and cannot be updated");
 
         assertThatExceptionOfType(CustomerArchivedException.class)
-                .isThrownBy(() -> customer.changeAddress(customer.address().toBuilder().complement("new complement").build()))
+                .isThrownBy(() -> customer.changeAddress(customer.getAddress().toBuilder().complement("new complement").build()))
                 .withMessage("Customer is archived and cannot be updated");
     }
 
@@ -78,7 +78,7 @@ class CustomerTest {
         customer.addLoyaltyPoints(new LoyaltyPoints(10));
         customer.addLoyaltyPoints(new LoyaltyPoints(20));
 
-        assertThat(customer.loyaltyPoints()).isEqualTo(new LoyaltyPoints(30));
+        assertThat(customer.getLoyaltyPoints()).isEqualTo(new LoyaltyPoints(30));
     }
 
     @Test
