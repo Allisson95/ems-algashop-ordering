@@ -73,4 +73,16 @@ class CustomerManagementApplicationService {
         customers.add(customer);
     }
 
+    @Transactional
+    public void archive(final UUID rawCustomerId) {
+        requireNonNull(rawCustomerId, "rawCustomerId cannot be null");
+        final CustomerId customerId = new CustomerId(rawCustomerId);
+        final Customer customer = customers.ofId(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException(customerId));
+
+        customer.archive();
+
+        customers.add(customer);
+    }
+
 }
