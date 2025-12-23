@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.core.convert.converter.Converter;
 
-@Mapper(uses = AddressMapper.class)
+@Mapper(config = MapStructConfiguration.class)
 public interface CustomerMapper extends Converter<Customer, CustomerOutput> {
 
     @Mapping(target = "id", source = "id.value")
