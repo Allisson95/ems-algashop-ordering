@@ -56,4 +56,19 @@ public class ShoppingCartManagementApplicationService {
         shoppingCarts.add(shoppingCart);
     }
 
+    public void removeItem(final UUID rawShoppingCartId, final UUID rawShoppingCartItemId) {
+        requireNonNull(rawShoppingCartId, "shoppingCartId cannot be null");
+        requireNonNull(rawShoppingCartItemId, "shoppingCartItemId cannot be null");
+
+        final var shoppingCartId = new ShoppingCartId(rawShoppingCartId);
+        final var shoppingCartItemId = new ShoppingCartItemId(rawShoppingCartItemId);
+
+        final ShoppingCart shoppingCart = shoppingCarts.ofId(shoppingCartId)
+                .orElseThrow(() -> new ShoppingCartNotFoundException(shoppingCartId));
+
+        shoppingCart.removeItem(shoppingCartItemId);
+
+        shoppingCarts.add(shoppingCart);
+    }
+
 }

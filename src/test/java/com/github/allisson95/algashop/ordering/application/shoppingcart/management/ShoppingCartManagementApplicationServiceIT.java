@@ -4,10 +4,7 @@ import com.github.allisson95.algashop.ordering.DataJpaCleanUpExtension;
 import com.github.allisson95.algashop.ordering.domain.model.commons.Quantity;
 import com.github.allisson95.algashop.ordering.domain.model.customer.*;
 import com.github.allisson95.algashop.ordering.domain.model.product.*;
-import com.github.allisson95.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
-import com.github.allisson95.algashop.ordering.domain.model.shoppingcart.ShoppingCartId;
-import com.github.allisson95.algashop.ordering.domain.model.shoppingcart.ShoppingCartNotFoundException;
-import com.github.allisson95.algashop.ordering.domain.model.shoppingcart.ShoppingCarts;
+import com.github.allisson95.algashop.ordering.domain.model.shoppingcart.*;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -146,6 +144,69 @@ class ShoppingCartManagementApplicationServiceIT {
 
             assertThatExceptionOfType(ProductOutOfStockException.class)
                     .isThrownBy(() -> service.addItem(item));
+        }
+
+    }
+
+    @Nested
+    class RemoveItemToShoppingCartIT {
+
+        @Test
+        void shouldRemoveItemToShoppingCart() {
+            final Customer customer = CustomerTestDataBuilder.existingCustomer().build();
+            customers.add(customer);
+            final var shoppingCartId = service.createNew(customer.getId().value());
+            final Product product = ProductTestDataBuilder.aProduct().build();
+            when(productCatalogService.ofId(product.id()))
+                    .thenReturn(Optional.of(product));
+            final ShoppingCartItemInput item = ShoppingCartItemInput.builder()
+                    .productId(product.id().value())
+                    .quantity(1)
+                    .shoppingCartId(shoppingCartId)
+                    .build();
+            service.addItem(item);
+            ShoppingCart shoppingCart = shoppingCarts.ofId(new ShoppingCartId(shoppingCartId)).orElseThrow();
+            assertThat(shoppingCart.getItems()).hasSize(1);
+            final UUID rawShoppingCartItemId = shoppingCart.getItems().iterator().next().getId().value();
+
+            service.removeItem(shoppingCartId, rawShoppingCartItemId);
+
+            shoppingCart = shoppingCarts.ofId(new ShoppingCartId(shoppingCartId)).orElseThrow();
+            assertThat(shoppingCart.getItems()).isEmpty();
+        }
+
+        @Test
+        void shouldThrowExceptionWhenTryToRemoveItemToShoppingCartThatDoesNotExist() {
+            final var rawShoppingCartId = new ShoppingCartId().value();
+            final var rawShoppingCartItemId = new ShoppingCartItemId().value();
+
+            assertThatExceptionOfType(ShoppingCartNotFoundException.class)
+                    .isThrownBy(() -> service.removeItem(rawShoppingCartId, rawShoppingCartItemId));
+        }
+
+        @Test
+        void shouldThrowExceptionWhenTryToRemoveItemThatDoesNotExists() {
+            final Customer customer = CustomerTestDataBuilder.existingCustomer().build();
+            customers.add(customer);
+            final var shoppingCartId = service.createNew(customer.getId().value());
+            final Product product = ProductTestDataBuilder.aProduct().build();
+            when(productCatalogService.ofId(product.id()))
+                    .thenReturn(Optional.of(product));
+            final ShoppingCartItemInput item = ShoppingCartItemInput.builder()
+                    .productId(product.id().value())
+                    .quantity(1)
+                    .shoppingCartId(shoppingCartId)
+                    .build();
+            service.addItem(item);
+            ShoppingCart shoppingCart = shoppingCarts.ofId(new ShoppingCartId(shoppingCartId)).orElseThrow();
+            assertThat(shoppingCart.getItems()).hasSize(1);
+            final var rawShoppingCartItemId = new ShoppingCartId().value();
+
+            assertThatExceptionOfType(ShoppingCartDoesNotContainItemException.class)
+                    .isThrownBy(() -> service.removeItem(shoppingCartId, rawShoppingCartItemId));
+
+            shoppingCart = shoppingCarts.ofId(new ShoppingCartId(shoppingCartId)).orElseThrow();
+            assertThat(shoppingCart.getItems()).hasSize(1);
         }
 
     }
