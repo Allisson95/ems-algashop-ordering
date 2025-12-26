@@ -26,7 +26,7 @@ public class OrderPersistenceEntityDisassembler {
                 .totalItems(new Quantity(orderPersistenceEntity.getTotalItems()))
                 .placedAt(orderPersistenceEntity.getPlacedAt())
                 .paidAt(orderPersistenceEntity.getPaidAt())
-                .cancelledAt(orderPersistenceEntity.getCancelledAt())
+                .canceledAt(orderPersistenceEntity.getCanceledAt())
                 .readyAt(orderPersistenceEntity.getReadyAt())
                 .billing(assembleBilling(orderPersistenceEntity.getBilling()))
                 .shipping(assembleShipping(orderPersistenceEntity.getShipping()))

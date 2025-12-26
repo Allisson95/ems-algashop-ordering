@@ -30,7 +30,7 @@ public class Order implements AggregateRoot<OrderId> {
 
     private Instant paidAt;
 
-    private Instant cancelledAt;
+    private Instant canceledAt;
 
     private Instant readyAt;
 
@@ -47,14 +47,14 @@ public class Order implements AggregateRoot<OrderId> {
     private Long version;
 
     @Builder(builderClassName = "ExistingOrderBuilder", builderMethodName = "existingOrder")
-    private Order(final OrderId id, final CustomerId customerId, final Money totalAmount, final Quantity totalItems, final Instant placedAt, final Instant paidAt, final Instant cancelledAt, final Instant readyAt, final Billing billing, final Shipping shipping, final OrderStatus status, final PaymentMethod paymentMethod, final Set<OrderItem> items) {
+    private Order(final OrderId id, final CustomerId customerId, final Money totalAmount, final Quantity totalItems, final Instant placedAt, final Instant paidAt, final Instant canceledAt, final Instant readyAt, final Billing billing, final Shipping shipping, final OrderStatus status, final PaymentMethod paymentMethod, final Set<OrderItem> items) {
         this.setId(id);
         this.setCustomerId(customerId);
         this.setTotalAmount(totalAmount);
         this.setTotalItems(totalItems);
         this.setPlacedAt(placedAt);
         this.setPaidAt(paidAt);
-        this.setCancelledAt(cancelledAt);
+        this.setCanceledAt(canceledAt);
         this.setReadyAt(readyAt);
         this.setBilling(billing);
         this.setShipping(shipping);
@@ -79,7 +79,7 @@ public class Order implements AggregateRoot<OrderId> {
 
     public void cancel() {
         this.changeStatus(OrderStatus.CANCELED);
-        this.setCancelledAt(Instant.now());
+        this.setCanceledAt(Instant.now());
     }
 
     public void place() {
@@ -251,8 +251,8 @@ public class Order implements AggregateRoot<OrderId> {
         this.paidAt = paidAt;
     }
 
-    private void setCancelledAt(final Instant cancelledAt) {
-        this.cancelledAt = cancelledAt;
+    private void setCanceledAt(final Instant canceledAt) {
+        this.canceledAt = canceledAt;
     }
 
     private void setReadyAt(final Instant readyAt) {

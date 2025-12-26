@@ -60,7 +60,7 @@ class OrdersIT {
                 o -> assertThat(o.getTotalItems()).isEqualTo(order.getTotalItems()),
                 o -> assertThat(o.getPlacedAt()).isEqualTo(order.getPlacedAt()),
                 o -> assertThat(o.getPaidAt()).isEqualTo(order.getPaidAt()),
-                o -> assertThat(o.getCancelledAt()).isEqualTo(order.getCancelledAt()),
+                o -> assertThat(o.getCanceledAt()).isEqualTo(order.getCanceledAt()),
                 o -> assertThat(o.getReadyAt()).isEqualTo(order.getReadyAt()),
                 o -> assertThat(o.getBilling()).isEqualTo(order.getBilling()),
                 o -> assertThat(o.getShipping()).isEqualTo(order.getShipping()),
@@ -102,7 +102,7 @@ class OrdersIT {
 
         Order savedOrder = orders.ofId(order.getId()).orElseThrow();
 
-        assertThat(savedOrder.getCancelledAt()).isNull();
+        assertThat(savedOrder.getCanceledAt()).isNull();
         assertThat(savedOrder.getPaidAt()).isNotNull();
     }
 

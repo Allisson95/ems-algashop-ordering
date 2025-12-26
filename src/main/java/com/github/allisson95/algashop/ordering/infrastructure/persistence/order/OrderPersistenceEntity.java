@@ -47,7 +47,7 @@ public class OrderPersistenceEntity extends AbstractEntity<Long> {
 
     private Instant paidAt;
 
-    private Instant cancelledAt;
+    private Instant canceledAt;
 
     private Instant readyAt;
 
@@ -80,14 +80,14 @@ public class OrderPersistenceEntity extends AbstractEntity<Long> {
     private Long version;
 
     @Builder
-    public OrderPersistenceEntity(final Long id, final CustomerPersistenceEntity customer, final BigDecimal totalAmount, final Integer totalItems, final Instant placedAt, final Instant paidAt, final Instant cancelledAt, final Instant readyAt, final BillingEmbeddable billing, final ShippingEmbeddable shipping, final String status, final String paymentMethod, final Set<OrderItemPersistenceEntity> items, final UUID createdBy, final Instant createdAt, final UUID lastModifiedBy, final Instant lastModifiedAt, final Long version) {
+    public OrderPersistenceEntity(final Long id, final CustomerPersistenceEntity customer, final BigDecimal totalAmount, final Integer totalItems, final Instant placedAt, final Instant paidAt, final Instant canceledAt, final Instant readyAt, final BillingEmbeddable billing, final ShippingEmbeddable shipping, final String status, final String paymentMethod, final Set<OrderItemPersistenceEntity> items, final UUID createdBy, final Instant createdAt, final UUID lastModifiedBy, final Instant lastModifiedAt, final Long version) {
         this.id = id;
         this.customer = customer;
         this.totalAmount = totalAmount;
         this.totalItems = totalItems;
         this.placedAt = placedAt;
         this.paidAt = paidAt;
-        this.cancelledAt = cancelledAt;
+        this.canceledAt = canceledAt;
         this.readyAt = readyAt;
         this.billing = billing;
         this.shipping = shipping;

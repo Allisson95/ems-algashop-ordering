@@ -20,7 +20,7 @@ public interface OrderPersistenceEntityRepository extends JpaRepository<OrderPer
             FROM OrderPersistenceEntity o
             WHERE o.customer.id = :customerId
             AND YEAR(o.placedAt) = :year
-            AND o.cancelledAt IS NULL
+            AND o.canceledAt IS NULL
             """)
     List<OrderPersistenceEntity> placedByCustomerInYear(@Param("customerId") UUID customerId, @Param("year") Integer year);
 
@@ -30,7 +30,7 @@ public interface OrderPersistenceEntityRepository extends JpaRepository<OrderPer
             WHERE o.customer.id = :customerId
             AND YEAR(o.placedAt) = :year
             AND o.paidAt IS NOT NULL
-            AND o.cancelledAt IS NULL
+            AND o.canceledAt IS NULL
             """)
     long salesQuantityByCustomerInYear(@Param("customerId") UUID customerId, @Param("year") Integer year);
 
@@ -39,7 +39,7 @@ public interface OrderPersistenceEntityRepository extends JpaRepository<OrderPer
             FROM OrderPersistenceEntity o
             WHERE o.customer.id = :customerId
             AND o.paidAt IS NOT NULL
-            AND o.cancelledAt IS NULL
+            AND o.canceledAt IS NULL
             """)
     BigDecimal totalSoldByCustomer(@Param("customerId") UUID customerId);
 

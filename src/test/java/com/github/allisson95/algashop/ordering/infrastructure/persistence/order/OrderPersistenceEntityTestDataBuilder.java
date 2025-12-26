@@ -22,7 +22,7 @@ public class OrderPersistenceEntityTestDataBuilder {
                 .totalItems(2)
                 .placedAt(Instant.now())
                 .paidAt(null)
-                .cancelledAt(null)
+                .canceledAt(null)
                 .readyAt(null)
                 .billing(null)
                 .shipping(null)

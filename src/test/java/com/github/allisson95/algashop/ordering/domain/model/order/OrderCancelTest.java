@@ -19,7 +19,7 @@ class OrderCancelTest {
         assertThatCode(order::cancel).doesNotThrowAnyException();
         assertWith(order,
                 o -> assertThat(o.isCanceled()).isTrue(),
-                o -> assertThatTemporal(o.getCancelledAt()).isCloseTo(Instant.now(), within(1, ChronoUnit.SECONDS))
+                o -> assertThatTemporal(o.getCanceledAt()).isCloseTo(Instant.now(), within(1, ChronoUnit.SECONDS))
         );
     }
 

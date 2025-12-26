@@ -48,7 +48,7 @@ public class OrderPersistenceEntityAssembler {
         orderPersistenceEntity.setTotalItems(order.getTotalItems().value());
         orderPersistenceEntity.setPlacedAt(order.getPlacedAt());
         orderPersistenceEntity.setPaidAt(order.getPaidAt());
-        orderPersistenceEntity.setCancelledAt(order.getCancelledAt());
+        orderPersistenceEntity.setCanceledAt(order.getCanceledAt());
         orderPersistenceEntity.setReadyAt(order.getReadyAt());
         orderPersistenceEntity.setBilling(assembleBilling(order.getBilling()));
         orderPersistenceEntity.setShipping(assembleShipping(order.getShipping()));

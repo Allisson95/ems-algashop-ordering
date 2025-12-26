@@ -29,7 +29,7 @@ class OrderPersistenceEntityDisassemblerTest {
                 e -> assertThat(e.getTotalItems()).isEqualTo(new Quantity(entity.getTotalItems())),
                 e -> assertThat(e.getPlacedAt()).isEqualTo(entity.getPlacedAt()),
                 e -> assertThat(e.getPaidAt()).isEqualTo(entity.getPaidAt()),
-                e -> assertThat(e.getCancelledAt()).isEqualTo(entity.getCancelledAt()),
+                e -> assertThat(e.getCanceledAt()).isEqualTo(entity.getCanceledAt()),
                 e -> assertThat(e.getReadyAt()).isEqualTo(entity.getReadyAt()),
                 e -> assertThat(e.getStatus()).isEqualTo(OrderStatus.valueOf(entity.getStatus())),
                 e -> assertThat(e.getPaymentMethod()).isEqualTo(PaymentMethod.valueOf(entity.getPaymentMethod())),

@@ -31,7 +31,7 @@ class OrderTest {
                 o -> assertThat(o.getTotalItems()).isEqualTo(new Quantity(0)),
                 o -> assertThat(o.getPlacedAt()).isNull(),
                 o -> assertThat(o.getPaidAt()).isNull(),
-                o -> assertThat(o.getCancelledAt()).isNull(),
+                o -> assertThat(o.getCanceledAt()).isNull(),
                 o -> assertThat(o.getReadyAt()).isNull(),
                 o -> assertThat(o.getBilling()).isNull(),
                 o -> assertThat(o.getShipping()).isNull(),
