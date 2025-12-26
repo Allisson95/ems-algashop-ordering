@@ -1,6 +1,7 @@
 package com.github.allisson95.algashop.ordering.application.customer.management;
 
 import com.github.allisson95.algashop.ordering.DataJpaCleanUpExtension;
+import com.github.allisson95.algashop.ordering.application.customer.loyaltypoints.CustomerLoyaltyPointsApplicationService;
 import com.github.allisson95.algashop.ordering.domain.model.commons.Money;
 import com.github.allisson95.algashop.ordering.domain.model.commons.Quantity;
 import com.github.allisson95.algashop.ordering.domain.model.customer.*;

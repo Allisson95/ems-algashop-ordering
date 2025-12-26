@@ -1,4 +1,4 @@
-package com.github.allisson95.algashop.ordering.application.customer.management;
+package com.github.allisson95.algashop.ordering.application.customer.loyaltypoints;
 
 import com.github.allisson95.algashop.ordering.domain.model.customer.*;
 import com.github.allisson95.algashop.ordering.domain.model.order.Order;
