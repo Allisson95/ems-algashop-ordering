@@ -6,17 +6,18 @@ import com.github.allisson95.algashop.ordering.domain.model.commons.Quantity;
 import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.github.allisson95.algashop.ordering.domain.model.customer.Customers;
 import com.github.allisson95.algashop.ordering.domain.model.order.*;
-import com.github.allisson95.algashop.ordering.domain.model.order.shipping.OriginAddressService;
 import com.github.allisson95.algashop.ordering.domain.model.order.shipping.ShippingCostService;
 import com.github.allisson95.algashop.ordering.domain.model.product.Product;
 import com.github.allisson95.algashop.ordering.domain.model.product.ProductTestDataBuilder;
 import com.github.allisson95.algashop.ordering.domain.model.shoppingcart.*;
+import com.github.allisson95.algashop.ordering.infrastructure.listener.order.OrderEventListener;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -26,7 +27,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @ExtendWith(DataJpaCleanUpExtension.class)
@@ -44,14 +45,11 @@ class CheckoutApplicationServiceIT {
     @Autowired
     private Customers customers;
 
-    @Autowired
-    private CheckoutService checkoutService;
-
-    @Autowired
-    private OriginAddressService originAddressService;
-
     @MockitoBean
     private ShippingCostService shippingCostService;
+
+    @MockitoSpyBean
+    private OrderEventListener orderEventListener;
 
     @BeforeEach
     public void setup() {
@@ -92,6 +90,8 @@ class CheckoutApplicationServiceIT {
         Optional<ShoppingCart> updatedCart = shoppingCarts.ofId(shoppingCart.getId());
         assertThat(updatedCart).isPresent();
         assertThat(updatedCart.get().isEmpty()).isTrue();
+
+        verify(orderEventListener, times(1)).handleOrderPlacedEvent(any(OrderPlacedEvent.class));
     }
 
     @Test

@@ -56,6 +56,8 @@ public class OrderPersistenceEntityAssembler {
         orderPersistenceEntity.setPaymentMethod(order.getPaymentMethod().name());
         orderPersistenceEntity.replaceItems(mergeItems(order, orderPersistenceEntity));
         orderPersistenceEntity.setVersion(DomainVersionHandler.getVersion(order));
+        orderPersistenceEntity.setDomainEventSupplier(order::domainEvents);
+        orderPersistenceEntity.setOnAllEventsPublished(order::clearDomainEvents);
 
         return orderPersistenceEntity;
     }

@@ -4,6 +4,7 @@ import com.github.allisson95.algashop.ordering.DataJpaCleanUpExtension;
 import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.github.allisson95.algashop.ordering.domain.model.customer.Customers;
 import com.github.allisson95.algashop.ordering.domain.model.order.*;
+import com.github.allisson95.algashop.ordering.infrastructure.listener.order.OrderEventListener;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,8 +12,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 @ExtendWith(DataJpaCleanUpExtension.class)
@@ -26,6 +31,9 @@ class OrderManagementApplicationServiceIT {
 
     @Autowired
     private Customers customers;
+
+    @MockitoSpyBean
+    private OrderEventListener orderEventListener;
 
     @BeforeEach
     void setUp() {
@@ -47,6 +55,8 @@ class OrderManagementApplicationServiceIT {
                 o -> assertThat(o.isCanceled()).isTrue(),
                 o -> assertThat(o.getCanceledAt()).isNotNull()
         );
+
+        verify(orderEventListener, times(1)).handleOrderCanceledEvent(any(OrderCanceledEvent.class));
     }
 
     @Test
@@ -79,6 +89,8 @@ class OrderManagementApplicationServiceIT {
                 o -> assertThat(o.isPaid()).isTrue(),
                 o -> assertThat(o.getPaidAt()).isNotNull()
         );
+
+        verify(orderEventListener, times(1)).handleOrderPaidEvent(any(OrderPaidEvent.class));
     }
 
     @Test
@@ -110,6 +122,8 @@ class OrderManagementApplicationServiceIT {
                 o -> assertThat(o.isReady()).isTrue(),
                 o -> assertThat(o.getReadyAt()).isNotNull()
         );
+
+        verify(orderEventListener, times(1)).handleOrderReadyEvent(any(OrderReadyEvent.class));
     }
 
     @Test

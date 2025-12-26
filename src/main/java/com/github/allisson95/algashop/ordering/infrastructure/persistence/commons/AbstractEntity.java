@@ -51,18 +51,11 @@ public abstract class AbstractEntity<PK extends Serializable> implements Persist
         this.onAllEventsPublished = onAllEventsPublished;
     }
 
-    /**
-     * Clears all domain events currently held. Usually invoked by the infrastructure in place in Spring Data
-     * repositories.
-     */
     @AfterDomainEventPublication
     protected void clearDomainEvents() {
         this.onAllEventsPublished.run();
     }
 
-    /**
-     * All domain events currently captured by the aggregate.
-     */
     @DomainEvents
     protected @NonNull Collection<Object> domainEvents() {
         return Collections.unmodifiableList(this.domainEventSupplier.get());

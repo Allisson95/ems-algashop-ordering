@@ -73,22 +73,30 @@ public class Order
     public void markAsPaid() {
         this.changeStatus(OrderStatus.PAID);
         this.setPaidAt(Instant.now());
+
+        super.registerEvent(new OrderPaidEvent(this.getId(), this.getCustomerId(), this.getPaidAt()));
     }
 
     public void markAsReady() {
         this.changeStatus(OrderStatus.READY);
         this.setReadyAt(Instant.now());
+
+        super.registerEvent(new OrderReadyEvent(this.getId(), this.getCustomerId(), this.getReadyAt()));
     }
 
     public void cancel() {
         this.changeStatus(OrderStatus.CANCELED);
         this.setCanceledAt(Instant.now());
+
+        super.registerEvent(new OrderCanceledEvent(this.getId(), this.getCustomerId(), this.getCanceledAt()));
     }
 
     public void place() {
         this.verifyIfCanChangeToPlaced();
         this.changeStatus(OrderStatus.PLACED);
         this.setPlacedAt(Instant.now());
+
+        super.registerEvent(new OrderPlacedEvent(this.getId(), this.getCustomerId(), this.getPlacedAt()));
     }
 
     public boolean isPaid() {
