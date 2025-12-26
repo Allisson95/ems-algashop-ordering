@@ -1,6 +1,7 @@
 package com.github.allisson95.algashop.ordering.infrastructure.listener.customer;
 
 import com.github.allisson95.algashop.ordering.application.customer.notification.CustomerNotificationApplicationService;
+import com.github.allisson95.algashop.ordering.application.customer.notification.CustomerNotificationApplicationService.NotifyNewRegistrationInput;
 import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerArchivedEvent;
 import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerRegisteredEvent;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,13 @@ public class CustomerEventListener {
     @EventListener
     public void handleCustomerCreatedEvent(final CustomerRegisteredEvent event) {
         log.info("Handling customer registered event: {}", event);
-        customerNotificationApplicationService.notifyNewRegistration(event.customerId());
+        customerNotificationApplicationService.notifyNewRegistration(
+                new NotifyNewRegistrationInput(
+                        event.customerId().value(),
+                        event.fullName().firstName(),
+                        event.email().value()
+                )
+        );
     }
 
     @EventListener

@@ -96,7 +96,7 @@ class CustomerTest {
 
         assertThatCollection(customer.domainEvents()).hasSize(1);
         assertThatCollection(customer.domainEvents()).first().isInstanceOf(CustomerRegisteredEvent.class);
-        assertThatCollection(customer.domainEvents()).first().isEqualTo(new CustomerRegisteredEvent(customer.getId(), customer.getRegisteredAt()));
+        assertThatCollection(customer.domainEvents()).first().isEqualTo(CustomerRegisteredEvent.of(customer));
     }
 
     @Test

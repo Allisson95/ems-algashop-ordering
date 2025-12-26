@@ -46,7 +46,7 @@ public class Customer
     private static Customer createNew(final FullName fullName, final BirthDate birthDate, final Email email, final Phone phone, final Document document, final Boolean promotionNotificationsAllowed, final Address address) {
         final Customer newCustomer = new Customer(new CustomerId(), fullName, birthDate, email, phone, document, promotionNotificationsAllowed, false, Instant.now(), null, LoyaltyPoints.ZERO, address);
 
-        newCustomer.registerEvent(new CustomerRegisteredEvent(newCustomer.getId(), newCustomer.getRegisteredAt()));
+        newCustomer.registerEvent(CustomerRegisteredEvent.of(newCustomer));
 
         return newCustomer;
     }

@@ -1,9 +1,13 @@
 package com.github.allisson95.algashop.ordering.application.customer.notification;
 
-import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerId;
+import java.util.UUID;
 
 public interface CustomerNotificationApplicationService {
 
-    void notifyNewRegistration(CustomerId customerId);
+    void notifyNewRegistration(NotifyNewRegistrationInput input);
+
+    record NotifyNewRegistrationInput(UUID customerId, String firstName, String email) {
+
+    }
 
 }
