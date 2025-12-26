@@ -1,7 +1,6 @@
 package com.github.allisson95.algashop.ordering.application.checkout;
 
 import com.github.allisson95.algashop.ordering.application.utility.Mapper;
-import com.github.allisson95.algashop.ordering.domain.model.commons.Address;
 import com.github.allisson95.algashop.ordering.domain.model.commons.Quantity;
 import com.github.allisson95.algashop.ordering.domain.model.commons.ZipCode;
 import com.github.allisson95.algashop.ordering.domain.model.customer.CustomerId;
@@ -35,6 +34,8 @@ public class BuyNowApplicationService {
 
     private final Mapper mapper;
 
+    private final ShippingInputDisassembler shippingInputDisassembler;
+
     @Transactional
     public String buyNow(final BuyNowInput input) {
         requireNonNull(input, "input cannot be null");
@@ -45,10 +46,7 @@ public class BuyNowApplicationService {
 
         final Product product = findProduct(new ProductId(input.productId()));
 
-        CalculationResponse shippingCostDetails = calculateShippingCost(input.shipping());
-
-        final Shipping shipping = createShipping(input.shipping(), shippingCostDetails);
-
+        final Shipping shipping = shippingInputDisassembler.toDomainModel(input.shipping(), calculateShippingCost(input.shipping()));
         final Billing billing = mapper.convert(input.billing(), Billing.class);
 
         Order order = buyNowService.buyNow(
@@ -69,15 +67,6 @@ public class BuyNowApplicationService {
         final ZipCode origin = originAddressService.originAddress().zipCode();
         final ZipCode destination = new ZipCode(shipping.address().zipCode());
         return shippingCostService.calculate(new ShippingCostService.CalculationRequest(origin, destination));
-    }
-
-    public Shipping createShipping(final ShippingInput shipping, final CalculationResponse shippingCostDetails) {
-        return Shipping.builder()
-                .cost(shippingCostDetails.cost())
-                .expectedDeliveryDate(shippingCostDetails.estimatedDeliveryDate())
-                .recipient(mapper.convert(shipping.recipient(), Recipient.class))
-                .address(mapper.convert(shipping.address(), Address.class))
-                .build();
     }
 
 }
