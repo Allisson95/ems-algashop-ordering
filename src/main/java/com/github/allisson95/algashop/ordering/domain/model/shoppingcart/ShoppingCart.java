@@ -1,5 +1,6 @@
 package com.github.allisson95.algashop.ordering.domain.model.shoppingcart;
 
+import com.github.allisson95.algashop.ordering.domain.model.AbstractEventSourceEntity;
 import com.github.allisson95.algashop.ordering.domain.model.AggregateRoot;
 import com.github.allisson95.algashop.ordering.domain.model.DomainException;
 import com.github.allisson95.algashop.ordering.domain.model.commons.Money;
@@ -22,7 +23,9 @@ import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
 @Getter
-public class ShoppingCart implements AggregateRoot<ShoppingCartId> {
+public class ShoppingCart
+        extends AbstractEventSourceEntity
+        implements AggregateRoot<ShoppingCartId> {
 
     private ShoppingCartId id;
 

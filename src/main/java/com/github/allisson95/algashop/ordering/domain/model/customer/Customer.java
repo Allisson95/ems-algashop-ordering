@@ -1,5 +1,6 @@
 package com.github.allisson95.algashop.ordering.domain.model.customer;
 
+import com.github.allisson95.algashop.ordering.domain.model.AbstractEventSourceEntity;
 import com.github.allisson95.algashop.ordering.domain.model.AggregateRoot;
 import com.github.allisson95.algashop.ordering.domain.model.commons.*;
 import lombok.Builder;
@@ -11,7 +12,9 @@ import java.util.Objects;
 import static java.util.Objects.requireNonNull;
 
 @Getter
-public class Customer implements AggregateRoot<CustomerId> {
+public class Customer
+        extends AbstractEventSourceEntity
+        implements AggregateRoot<CustomerId> {
 
     private CustomerId id;
 
@@ -41,7 +44,11 @@ public class Customer implements AggregateRoot<CustomerId> {
 
     @Builder(builderClassName = "NewCustomerBuilder", builderMethodName = "newCustomer")
     private static Customer createNew(final FullName fullName, final BirthDate birthDate, final Email email, final Phone phone, final Document document, final Boolean promotionNotificationsAllowed, final Address address) {
-        return new Customer(new CustomerId(), fullName, birthDate, email, phone, document, promotionNotificationsAllowed, false, Instant.now(), null, LoyaltyPoints.ZERO, address);
+        final Customer newCustomer = new Customer(new CustomerId(), fullName, birthDate, email, phone, document, promotionNotificationsAllowed, false, Instant.now(), null, LoyaltyPoints.ZERO, address);
+
+        newCustomer.registerDomainEvent(new CustomerRegisteredEvent(newCustomer.getId(), newCustomer.getRegisteredAt()));
+
+        return newCustomer;
     }
 
     @Builder(builderClassName = "ExistingCustomerBuilder", builderMethodName = "existingCustomer")

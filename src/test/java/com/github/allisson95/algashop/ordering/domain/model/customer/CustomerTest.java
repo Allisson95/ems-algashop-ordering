@@ -90,4 +90,13 @@ class CustomerTest {
                 .withMessage("loyaltyPointsToAdd cannot be negative or zero");
     }
 
+    @Test
+    void whenCreateNewCustomer_shouldGenerateCustomerRegisteredEvent() {
+        final Customer customer = CustomerTestDataBuilder.newCustomer().build();
+
+        assertThatCollection(customer.domainEvents()).hasSize(1);
+        assertThatCollection(customer.domainEvents()).first().isInstanceOf(CustomerRegisteredEvent.class);
+        assertThatCollection(customer.domainEvents()).first().isEqualTo(new CustomerRegisteredEvent(customer.getId(), customer.getRegisteredAt()));
+    }
+
 }
