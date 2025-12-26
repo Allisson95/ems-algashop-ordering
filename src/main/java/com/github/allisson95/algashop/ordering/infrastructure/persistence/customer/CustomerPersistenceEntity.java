@@ -4,7 +4,6 @@ import com.github.allisson95.algashop.ordering.infrastructure.persistence.common
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.commons.AddressEmbeddable;
 import jakarta.persistence.*;
 import lombok.*;
-import org.jspecify.annotations.NonNull;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -13,7 +12,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.UUID;
 
 @Builder
@@ -25,7 +23,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "customer")
 @EntityListeners(AuditingEntityListener.class)
-public class CustomerPersistenceEntity extends AbstractEntity<CustomerPersistenceEntity, UUID> {
+public class CustomerPersistenceEntity extends AbstractEntity<UUID> {
 
     @ToString.Include
     @Id
@@ -71,13 +69,5 @@ public class CustomerPersistenceEntity extends AbstractEntity<CustomerPersistenc
 
     @Version
     private Long version;
-
-    public void registerEvents(Collection<Object> events) {
-        events.forEach(this::registerEvent);
-    }
-
-    public @NonNull Collection<Object> domainEvents() {
-        return super.domainEvents();
-    }
 
 }

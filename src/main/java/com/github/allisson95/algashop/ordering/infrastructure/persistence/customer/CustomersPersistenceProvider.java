@@ -44,8 +44,6 @@ class CustomersPersistenceProvider implements Customers {
                         customerPersistenceEntity -> this.updateCustomer(customerPersistenceEntity, customer),
                         () -> this.insertCustomer(customer)
                 );
-
-        customer.clearDomainEvents();
     }
 
     @Override

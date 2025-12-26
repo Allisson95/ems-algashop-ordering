@@ -28,7 +28,7 @@ import static java.util.Objects.requireNonNullElseGet;
 @Entity
 @Table(name = "'order'")
 @EntityListeners(AuditingEntityListener.class)
-public class OrderPersistenceEntity extends AbstractEntity<OrderPersistenceEntity, Long> {
+public class OrderPersistenceEntity extends AbstractEntity<Long> {
 
     @ToString.Include
     @Id
