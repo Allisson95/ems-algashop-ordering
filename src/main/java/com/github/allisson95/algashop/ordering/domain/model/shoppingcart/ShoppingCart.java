@@ -52,12 +52,15 @@ public class ShoppingCart
     }
 
     public static ShoppingCart startShopping(final CustomerId customerId) {
-        return new ShoppingCart(new ShoppingCartId(), customerId, Money.ZERO, Quantity.ZERO, Instant.now(), new LinkedHashSet<>());
+        final ShoppingCart shoppingCart = new ShoppingCart(new ShoppingCartId(), customerId, Money.ZERO, Quantity.ZERO, Instant.now(), new LinkedHashSet<>());
+        shoppingCart.registerEvent(new ShoppingCartCreatedEvent(shoppingCart.getId(), shoppingCart.getCustomerId(), shoppingCart.getCreatedAt()));
+        return shoppingCart;
     }
 
     public void empty() {
         this.items.clear();
         this.recalculateTotals();
+        super.registerEvent(new ShoppingCartEmptiedEvent(this.getId(), this.getCustomerId(), Instant.now()));
     }
 
     public void addItem(final Product product, final Quantity quantity) {
@@ -77,6 +80,8 @@ public class ShoppingCart
         }
 
         this.recalculateTotals();
+
+        super.registerEvent(new ShoppingCartItemAddedEvent(this.getId(), this.getCustomerId(), product.id(), Instant.now()));
     }
 
     public void removeItem(final ShoppingCartItemId shoppingCartItemId) {
@@ -84,6 +89,8 @@ public class ShoppingCart
         final ShoppingCartItem shoppingCartItem = this.findItem(shoppingCartItemId);
         this.items.remove(shoppingCartItem);
         this.recalculateTotals();
+
+        super.registerEvent(new ShoppingCartItemRemovedEvent(this.getId(), this.getCustomerId(), shoppingCartItem.getProductId(), Instant.now()));
     }
 
     public void refreshItem(final Product product) {

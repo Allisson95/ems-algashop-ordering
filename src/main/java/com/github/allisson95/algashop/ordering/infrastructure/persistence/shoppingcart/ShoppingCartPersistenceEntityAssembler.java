@@ -44,6 +44,9 @@ public class ShoppingCartPersistenceEntityAssembler {
 
         shoppingCartPersistenceEntity.setVersion(DomainVersionHandler.getVersion(shoppingCart));
 
+        shoppingCartPersistenceEntity.setDomainEventSupplier(shoppingCart::domainEvents);
+        shoppingCartPersistenceEntity.setOnAllEventsPublished(shoppingCart::clearDomainEvents);
+
         return shoppingCartPersistenceEntity;
     }
 
