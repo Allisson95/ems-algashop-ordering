@@ -4,11 +4,8 @@ import com.github.allisson95.algashop.ordering.domain.model.DomainService;
 import com.github.allisson95.algashop.ordering.domain.model.commons.Money;
 import com.github.allisson95.algashop.ordering.domain.model.commons.Quantity;
 import com.github.allisson95.algashop.ordering.domain.model.customer.Customer;
-import com.github.allisson95.algashop.ordering.domain.model.customer.LoyaltyPoints;
 import com.github.allisson95.algashop.ordering.domain.model.product.Product;
 import lombok.RequiredArgsConstructor;
-
-import java.time.Year;
 
 import static java.util.Objects.requireNonNull;
 
@@ -16,7 +13,7 @@ import static java.util.Objects.requireNonNull;
 @RequiredArgsConstructor
 public class BuyNowService {
 
-    private final Orders orders;
+    private final CustomerHaveFreeShippingSpecification customerHaveFreeShippingSpecification;
 
     public Order buyNow(final Product product,
                         final Customer customer,
@@ -55,9 +52,7 @@ public class BuyNowService {
     }
 
     private boolean haveFreeShipping(final Customer customer) {
-        return customer.getLoyaltyPoints().compareTo(new LoyaltyPoints(100)) >= 0
-                && orders.salesQuantityByCustomerInYear(customer.getId(), Year.now()) >= 2
-                || customer.getLoyaltyPoints().compareTo(new LoyaltyPoints(2000)) >= 0;
+        return customerHaveFreeShippingSpecification.isSatisfiedBy(customer);
     }
 
 }
