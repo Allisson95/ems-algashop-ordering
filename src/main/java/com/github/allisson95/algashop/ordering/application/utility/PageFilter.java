@@ -1,8 +1,16 @@
 package com.github.allisson95.algashop.ordering.application.utility;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Builder
-public record PageFilter(int size, int page) {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class PageFilter {
+
+    private int page = 0;
+
+    private int size = 15;
 
 }

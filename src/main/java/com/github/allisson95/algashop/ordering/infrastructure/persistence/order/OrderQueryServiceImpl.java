@@ -14,17 +14,14 @@ import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static java.util.Objects.requireNonNull;
 
@@ -120,29 +117,38 @@ class OrderQueryServiceImpl implements OrderQueryService {
     }
 
     @Override
-    public Page<OrderSumaryOutput> filter(final Pageable pageable) {
-        final long totalQueryResults = countTotalQueryResult(pageable);
+    public Page<OrderSumaryOutput> filter(final OrderFilter filter) {
+        final long totalQueryResults = countTotalQueryResult(filter);
         if (totalQueryResults == 0) {
+            final PageRequest pageable = PageRequest.of(
+                    filter.getPage(),
+                    filter.getSize(),
+                    filter.getSortDirectionOrDefault(),
+                    filter.getSortByPropertyOrDefault().getProperty()
+            );
             return Page.empty(pageable);
         }
 
-        return filterQuery(pageable, totalQueryResults);
+        return filterQuery(filter, totalQueryResults);
     }
 
-    private long countTotalQueryResult(final Pageable pageable) {
+    private long countTotalQueryResult(final OrderFilter filter) {
         final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Long> query = cb.createQuery(Long.class);
         final Root<OrderPersistenceEntity> from = query.from(OrderPersistenceEntity.class);
 
         final Expression<Long> countExpression = cb.count(from);
-        query.select(countExpression);
+        final Predicate[] predicates = toPredicates(cb, from, filter);
+
+        query.select(countExpression)
+                .where(predicates);
 
         final TypedQuery<Long> typedQuery = entityManager.createQuery(query);
 
         return typedQuery.getSingleResult();
     }
 
-    private Page<OrderSumaryOutput> filterQuery(final Pageable pageable, final long totalQueryResults) {
+    private Page<OrderSumaryOutput> filterQuery(final OrderFilter filter, final long totalQueryResults) {
         final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         final CriteriaQuery<OrderSumaryOutput> query = cb.createQuery(OrderSumaryOutput.class);
         final Root<OrderPersistenceEntity> from = query.from(OrderPersistenceEntity.class);
@@ -169,12 +175,67 @@ class OrderQueryServiceImpl implements OrderQueryService {
                         from.get(OrderPersistenceEntity_.paymentMethod)
                 ));
 
+        final Predicate[] predicates = toPredicates(cb, from, filter);
+        query.where(predicates);
+
         final TypedQuery<OrderSumaryOutput> typedQuery = entityManager.createQuery(query);
+
+        final PageRequest pageable = PageRequest.of(
+                filter.getPage(),
+                filter.getSize(),
+                filter.getSortDirectionOrDefault(),
+                filter.getSortByPropertyOrDefault().getProperty()
+        );
 
         typedQuery.setFirstResult((int) pageable.getOffset());
         typedQuery.setMaxResults(pageable.getPageSize());
 
         return new PageImpl<>(typedQuery.getResultList(), pageable, totalQueryResults);
+    }
+
+    private Predicate[] toPredicates(final CriteriaBuilder cb, final Root<OrderPersistenceEntity> root, final OrderFilter filter) {
+        final List<Predicate> predicates = new ArrayList<>();
+
+        if (filter.getStatus() != null && !filter.getStatus().isBlank()) {
+            predicates.add(cb.equal(root.get(OrderPersistenceEntity_.status), filter.getStatus().toUpperCase(Locale.ROOT)));
+        }
+
+        if (filter.getOrderId() != null) {
+            long orderIdLongValue;
+            try {
+                final OrderId orderId = new OrderId(filter.getOrderId());
+                orderIdLongValue = orderId.value().toLong();
+            } catch (IllegalArgumentException e) {
+                orderIdLongValue = 0L;
+            }
+
+            predicates.add(cb.equal(root.get(OrderPersistenceEntity_.id), orderIdLongValue));
+        }
+
+        if (filter.getCustomerId() != null) {
+            predicates.add(cb.equal(
+                    root.get(OrderPersistenceEntity_.customer).get(CustomerPersistenceEntity_.id),
+                    filter.getCustomerId())
+            );
+        }
+
+        if (filter.getPlacedAtFrom() != null) {
+            predicates.add(cb.greaterThanOrEqualTo(root.get(OrderPersistenceEntity_.placedAt), filter.getPlacedAtFrom()));
+        }
+
+        if (filter.getPlacedAtTo() != null) {
+            predicates.add(cb.lessThanOrEqualTo(root.get(OrderPersistenceEntity_.placedAt), filter.getPlacedAtTo()));
+        }
+
+        if (filter.getTotalAmountFrom() != null) {
+            predicates.add(cb.greaterThanOrEqualTo(root.get(OrderPersistenceEntity_.totalAmount), filter.getTotalAmountFrom()));
+        }
+
+        if (filter.getTotalAmountTo() != null) {
+            predicates.add(cb.lessThanOrEqualTo(root.get(OrderPersistenceEntity_.totalAmount), filter.getTotalAmountTo()));
+        }
+
+        return predicates.toArray(Predicate[]::new);
     }
 
     private OrderDetailOutput mapOrder(final @NonNull ResultSet rs, final List<OrderItemDetailOutput> items) throws SQLException {
