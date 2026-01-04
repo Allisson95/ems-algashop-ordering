@@ -7,13 +7,17 @@ import com.github.allisson95.algashop.ordering.domain.model.order.OrderItemId;
 import com.github.allisson95.algashop.ordering.domain.model.order.OrderNotFoundException;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntity;
 import com.github.allisson95.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntity_;
+import com.github.allisson95.algashop.ordering.infrastructure.persistence.utility.CriteriaJpaUtility;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Tuple;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -134,19 +138,10 @@ class OrderQueryServiceImpl implements OrderQueryService {
     }
 
     private long countTotalQueryResult(final OrderFilter filter) {
-        final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Long> query = cb.createQuery(Long.class);
-        final Root<OrderPersistenceEntity> from = query.from(OrderPersistenceEntity.class);
-
-        final Expression<Long> countExpression = cb.count(from);
-        final Predicate[] predicates = toPredicates(cb, from, filter);
-
-        query.select(countExpression)
-                .where(predicates);
-
-        final TypedQuery<Long> typedQuery = entityManager.createQuery(query);
-
-        return typedQuery.getSingleResult();
+        return CriteriaJpaUtility.countTotalQueryResult(
+                entityManager,
+                OrderPersistenceEntity.class,
+                (root, query, cb) -> toPredicates(cb, root, filter));
     }
 
     private Page<OrderSummaryOutput> filterQuery(final Pageable pageable, final OrderFilter filter, final long totalQueryResults) {
@@ -177,7 +172,7 @@ class OrderQueryServiceImpl implements OrderQueryService {
         final Predicate[] predicates = toPredicates(cb, root, filter);
         query.where(predicates);
 
-        final List<Order> sortOrder = toCriteriaOrders(pageable, cb, root);
+        final List<Order> sortOrder = CriteriaJpaUtility.toCriteriaOrders(pageable, cb, root);
         if (!sortOrder.isEmpty()) {
             query.orderBy(sortOrder);
         }
@@ -213,28 +208,6 @@ class OrderQueryServiceImpl implements OrderQueryService {
                 .toList();
 
         return new PageImpl<>(orderSummaryOutputs, pageable, totalQueryResults);
-    }
-
-    private List<Order> toCriteriaOrders(final Pageable pageable, final CriteriaBuilder cb, final Root<?> root) {
-        final List<Order> orders = new ArrayList<>();
-        if (pageable != null) {
-            for (final Sort.Order sortOrder : pageable.getSort()) {
-                Path<?> path;
-                try {
-                    path = root.get(sortOrder.getProperty());
-                } catch (final IllegalArgumentException e) {
-                    // Skip invalid properties to avoid runtime errors
-                    continue;
-                }
-
-                if (sortOrder.isAscending()) {
-                    orders.add(cb.asc(path));
-                } else {
-                    orders.add(cb.desc(path));
-                }
-            }
-        }
-        return orders;
     }
 
     private Predicate[] toPredicates(final CriteriaBuilder cb, final Root<OrderPersistenceEntity> root, final OrderFilter filter) {
