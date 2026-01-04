@@ -52,7 +52,7 @@ class ShoppingCartsPersistenceProvider implements ShoppingCarts {
     @Transactional
     @Override
     public void add(final ShoppingCart shoppingCart) {
-        this.repository.findShoppingCartPersistenceEntityWithItemsById(shoppingCart.getId().value())
+        this.repository.findById(shoppingCart.getId().value())
                 .ifPresentOrElse(
                         shoppingCartPersistenceEntity -> this.updateShoppingCart(shoppingCartPersistenceEntity, shoppingCart),
                         () -> this.insertShoppingCart(shoppingCart)
