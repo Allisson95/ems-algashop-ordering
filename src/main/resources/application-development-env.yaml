@@ -2,6 +2,8 @@ logging:
   level:
     net.ttddyy.dsproxy.listener: DEBUG
     org.apache.hc.client5.http: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
 
 spring:
   cache:
@@ -31,6 +33,19 @@ spring:
         base-url: http://localhost:8787
   security:
     oauth2:
+      client:
+        provider:
+          algashop-idp:
+            issuer-uri: http://localhost:8081
+        registration:
+          algashop-ordering-service-client:
+            provider: algashop-idp
+            authorization-grant-type: client_credentials
+            client-authentication-method: client_secret_basic
+            client-id: algashop-ordering-service
+            client-secret: "secret1"
+            scope:
+              - products:read
       resourceserver:
         jwt:
           issuer-uri: http://localhost:8081

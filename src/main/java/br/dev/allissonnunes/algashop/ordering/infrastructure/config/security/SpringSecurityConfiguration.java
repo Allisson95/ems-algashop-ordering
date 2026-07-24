@@ -30,6 +30,7 @@ class SpringSecurityConfiguration {
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(Customizer.withDefaults()))
+                .oauth2Client(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(healthMatcher(), additionalHealthPathsMatcher()).permitAll()
                         .anyRequest().authenticated())
