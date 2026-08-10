@@ -1,5 +1,6 @@
 package br.dev.allissonnunes.algashop.ordering.infrastructure.config.persistence;
 
+import br.dev.allissonnunes.algashop.ordering.core.application.security.SecurityCheckApplicationService;
 import org.jspecify.annotations.NonNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,8 +21,13 @@ import java.util.UUID;
 public class SpringDataJpaConfiguration {
 
     @Bean
-    AuditorAware<@NonNull UUID> auditorAware() {
-        return () -> Optional.of(UUID.randomUUID());
+    AuditorAware<@NonNull UUID> auditorAware(final SecurityCheckApplicationService securityCheck) {
+        return () -> {
+            if (!securityCheck.isAuthenticated() || securityCheck.isMachineAuthentication()) {
+                return Optional.empty();
+            }
+            return Optional.of(securityCheck.getAuthenticatedUserId());
+        };
     }
 
     @Bean
